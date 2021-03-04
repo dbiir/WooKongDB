@@ -1,0 +1,391 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>その他の設定パラメータ</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="Watchdog"
+HREF="runtime-watchdog-config.html"><LINK
+REL="NEXT"
+TITLE="クライアント認証"
+HREF="client-authentication.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="Watchdog"
+HREF="runtime-watchdog-config.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="クライアント認証"
+HREF="client-authentication.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-MISC"
+>5.15. その他の設定パラメータ</A
+></H1
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-RELCACHE-EXPIRE"
+></A
+><TT
+CLASS="VARNAME"
+>relcache_expire</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+>リレーションキャッシュの寿命を秒単位で指定します。
+リレーションキャッシュは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がテーブルの構造を含む様々な情報を取得したり、テーブルのタイプ（たとえば、参照されているテーブルが一時テーブルかどうかなど）をチェックするために使う<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>のシステムカタログの問い合わせ結果を保存しておくものです。
+キャッシュはpgpoolの子プロセスのローカルメモリ空間に保管されています。
+もし<TT
+CLASS="COMMAND"
+>ALTER TABLE</TT
+>でテーブルが変更された場合などは、リレーションキャッシュと一致しなくなります。
+そのため、<TT
+CLASS="VARNAME"
+>relcache_expire</TT
+>がキャッシュの寿命をコントロールしています。
+デフォルトは0で、キャッシュの期限が切れることはありません。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-RELCACHE-SIZE"
+></A
+><TT
+CLASS="VARNAME"
+>relcache_size</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+>リレーションキャッシュのサイズを指定します。
+デフォルトは256です。
+        </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>もし以下のようなメッセージが<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>ログに頻繁に出る場合は、パフォーマンス向上のため<TT
+CLASS="VARNAME"
+>relcache_size</TT
+>を大きくしてください。
+            </P><PRE
+CLASS="PROGRAMLISTING"
+>"pool_search_relcache: cache replacement happened"
+            </PRE
+><P>
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-CHECK-TEMP-TABLE"
+></A
+><TT
+CLASS="VARNAME"
+>check_temp_table</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+        </DT
+><DD
+><P
+>onに設定されたとき、<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>に含まれるテーブルが一時テーブルかどうかのチェックを行います。
+一時テーブルをチェックするため<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はプライマリ/マスター<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドのシステムカタログに問い合わせ、プライマリ/マスタサーバの負荷を上げます。
+もしシステムが決して一時テーブルを使用しないことが確かならば、安全に<TT
+CLASS="VARNAME"
+>check_tmp_table</TT
+>をoffにすることができます。
+デフォルトはonです。
+        </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+現在のセッションでのパラメータ値は、<A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+>コマンドで変更することもできます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-CHECK-UNLOGGED-TABLE"
+></A
+><TT
+CLASS="VARNAME"
+>check_unlogged_table</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+        </DT
+><DD
+><P
+>onに設定されたとき、<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>に含まれるテーブルがunloggedテーブルかどうかのチェックを行います。
+unloggedテーブルをチェックするため<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はプライマリ/マスター<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドのシステムカタログに問い合わせ、プライマリ/マスタサーバの負荷を上げます。
+もしシステムが決してunloggedテーブルを使用しないことが確かならば（たとえば、9.0 以前のバージョンの<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>を使っている）、安全に<TT
+CLASS="VARNAME"
+>check_unlogged_table</TT
+>をoffにすることができます。
+デフォルトはonです。
+        </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+現在のセッションでのパラメータ値は、<A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+>コマンドで変更することもできます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-PID-FILE-NAME"
+></A
+><TT
+CLASS="VARNAME"
+>pid_file_name</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のプロセスIDを格納するファイルのフルパスを指定します。
+デフォルトは<TT
+CLASS="LITERAL"
+>'/var/run/pgpool/pgpool.pid'</TT
+>です。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-LOGDIR"
+></A
+><TT
+CLASS="VARNAME"
+>logdir</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+><TT
+CLASS="LITERAL"
+>pool_status</TT
+>ファイルが書かれます。を格納するディレクトリのフルパスを指定します。
+デフォルトは<TT
+CLASS="LITERAL"
+>"/tmp"</TT
+>です。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-watchdog-config.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="client-authentication.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Watchdog</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>クライアント認証</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>認証方式</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="クライアント認証"
+HREF="client-authentication.html"><LINK
+REL="PREVIOUS"
+TITLE="pool_hba.confファイル"
+HREF="auth-pool-hba-conf.html"><LINK
+REL="NEXT"
+TITLE="例集"
+HREF="examples.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pool_hba.confファイル"
+HREF="auth-pool-hba-conf.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="client-authentication.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 6章クライアント認証</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="例集"
+HREF="examples.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AUTH-METHODS"
+>6.2. 認証方式</A
+></H1
+><P
+>以下の小節では、認証方式について詳細に説明します。
+  </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AUTH-TRUST"
+>6.2.1. trust認証</A
+></H2
+><P
+><TT
+CLASS="LITERAL"
+>trust</TT
+>認証が指定されると<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は、サーバに接続できる全ての人に対してその人が指定する任意のデータベースユーザ名としてのアクセス権限が付与されていると想定します
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AUTH-MD5"
+>6.2.2. MD5パスワード認証</A
+></H2
+><P
+>この認証方法はMD-5ハッシュ化されたパスワードがクライアントから送信されるパスワードベースの認証方法です。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>データベースユーザパスワードを見ることができず、クライアントプリケーションはMD5ハッシュ化されたパスワードを送るのみです。
+そのため、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の<TT
+CLASS="LITERAL"
+>md5</TT
+>認証は<A
+HREF="runtime-config-connection.html#GUC-POOL-PASSWD"
+>pool_passwd</A
+>認証ファイルを使ってサポートしています。
+   </P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="MD5-AUTHENTICATION-FILE-FORMAT"
+>6.2.2.1. 認証ファイル形式</A
+></H3
+><P
+>        <TT
+CLASS="LITERAL"
+>pool_passwd</TT
+>ファイルは以下の形式の行を含みます。
+    </P><PRE
+CLASS="PROGRAMLISTING"
+>        "username:encrypted_passwd"
+    </PRE
+><P>
+    </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="SETTING-MD5-AUTHENTICATION"
+>6.2.2.2. md5認証の設定</A
+></H3
+><P
+>以下が<TT
+CLASS="LITERAL"
+>md5</TT
+>認証を有効にする手順です。
+    </P
+><P
+>1. データベースのOSユーザとしてログインしてンし、<TT
+CLASS="COMMAND"
+>"pg_md5 --md5auth --username=ユーザ名"</TT
+> を実行します。
+pool_passwdがまだ存在していなかった場合は、pg_md5コマンドが自動的にこれを生成します。
+        </P><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>ユーザ名とパスワードは、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>に登録したものと完全に同じでなければなりません。
+        </P
+></BLOCKQUOTE
+></DIV
+><P>
+    </P
+><P
+>2. <TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>にmd5認証のエントリを作成します。
+詳細については<A
+HREF="auth-pool-hba-conf.html"
+>項6.1</A
+>を参照してください。
+    </P
+><P
+>3. （もちろんpool_passwdと<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の両方で）のmd5パスワードを変更したら、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>設定の再読み込みを実行してください。
+    </P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AUTH-PAM"
+>6.2.3. PAM認証</A
+></H2
+><P
+>この認証方式は認証機構としてPAM（Pluggable Authentication Modules）を使用します。
+デフォルトのPAMサービス名は<TT
+CLASS="LITERAL"
+>pgpool</TT
+>です。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が稼働するホスト上のユーザ情報を使ったPAM認証を利用することができます。
+PAMについての詳細は<A
+HREF="http://www.kernal.org/pub/linux/libs/pam/"
+TARGET="_top"
+>Linux-PAM</A
+>ページを読んでください
+   </P
+><P
+>PAM認証を有効にするには、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のサービス設定ファイルをシステムのPAM設定ディレクトリ（通常は<TT
+CLASS="LITERAL"
+>"/etc/pam.d"</TT
+>にあります）に作成しなければなりません。
+サービス設定ファイルのサンプルはインストールディレクトリ下に<TT
+CLASS="LITERAL"
+>"share/pgpool.pam"</TT
+>としてインストールされています。
+   </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>PAMサポートを有効にするには、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が<TT
+CLASS="COMMAND"
+>"--with-pam"</TT
+>をつけてconfigureされていなければなりません。
+    </P
+></BLOCKQUOTE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="auth-pool-hba-conf.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="examples.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>ファイル</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="client-authentication.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例集</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

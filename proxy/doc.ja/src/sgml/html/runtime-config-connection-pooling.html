@@ -1,0 +1,811 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>コネクションプーリング</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="バックエンドの設定"
+HREF="runtime-config-backend-settings.html"><LINK
+REL="NEXT"
+TITLE="エラー報告とログ取得"
+HREF="runtime-config-logging.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="バックエンドの設定"
+HREF="runtime-config-backend-settings.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="エラー報告とログ取得"
+HREF="runtime-config-logging.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-CONFIG-CONNECTION-POOLING"
+>5.5. コネクションプーリング</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は確立された<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバへの接続を保存しておき、同じ属性(ユーザ名、データベース、プロトコルバージョン)を持つ新しい接続が来た時にこれらを再利用します。
+これにより接続のオーバヘッドを低減し、システム全体のスループットを向上することができます。
+  </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-CONNECTION-POOLING-SETTINGS"
+>5.5.1. コネクションプールの設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-CONNECTION-CACHE"
+></A
+><TT
+CLASS="VARNAME"
+>connection_cache</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+	  </DT
+><DD
+><P
+>onに設定されるとバックエンドへの接続をキャッシュします。
+デフォルトはonです。
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>ただし、<TT
+CLASS="VARNAME"
+>connection_cache</TT
+>がonでも、<TT
+CLASS="LITERAL"
+>template0</TT
+>、<TT
+CLASS="LITERAL"
+>template1</TT
+>、<TT
+CLASS="LITERAL"
+>postgres</TT
+>、<TT
+CLASS="LITERAL"
+>regression</TT
+>データベースへの接続はキャッシュされません。</I
+></SPAN
+>
+	  </P
+><P
+>このパラメータを変更した時には<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を再起動してください。
+	  </P
+></DD
+><DT
+><A
+NAME="GUC-MAX-POOL"
+></A
+><TT
+CLASS="VARNAME"
+>max_pool</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+	  </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の各子プロセスがキャッシュするコネクションの最大数です。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は、受け付けた接続が同じユーザ名で同じデータベースに接続しようとする場合に、キャッシュされたコネクションを再利用します。
+そうでなければ<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はバックエンドへの新しい接続を生成します。
+もしキャッシュされている接続の数がmax_poolを超えた場合には、一番古いコネクションが廃棄され、そのスロットが新しい接続のために使用されます。
+	  </P
+><P
+>デフォルト値は4です。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のプロセスからバックエンドへの接続の数は全部で<A
+HREF="runtime-config-connection.html#GUC-NUM-INIT-CHILDREN"
+>num_init_children</A
+> * <TT
+CLASS="VARNAME"
+>max_pool</TT
+>に達する可能性があることに注意してください。
+	  </P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+	  </P
+></DD
+><DT
+><A
+NAME="GUC-LISTEN-BACKLOG-MULTIPLIER"
+></A
+><TT
+CLASS="VARNAME"
+>listen_backlog_multiplier</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+>フロントエンドから<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>への接続待ち行列の長さを制御します。
+接続待ち行列の長さ(具体的には<TT
+CLASS="LITERAL"
+>listen()</TT
+>システムコールの<TT
+CLASS="LITERAL"
+>backlog</TT
+>パラメータ)は、<TT
+CLASS="VARNAME"
+>listen_backlog_multiplier</TT
+> * <A
+HREF="runtime-config-connection.html#GUC-NUM-INIT-CHILDREN"
+>num_init_children</A
+>で決まります。
+				</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>システムのよっては<TT
+CLASS="LITERAL"
+>listen()</TT
+>システムコールの<TT
+CLASS="LITERAL"
+>backlog</TT
+>パラメータに上限が設定されています。
+詳細は<A
+HREF="runtime-config-connection.html#GUC-NUM-INIT-CHILDREN"
+>num_init_children</A
+>の項を参照してください。
+					</P
+></BLOCKQUOTE
+></DIV
+><P
+>デフォルト値は2です。
+				</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-SERIALIZE-ACCEPT"
+></A
+><TT
+CLASS="VARNAME"
+>serialize_accept</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+        </DT
+><DD
+><P
+>onに設定することで、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は受け付けるクライアント接続のシリアライズを有効にします。
+シリアライズを行わない場合、OSカーネルは<TT
+CLASS="LITERAL"
+>accept()</TT
+>を実行するために全ての<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>子プロセスを起こし、実際にはそのうちの１つのみが入ってきた接続を処理します。
+ここでの問題は、子プロセスが一度に起こされるために重いコンテキストスイッチングが起こり、性能に影響がでることです。
+				</P
+><P
+>この現象は「thundering herd problem（猛獣の暴走）」と呼ばれる古典的な問題です。
+これは<TT
+CLASS="LITERAL"
+>accept()</TT
+>呼び出しのシリアライズを行うことで解決できます。
+入ってきた接続に対して<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>プロセスのうちひとつだけが起こされて<TT
+CLASS="LITERAL"
+>accept()</TT
+>を実行ようになるためです。
+				</P
+><P
+>しかしシリアライズにはオーバヘッドがあり、<A
+HREF="runtime-config-connection.html#GUC-NUM-INIT-CHILDREN"
+>num_init_children</A
+>が大きい時のみ使用することを推奨します。
+小さい<A
+HREF="runtime-config-connection.html#GUC-NUM-INIT-CHILDREN"
+>num_init_children</A
+>に対しては、シリアライズのオーバヘッドのために性能が低下するかもしれません。
+				</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><A
+HREF="runtime-config-connection.html#GUC-NUM-INIT-CHILDREN"
+>num_init_children</A
+>と<TT
+CLASS="VARNAME"
+>serialize_accept</TT
+>の相関は環境によって異なるので、<TT
+CLASS="VARNAME"
+>serialize_accept</TT
+>を使うかどうか決める前にベンチマークテストを行ってみることをおすすめします。
+					</P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="EXAMPLE"
+><A
+NAME="EXAMPLE-SERIALIZE-ACCEPT-PGBENCH"
+></A
+><P
+><B
+>例 5-1. serialize_acceptの使用判断のためにpgbenchを利用する</B
+></P
+><P
+>以下のコマンドを使って<TT
+CLASS="COMMAND"
+>pgbench</TT
+>を実行します。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>pgbench -n -S -p 9999 -c 32 -C -S -T 300 test
+          </PRE
+><P>
+ここで、<TT
+CLASS="LITERAL"
+>-C</TT
+>は<TT
+CLASS="COMMAND"
+>pgbench</TT
+>にトランザクション実行の度に毎回データベースに接続することを指示します。
+<TT
+CLASS="LITERAL"
+>-c 32</TT
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>への同時セッション数です。
+これはシステム要件にあわせて変更するのがよいでしょう。
+<TT
+CLASS="COMMAND"
+>pgbench</TT
+>が終了後、"including connections establishing" の数値をチェックします。
+          </P
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>なお、<A
+HREF="runtime-config-connection-pooling.html#GUC-CHILD-LIFE-TIME"
+>child_life_time</A
+> が有効だと、<TT
+CLASS="VARNAME"
+>serialize_accept</TT
+>は効果がありません。
+<TT
+CLASS="VARNAME"
+>serialize_accept</TT
+>をonにしたい場合は、<A
+HREF="runtime-config-connection-pooling.html#GUC-CHILD-LIFE-TIME"
+>child_life_time</A
+>が0であることを確認してください。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>プロセスのメモリーリークなどの潜在的な問題を気にする場合は、代わりに<A
+HREF="runtime-config-connection-pooling.html#GUC-CHILD-MAX-CONNECTIONS"
+>child_max_connections</A
+>を使ってください。
+この制限は純粋に実装上の問題であり、将来はなくなるかもしれません。
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+>デフォルトはoffです。
+				</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-CHILD-LIFE-TIME"
+></A
+><TT
+CLASS="VARNAME"
+>child_life_time</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の子プロセスがアイドル状態のままでいるときに、それを強制終了するまでの時間を秒単位で指定します。
+<TT
+CLASS="VARNAME"
+>child_life_time</TT
+>により終了された時には、すぐに新しい子プロセスが<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>により起動されます。
+<TT
+CLASS="VARNAME"
+>child_life_time</TT
+>は<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>子プロセスのメモリリークやその他の不測のエラーに備えた予防措置です。
+				</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><TT
+CLASS="VARNAME"
+>child_life_time</TT
+>はまだ一度もコネクションを受け付けていないプロセスには適用されません。
+					</P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>						<A
+HREF="runtime-config-connection-pooling.html#GUC-SERIALIZE-ACCEPT"
+>serialize_accept</A
+> becomes ineffective when
+						<TT
+CLASS="VARNAME"
+>child_life_time</TT
+> is enabled.
+					</P
+></BLOCKQUOTE
+></DIV
+><P
+>デフォルト値は300秒（すなわち5分）です。
+0を指定するとこの機能は無効になります。
+				</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-CLIENT-IDLE-LIMIT"
+></A
+><TT
+CLASS="VARNAME"
+>client_idle_limit</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+>クライアントが前回のクエリからアイドル状態のままでいるときに、それを切断するまでの時間を秒単位で指定します。
+これは、だらしないクライアントや<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の間のTCP/IPコネクションの不調によって、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の子プロセスが占有されてしまうのを回避するのに役立ちます。
+				</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><TT
+CLASS="VARNAME"
+>client_idle_limit</TT
+>はオンラインリカバリのセカンドステージでは無視されます。
+					</P
+></BLOCKQUOTE
+></DIV
+><P
+>デフォルト値は0で、この機能はoffとなります。
+				</P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+現在のセッションでのパラメータ値は、<A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+>コマンドで変更することもできます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-CHILD-MAX-CONNECTIONS"
+></A
+><TT
+CLASS="VARNAME"
+>child_max_connections</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+>各<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>子プロセスの寿命を、受付可能なクライアント接続の数で指定します。
+<TT
+CLASS="VARNAME"
+>child_max_connections</TT
+>個のクライアント接続を処理した後に<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はその子プロセスを終了させ、すぐに代わりの新しい子プロセスを生成します。
+				</P
+><P
+><TT
+CLASS="VARNAME"
+>child_max_connections</TT
+>は<A
+HREF="runtime-config-connection-pooling.html#GUC-CHILD-LIFE-TIME"
+>child_life_time</A
+>や<A
+HREF="runtime-config-connection-pooling.html#GUC-CONNECTION-LIFE-TIME"
+>connection_life_time</A
+>が効かないくらい忙しいサーバで有用です。
+また<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドが肥大化するのを防ぐのにも有用です。
+				</P
+><P
+>デフォルト値は0で、この機能はoffとなります。
+				</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-CONNECTION-LIFE-TIME"
+></A
+><TT
+CLASS="VARNAME"
+>connection_life_time</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+>キャッシュされた<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>への接続を切断するまでの時間を秒単位で指定します。
+これはキャッシュされた接続の有効期間として働きます。
+				</P
+><P
+>デフォルトは0です。
+これはキャッシュされた接続が切断されないことを意味しています。
+				</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-RESET-QUERY-LIST"
+></A
+><TT
+CLASS="VARNAME"
+>reset_query_list</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>ユーザセッションを終了するときにバックエンドコネクションを初期化するために送られる<ACRONYM
+CLASS="ACRONYM"
+>SQL</ACRONYM
+>コマンドを指定します。
+複数のコマンドを<TT
+CLASS="LITERAL"
+>";"</TT
+>で区切って指定することができます。
+				</P
+><P
+>利用できるコマンドは<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>のバージョンによって異なります。
+各<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バージョンごとの設定は以下です。
+ただし、"ABORT"は必ずコマンドに含めてください。
+				</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="RESET-QUERY-LIST-SUGGESTIONS-TABLE"
+></A
+><P
+><B
+>表 5-4. PostgreSQLバージョンごとの<TT
+CLASS="VARNAME"
+>reset_query_list</TT
+>の推奨設定</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>PostgreSQLバージョン</TH
+><TH
+>reset_query_list</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>7.1以前</TD
+><TD
+><TT
+CLASS="LITERAL"
+>'ABORT'</TT
+></TD
+></TR
+><TR
+><TD
+>7.2から8.2</TD
+><TD
+><TT
+CLASS="LITERAL"
+>'ABORT; RESET ALL; SET SESSION AUTHORIZATION DEFAULT'</TT
+></TD
+></TR
+><TR
+><TD
+>8.3以降</TD
+><TD
+><TT
+CLASS="LITERAL"
+>'ABORT; DISCARD ALL'</TT
+></TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>
+<TT
+CLASS="LITERAL"
+>ABORT</TT
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> 7.4以降ではトランザクションブロックの中にいない場合には発行されません。
+
+					</P
+></BLOCKQUOTE
+></DIV
+><P
+>デフォルト<TT
+CLASS="LITERAL"
+>'ABORT; DISCARD SLL'</TT
+>です。
+				</P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config-backend-settings.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-config-logging.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>バックエンドの設定</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>エラー報告とログ取得</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

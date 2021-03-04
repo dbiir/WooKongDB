@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>insert_lockテーブルの作成</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Pgpool-IIのインストール"
+HREF="installation.html"><LINK
+REL="PREVIOUS"
+TITLE="pgpool-regclassのインストール"
+HREF="install-pgpool-regclass.html"><LINK
+REL="NEXT"
+TITLE="pgpool.confの設定"
+HREF="setting-up-pgpool-conf.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pgpool-regclassのインストール"
+HREF="install-pgpool-regclass.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 3章<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストール</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pgpool.confの設定"
+HREF="setting-up-pgpool-conf.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="CREATE-INSTALLLOCK-TABLE"
+>3.7. insert_lockテーブルの作成</A
+></H1
+><P
+>ネイティブレプリケーションモードを使う予定のない場合は、本説は飛ばすことができます。
+    </P
+><P
+>ネイティブレプリケーションモードでinsert_lockを利用したい場合は、排他制御用のテーブル<TT
+CLASS="STRUCTNAME"
+>pgpool_catalog.insert_lock</TT
+>を作成することを強く推奨します。
+これがなくてもある程度はinsert_lock は動作します。
+しかしその場合は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は挿入対象のテーブルに対してロックを行います。
+これは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> 2.2と2.3 シリーズの動作と同じです。
+このテーブルに対するロックは、<TT
+CLASS="COMMAND"
+>VACUUM</TT
+>と競合するため、<TT
+CLASS="COMMAND"
+>INSERT</TT
+>処理が長時間が待たされ続ける可能性があります。
+
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>	$ cd pgpool-II-x.x.x/sql
+	$ psql -f insert_lock.sql template1
+      </PRE
+><P>
+
+    </P
+><P
+><TT
+CLASS="FILENAME"
+>insert_lock.sql</TT
+>は、pgpool-II経由で利用するデータベース毎に必要になります。
+ただし、"psql -f insert_lock.sql template1"の実行後に作成されたデータベースでは、新しいデータベース作成のためにテンプレートデータベースが複製されるため、これを実行する必要はありません。 
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="install-pgpool-regclass.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="setting-up-pgpool-conf.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pgpool-regclassのインストール</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pgpool.confの設定</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

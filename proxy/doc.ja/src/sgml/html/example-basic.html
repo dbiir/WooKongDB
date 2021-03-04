@@ -1,0 +1,899 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>基本設定の例</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="設定の例"
+HREF="example-configs.html"><LINK
+REL="PREVIOUS"
+TITLE="設定の例"
+HREF="example-configs.html"><LINK
+REL="NEXT"
+TITLE="Watchdogの設定例"
+HREF="example-watchdog.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="設定の例"
+HREF="example-configs.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="example-configs.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 7章設定の例</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="Watchdogの設定例"
+HREF="example-watchdog.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="EXAMPLE-BASIC"
+>7.1. 基本設定の例</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXAMPLE-CONFIGS-BEGIN"
+>7.1.1. さあ始めましょう</A
+></H2
+><P
+>ここでは、レプリケーションを行うための準備として、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のインストールや設定、データベースノードの準備について説明します。
+      </P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-CONFIGS-BEGIN-INSTALLING"
+>7.1.1.1. <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストール</A
+></H3
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストールはとても簡単です。
+ソースのtar ballを展開したディレクトリで以下のようにコマンドを実行します。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>$ ./configure
+$ make
+$ make install
+          </PRE
+><P>
+<TT
+CLASS="COMMAND"
+>configure</TT
+>スクリプトはシステム情報を収集しコンパイル処理に利用します。
+<TT
+CLASS="COMMAND"
+>configure</TT
+>スクリプトにコマンドライン引数を指定することにより、インストール先ディレクトリなど、デフォルトの動作を変更することができます。
+デフォルトでは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> は<TT
+CLASS="LITERAL"
+>/usr/local</TT
+>ディレクトリ以下にインストールされます。
+        </P
+><P
+><TT
+CLASS="COMMAND"
+>make</TT
+>コマンドはソースコードはコンパイルし、<TT
+CLASS="COMMAND"
+>make install</TT
+>コマンドで実行可能ファイルがインストールされます。
+インストール先ディレクトリに書き込み権限を持っている必要があります。
+ここでは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は<TT
+CLASS="LITERAL"
+>/usr/local</TT
+>にインストールすることにします。
+        </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> 7.4 以降の<TT
+CLASS="LITERAL"
+>libpq</TT
+>ライブラリ(3.0 プロトコル)を必要とします。
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+><TT
+CLASS="COMMAND"
+>configure</TT
+>スクリプトが以下のエラーメッセージを表示した場合、<TT
+CLASS="LITERAL"
+>libpq</TT
+>ライブラリがインストールされていないか、バージョンが3.0でない可能性があります。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>configure: error: libpq is not installed or libpq is old
+          </PRE
+><P>
+プロトコルのバージョンが3.0の<TT
+CLASS="LITERAL"
+>libpq</TT
+>ライブラリがインストールされているにも係わらず上記のエラーメッセージが表示される場合、<TT
+CLASS="COMMAND"
+>configure</TT
+>スクリプトに<TT
+CLASS="LITERAL"
+>libpq</TT
+>ライブラリが認識されていない可能性があります。
+<TT
+CLASS="COMMAND"
+>configure</TT
+>スクリプトは標準では<TT
+CLASS="LITERAL"
+>/usr/local/pgsql</TT
+>ディレクトリ以下から<TT
+CLASS="LITERAL"
+>libpq</TT
+>ライブラリを検索します。
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>のインストール先が<TT
+CLASS="LITERAL"
+>/usr/local/pgsql</TT
+>ディレクトリ以下でなければ、<TT
+CLASS="COMMAND"
+>configure</TT
+>スクリプトを実行する際にコマンドライン引数として<TT
+CLASS="LITERAL"
+>--with-pgsql</TT
+>や<TT
+CLASS="LITERAL"
+>--with-pgsql-includedir</TT
+>、<TT
+CLASS="LITERAL"
+>--with-pgsql-libdir</TT
+>オプションを指定してください。
+        </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-CONFIGS-BEGIN-CONFIG-FILES"
+>7.1.1.2. 設定ファイルの作成</A
+></H3
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定パラメータは<TT
+CLASS="LITERAL"
+>pgpool.conf</TT
+>ファイルに保存されてします。
+ファイルは、1 行ごとに<TT
+CLASS="LITERAL"
+>パラメータ名 = 値</TT
+>という書式です。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> をインストールすると、<TT
+CLASS="LITERAL"
+>pgpool.conf.sample</TT
+>ファイルが作成されます。
+それを<TT
+CLASS="LITERAL"
+>pgpool.conf</TT
+>というファイル名にコピーしてから編集するといいでしょう。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>$ cp /usr/local/etc/pgpool.conf.sample /usr/local/etc/pgpool.conf
+          </PRE
+><P>
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> はローカルホストからのポート番号9999への接続のみを受け付けます。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> と異なるホストからの接続を受け付けたい場合は、<A
+HREF="runtime-config-connection.html#GUC-LISTEN-ADDRESSES"
+>listen_addresses</A
+>を<TT
+CLASS="LITERAL"
+>'*'</TT
+>に設定します。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>listen_addresses = 'localhost'
+port = 9999
+          </PRE
+><P>
+ここではデフォルトのパラメータを使うことにします。
+        </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-CONFIGS-BEGIN-CONFIG-PCP"
+>7.1.1.3. <ACRONYM
+CLASS="ACRONYM"
+>PCP</ACRONYM
+>コマンドの設定</A
+></H3
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>には、データベースノードの情報取得や<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>停止などをネットワーク越しに行える管理目的のインターフェイスがあります。
+<ACRONYM
+CLASS="ACRONYM"
+>PCP</ACRONYM
+>コマンドを使用するにはユーザ認証が必要になります。
+この認証は<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>ユーザの認証とは異なります。
+ユーザ名とパスワードが<TT
+CLASS="LITERAL"
+>pcp.conf</TT
+>ファイルに定義されている必要があります。
+このファイルでは、1行ごとにユーザ名とパスワードがペアとしてリストされており、これららコロン(:)で区切られています。
+パスワードは<TT
+CLASS="LITERAL"
+>MD5</TT
+>ハッシュ形式で暗号化されています。
+
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>postgres:e8a48653851e28c69d0506508fb27fc5
+          </PRE
+><P>
+
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> をインストールするとサンプルとして<TT
+CLASS="LITERAL"
+>pcp.conf.sample</TT
+>が自動的に生成されます。
+それを<TT
+CLASS="LITERAL"
+>pcp.conf</TT
+>というファイル名にコピーしてから編集するといいでしょう。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>$ cp /usr/local/etc/pcp.conf.sample /usr/local/etc/pcp.conf
+          </PRE
+><P>
+パスワードをMD5ハッシュ形式に変換する際には、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>とともにインストールされる<TT
+CLASS="COMMAND"
+>pg_md5</TT
+>コマンドを使用します。
+<TT
+CLASS="COMMAND"
+>pg_md5</TT
+>コマンドは、コマンドライン引数として文字列を指定すると、それをMD5ハッシュ化したものを表示します。
+例えば、以下のようにコマンドライン引数として<TT
+CLASS="LITERAL"
+>"postgres"</TT
+>を指定して実行すると、それをMD5ハッシュ化しテキストが標準出力に表示されます。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>$ /usr/bin/pg_md5 postgres
+e8a48653851e28c69d0506508fb27fc5
+          </PRE
+><P>
+PCPコマンドはネットワークを通して実行されるので、ポート番号を<TT
+CLASS="LITERAL"
+>pgpool.conf</TT
+>ファイルの<A
+HREF="runtime-config-connection.html#GUC-PCP-PORT"
+>pcp_port</A
+>パラメータに設定します。
+ここでは、<A
+HREF="runtime-config-connection.html#GUC-PCP-PORT"
+>pcp_port</A
+>のデフォルトである9898を使用することにします。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>pcp_port = 9898
+          </PRE
+><P>
+        </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-CONFIGS-PREP-DB-NODES"
+>7.1.1.4. データベースノードの準備</A
+></H3
+><P
+>次に、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のための<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバを設定する必要があります。
+これらのサーバは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> と同じホストで起動しても、異なるホストであっても構いません。
+同じホストにサーバを配置するのならば、各サーバにそれぞれ異なるポート番号を割り合てなければなりません。
+異なるマシンで起動する場合は <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>からのネットワーク接続を受け入れられるよう適切に設定されている必要があります。
+
+が起動するホストからデータベースサーバに接続できるように設定する必要があります。 <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> ではデータベースサーバごとにレプリケーションを行うので、チュートリアルのためのデータベースクラスタを作成したほうがいいでしょう。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>backend_hostname0 = 'localhost'
+backend_port0 = 5432
+backend_weight0 = 1
+backend_hostname1 = 'localhost'
+backend_port1 = 5433
+backend_weight1 = 1
+backend_hostname2 = 'localhost'
+backend_port2 = 5434
+backend_weight2 = 1
+          </PRE
+><P>
+
+<A
+HREF="runtime-config-backend-settings.html#GUC-BACKEND-HOSTNAME"
+>backend_hostname</A
+>、<A
+HREF="runtime-config-backend-settings.html#GUC-BACKEND-PORT"
+>backend_port</A
+>、<A
+HREF="runtime-config-backend-settings.html#GUC-BACKEND-WEIGHT"
+>backend_weight</A
+>には、ノードのホスト名、ポート番号、負荷分散の割合を設定します。
+各パラメータ名の後ろには、ノードIDが0から始まる整数(すなわち、0, 1, 2, ...)で指定されていなければなりません。
+        </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>すべてのノードで<A
+HREF="runtime-config-backend-settings.html#GUC-BACKEND-WEIGHT"
+>backend_weight</A
+>パラメータが1に設定してるのは、SELECTクエリが３台のサーバで等しく分散されることを意味しています。
+          </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-CONFIGS-START-STOP-PGPOOL"
+>7.1.1.5. <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の起動と停止</A
+></H3
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を起動するにはターミナルで以下のコマンドを実行します。
+
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgpool
+        </PRE
+><P>
+
+しかしこれでは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が制御端末を切り離すため、ログが出力されません。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>にログメッセージを表示させたい場合、<TT
+CLASS="COMMAND"
+>pgpool</TT
+>コマンドに<TT
+CLASS="LITERAL"
+>-n</TT
+>オプションを指定すると、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は非デーモンプロセスとして起動し、制御端末は切り離されません。
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgpool -n &#38;
+        </PRE
+><P>
+
+コマンドを実行した端末にログメッセージが表示されるので、以下のようなオプションを使うことをお勧めします。
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgpool -n -d &#62; /tmp/pgpool.log 2&#62;&#38;1 &#38;
+        </PRE
+><P>
+
+-d オプションはデバッグメッセージの出力を有効にします。
+上記の例はファイルにリダイレクトさせているため、ログメッセージが<TT
+CLASS="LITERAL"
+>/tmp/pgpol.log</TT
+>追加され続けます。
+ログをローテートさせたい場合は、ローテート機能を持った外部コマンドにログを渡してください。
+たとえば、Apache2の<A
+HREF="https://httpd.apache.org/docs/2.4/programs/rotatelogs.html"
+TARGET="_top"
+>rotatelogs</A
+>が使用できます。
+
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgpool -n 2&#62;&#38;1 | /usr/local/apache2/bin/rotatelogs \
+  -l -f /var/log/pgpool/pgpool.log.%A 86400 &#38;
+        </PRE
+><P>
+
+これにより毎日夜中の0時にログがローテートされ、<TT
+CLASS="LITERAL"
+>pgpool.log.Thursday</TT
+>のような名前のログファイルが毎日作成されます。
+ただし、すでに同じ名前のファイルがある場合にはrotatelogsはログをそのファイルに追加してしまいます。
+cronを使うことで、古いログファイルをローテーションの前に削除することができます。
+
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>55 23 * * * /usr/bin/find /var/log/pgpool -type f -mtime +5 -exec /bin/rm -f '{}' \;
+        </PRE
+><P>
+
+注意：Linuxディストリビューションによっては、rotatelogsは<TT
+CLASS="LITERAL"
+>usr/sbin/rotatelogs2</TT
+>として存在しているかもしれません。
+<TT
+CLASS="LITERAL"
+>-f</TT
+>オプションは<TT
+CLASS="COMMAND"
+>rotatelogs</TT
+>が起動された直後に直ちにログファイルを作るオプションで、apache2 2.2.9以降でのみ有効です。
+<A
+HREF="http://www.cronlog.org/"
+TARGET="_top"
+>cronolog</A
+>を使うこともできます。
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgpool -n 2&#62;&#38;1 | /usr/sbin/cronolog \
+  --hardlink=/var/log/pgsql/pgpool.log \
+  '/var/log/pgsql/%Y-%m-%d-pgpool.log' &#38;
+        </PRE
+><P>
+
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を停止するには以下のコマンドを実行します。
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgpool stop
+        </PRE
+><P>
+
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を停止する際にクライアントが接続している場合、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はその接続が切断されるまで待ってから停止します。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を強制的にシャットダウンしたい場合は、以下のコマンドを実行します。
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgpool -m fast stop
+        </PRE
+><P>
+
+        </P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXAMPLE-CONFIGS-REPLICATION"
+>7.1.2. 初めてのレプリケーション</A
+></H2
+><P
+>レプリケーション（<A
+HREF="runtime-config-runnung-mode.html#RUNTIME-CONFIG-REPLICATION-MODE"
+>項5.3.2</A
+>を参照）では複数のデータベースノードに同じデータを複製して格納します。
+ここでは、<A
+HREF="example-basic.html#EXAMPLE-CONFIGS-BEGIN"
+>項7.1.1</A
+>で準備した 3 台のデータベースノードを使用し、一歩一歩データベースクラスタシステムを作っていきまししょう。
+複製させるサンプルのデータ<A
+HREF="https://www.postgresql.org/docs/current/static/pgbench.html"
+TARGET="_top"
+><TT
+CLASS="COMMAND"
+>pgbench</TT
+></A
+>ベンチマークプログラムで生成することにします。
+      </P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-CONFIGS-CONFIG-REPLICATION"
+>7.1.2.1. レプリケーションの設定</A
+></H3
+><P
+>データベースノードのレプリケーションを有効にするには、<TT
+CLASS="LITERAL"
+>pgpool.conf</TT
+>ファイルの<A
+HREF="runtime-config-runnung-mode.html#GUC-REPLICATION-MODE"
+>replication_mode</A
+>をonに設定します。
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>replication_mode = true
+        </PRE
+><P>
+<A
+HREF="runtime-config-runnung-mode.html#GUC-REPLICATION-MODE"
+>replication_mode</A
+>をonに設定することにより、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は受信したクエリを全てのデータベースノードに送信します。
+対して実行され、同じデータが複製されて格納されるようになります。
+さらに、<A
+HREF="runtime-config-load-balancing.html#GUC-LOAD-BALANCE-MODE"
+>load_balance_mode</A
+>をonに設定することにより、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はSELECTクエリをデータベースノード間に振り分けます。
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>load_balance_mode = true
+        </PRE
+><P>
+ここでは、<A
+HREF="runtime-config-runnung-mode.html#GUC-REPLICATION-MODE"
+>replication_mode</A
+>、<A
+HREF="runtime-config-load-balancing.html#GUC-LOAD-BALANCE-MODE"
+>load_balance_mode</A
+>の両方を有効にします。
+        </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-CONFIGS-CHECKING-REPLICATION"
+>7.1.2.2. レプリケーションの確認</A
+></H3
+><P
+><TT
+CLASS="LITERAL"
+>pgpool.conf</TT
+>の変更を<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に反映させるには<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を再起動する必要があります。
+「<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の起動と停止」<A
+HREF="example-basic.html#EXAMPLE-CONFIGS-START-STOP-PGPOOL"
+>項7.1.1.5</A
+>を参照してください。
+<TT
+CLASS="LITERAL"
+>pgpool.conf</TT
+>の設定と再起動がすんだら、実際にレプリケーションを試してうまく行くことを確認しましょう。
+まず、複製するデータベースを作成する必要があります。
+これを<TT
+CLASS="LITERAL"
+>"bench_replication"</TT
+>と名づけましょう。
+このデータベースが全てのノードで作成される必要があります。
+<A
+HREF="https://www.postgresql.org/docs/current/static/app-createdb.html"
+TARGET="_top"
+><TT
+CLASS="COMMAND"
+>createdb</TT
+></A
+>コマンドを<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>経由で実行すると、すべてのノードでデータベースが作成されます。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>$ createdb -p 9999 bench_replication
+          </PRE
+><P>
+そして<A
+HREF="https://www.postgresql.org/docs/current/static/pgbench.html"
+TARGET="_top"
+><TT
+CLASS="COMMAND"
+>pgbench</TT
+></A
+>に<TT
+CLASS="LITERAL"
+>-i</TT
+>オプションを指定して実行します。
+<TT
+CLASS="LITERAL"
+>-i</TT
+>オプションにより、データベースは事前に定義されたテーブルとデータで初期化されます。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgbench -i -p 9999 bench_replication
+          </PRE
+><P>
+<A
+HREF="https://www.postgresql.org/docs/current/static/pgbench.html"
+TARGET="_top"
+><TT
+CLASS="COMMAND"
+>pgbench -i</TT
+></A
+>によいって作成されるテーブルとデータを以下の表にまとめます。
+すべてのノードにおいてこれらのテーブルおよびデータが作成されていれば、正常にレプリケーションが動作していることになります。
+        </P
+><DIV
+CLASS="TABLE"
+><A
+NAME="EXAMPLE-CONFIGS-CHECKING-REPLICATION-TABLE"
+></A
+><P
+><B
+>表 7-1. data summary</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>テーブル名</TH
+><TH
+>行数</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>branches</TD
+><TD
+>1</TD
+></TR
+><TR
+><TD
+>tellers</TD
+><TD
+>10</TD
+></TR
+><TR
+><TD
+>accounts</TD
+><TD
+>100000</TD
+></TR
+><TR
+><TD
+>history</TD
+><TD
+>0</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>これをチェックするため、簡単なシェルスクリプトを実行してみましょう。
+以下のスクリプトはすべてのノード (ポート番号 5432、5433、5434) のデータベースにおけるbranches、tellers、accounts、historyの行数が表示されます。
+            </P><PRE
+CLASS="PROGRAMLISTING"
+>$ for port in 5432 5433 5434; do
+&#62;     echo $port
+&#62;     for table_name in branches tellers accounts history; do
+&#62;         echo $table_name
+&#62;         psql -c "SELECT count(*) FROM $table_name" -p $port bench_replication
+&#62;     done
+&#62; done
+            </PRE
+><P>
+
+        </P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="example-configs.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="example-watchdog.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>設定の例</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="example-configs.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Watchdogの設定例</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

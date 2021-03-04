@@ -1,0 +1,7 @@
+# Options for pgpool
+
+# If you want to use '-n' in START_OPTS, change the service type to simple in
+# the Pgpool-II service configuration file
+#OPTS=" -d"
+
+#STOP_OPTS=" -m fast"

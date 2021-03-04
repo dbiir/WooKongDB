@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Release 3.3.13</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="pgpool-II 3.6.4 Documentation"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Release Notes"
+HREF="release.html"><LINK
+REL="PREVIOUS"
+TITLE="Release 3.3.14"
+HREF="release-3-3-14.html"><LINK
+REL="NEXT"
+TITLE="Release 3.2.20"
+HREF="release-3-2-20.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=ISO-8859-1"><META
+NAME="creation"
+CONTENT="2017-05-11T09:56:13"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>pgpool-II 3.6.4 Documentation</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="Release 3.3.14"
+HREF="release-3-3-14.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>Appendix A. Release Notes</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="Release 3.2.20"
+HREF="release-3-2-20.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RELEASE-3-3-13"
+>A.15. Release 3.3.13</A
+></H1
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Release Date: </B
+>2016-12-26</P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN7615"
+>A.15.1. Bug fixes</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>      Tightening up the watchdog security. (Muhammad Usama)
+    </P
+><P
+>      Now wd_authkey uses the HMAC SHA-256 hashing.
+	</P
+></LI
+><LI
+><P
+>	  Add pgpool_adm extension in <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> RPM. (Bo Peng)
+	</P
+></LI
+><LI
+><P
+>	  Fix occasional segfault when query cache is enabled. (bug 263) (Tatsuo Ishii)
+	</P
+></LI
+><LI
+><P
+>	  Do not cancel a query when the query resulted in an error other than in native replication mode. (Tatsuo Ishii)
+	</P
+><P
+>	  It was intended to keep the consistency, but there's no point in other
+	  than native replication mode.
+	</P
+></LI
+><LI
+><P
+>	  Change the default value of search_primary_node_timeout from 10 to 300. (Tatsuo Ishii)
+	</P
+><P
+>	  Prior default value 10 seconds is sometimes too short for a standby to
+	  be promoted.
+	</P
+><P
+>	  Per [pgpool-general: 5026].
+	</P
+></LI
+><LI
+><P
+>	  Fix the case when all backends are down then 1 node attached. (bug 248) (Tatsuo Ishii)
+	</P
+><P
+>	  When all backends are down, no connection is accepted. Then 1
+	  PostgreSQL becomes up, and attach the node using pcp_attach_node. It
+	  successfully finishes. However, when a new connection arrives, still
+	  the connection is refused because pgpool child process looks into the
+	  cached status, in which the recovered node is still in down status if
+	  mode is streaming replication mode (native replication and other modes
+	  are fine). Solution is, if all nodes are down, force to restart all
+	  pgpool child.
+	</P
+></LI
+><LI
+><P
+>	  Do not use random() while generating MD5 salt. (Tatsuo Ishii)
+	</P
+><P
+>	  random() should not be used in security related applications.  To
+	  replace random(), import PostmasterRandom() from PostgreSQL.  Also
+	  store current time at the start up of Pgpool-II main process for later
+	  use.
+	</P
+></LI
+><LI
+><P
+>	  Don't ignore sync message from frontend when query cache is enabled. (Tatsuo Ishii)
+	</P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release-3-3-14.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="release-3-2-20.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Release 3.3.14</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Release 3.2.20</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

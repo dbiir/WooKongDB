@@ -1,0 +1,51 @@
+'\" t
+.\"     Title: SHOW POOL STATUS
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "SHOW POOL STATUS" "1" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+SHOW_POOL_STATUS \- sends back the list of configuration parameters with their name, value, and description
+.SH "SYNOPSIS"
+.sp
+.nf
+SHOW POOL_STATUS
+    
+.fi
+.SH "DESCRIPTION"
+.PP
+\fBSHOW POOL_STATUS\fR
+displays the current value of
+Pgpool\-II
+configuration parameters\&.
+.PP
+This command is similar to the
+PGPOOL SHOW (\fBPGPOOL_SHOW\fR(1))
+command, but this is the older version of it\&. It is recommended to use
+PGPOOL SHOW (\fBPGPOOL_SHOW\fR(1))
+instead\&.
+.SH "SEE ALSO"
+PGPOOL SHOW (\fBPGPOOL_SHOW\fR(1))

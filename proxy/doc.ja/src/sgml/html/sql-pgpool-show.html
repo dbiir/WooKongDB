@@ -1,0 +1,428 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>PGPOOL SHOW</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="SQL 型コマンド"
+HREF="sql-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="SQL 型コマンド"
+HREF="sql-commands.html"><LINK
+REL="NEXT"
+TITLE="PGPOOL SET"
+HREF="sql-pgpool-set.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="SQL 型コマンド"
+HREF="sql-commands.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="PGPOOL SET"
+HREF="sql-pgpool-set.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="SQL-PGPOOL-SHOW"
+></A
+>PGPOOL SHOW</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN5866"
+></A
+><H2
+>名前</H2
+>PGPOOL SHOW&nbsp;--&nbsp;パラメータの設定値を表示する</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN5869"
+></A
+><H2
+>概要</H2
+><PRE
+CLASS="SYNOPSIS"
+>PGPOOL SHOW <TT
+CLASS="REPLACEABLE"
+><I
+>configuration_parameter</I
+></TT
+>
+PGPOOL SHOW <TT
+CLASS="REPLACEABLE"
+><I
+>configuration_parameter_group</I
+></TT
+>
+PGPOOL SHOW ALL</PRE
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5873"
+></A
+><H2
+>説明</H2
+><P
+>  
+
+   <TT
+CLASS="COMMAND"
+>PGPOOL SHOW</TT
+> は 実行時 <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のパラメータの設定値を表示します。
+   このコマンドは PostgreSQL の
+    <A
+HREF="http://www.postgresql.jp/document/9.5/html/sql-show.html"
+TARGET="_top"
+>    <TT
+CLASS="COMMAND"
+>SHOW</TT
+></A
+> コマンドと似ていますが、
+    <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> の <TT
+CLASS="COMMAND"
+>SHOW</TT
+> コマンドと区別するために、
+    <ACRONYM
+CLASS="ACRONYM"
+>PGPOOL</ACRONYM
+> というキーワードが追加されました。
+
+  </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5883"
+></A
+><H2
+>パラメータ</H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>configuration_parameter</I
+></TT
+></DT
+><DD
+><P
+>      
+        <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の設定パラメータ名です。指定可能なパラメータ名は
+        <A
+HREF="runtime-config.html"
+>第5章</A
+> をご参照ください。
+      </P
+></DD
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>configuration_parameter_group</I
+></TT
+></DT
+><DD
+><P
+>      
+        <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の設定パラメータのグループ名です。
+        現在、指定可能なパラメータグループは以下の 3つです。
+      </P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="LITERAL"
+>backend</TT
+></DT
+><DD
+><P
+>          
+            すべてのバックエンドグループのパラメータの設定値。
+          </P
+></DD
+><DT
+><TT
+CLASS="LITERAL"
+>other_pgpool</TT
+></DT
+><DD
+><P
+>          
+            すべての watchdog ノードのパラメータの設定値。
+          </P
+></DD
+><DT
+><TT
+CLASS="LITERAL"
+>heartbeat</TT
+></DT
+><DD
+><P
+>          
+            すべての watchdog heartbeat ノードのパラメータの設定値。
+          </P
+></DD
+></DL
+></DIV
+></DD
+><DT
+><TT
+CLASS="LITERAL"
+>ALL</TT
+></DT
+><DD
+><P
+>     
+      すべてのパラメータの設定値と説明を表示します。
+     </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5920"
+></A
+><H2
+>例</H2
+><P
+>  
+   パラメータ <TT
+CLASS="VARNAME"
+>port</TT
+> の現在の設定値を表示:
+
+</P><PRE
+CLASS="PROGRAMLISTING"
+>PGPOOL SHOW port;
+port
+------
+9999
+(1 row)</PRE
+><P>
+  </P
+><P
+>  
+   パラメータ <A
+HREF="runtime-config-load-balancing.html#GUC-BLACK-FUNCTION-LIST"
+>black_function_list</A
+> の現在の設定値を表示:
+</P><PRE
+CLASS="PROGRAMLISTING"
+>PGPOOL SHOW black_function_list;
+ black_function_list
+ ---------------------
+ nextval,setval
+ (1 row)</PRE
+><P>
+  </P
+><P
+> 
+   バックエンドグループのすべてのパラメータの設定値を表示する:
+</P><PRE
+CLASS="PROGRAMLISTING"
+>  PGPOOL SHOW backend;
+ item                     |          value          |              description
+ -------------------------+-------------------------+-----------------------------------------------------------
+ backend_hostname0        | 127.0.0.1               | hostname or IP address of PostgreSQL backend.
+ backend_port0            | 5434                    | port number of PostgreSQL backend.
+ backend_weight0          | 0                       | load balance weight of backend.
+ backend_data_directory0  | /var/lib/pgsql/data     | data directory of the backend.
+ backend_flag0            | ALLOW_TO_FAILOVER       | Controls various backend behavior.
+ backend_hostname1        | 127.0.0.1               | hostname or IP address of PostgreSQL backend.
+ backend_port1            | 5432                    | port number of PostgreSQL backend.
+ backend_weight1          | 1                       | load balance weight of backend.
+ backend_data_directory1  | /home/work/installed/pg | data directory of the backend.
+ backend_flag1            | ALLOW_TO_FAILOVER       | Controls various backend behavior.
+ (10 rows)</PRE
+><P></P
+><P
+>  
+   全設定を表示:
+</P><PRE
+CLASS="PROGRAMLISTING"
+> PGPOOL SHOW ALL;
+ item                     |          value          |              description
+ -------------------------+-------------------------+-----------------------------------------------------------
+ backend_hostname0        | 127.0.0.1               | hostname or IP address of PostgreSQL backend.
+ backend_port0            | 5434                    | port number of PostgreSQL backend.
+ backend_weight0          | 0                       | load balance weight of backend.
+ backend_data_directory0  | /var/lib/pgsql/data     | data directory of the backend.
+ backend_flag0            | ALLOW_TO_FAILOVER       | Controls various backend behavior.
+ backend_hostname1        | 127.0.0.1               | hostname or IP address of PostgreSQL backend.
+ backend_port1            | 5432                    | port number of PostgreSQL backend.
+ backend_weight1          | 1                       | load balance weight of backend.
+ backend_data_directory1  | /home/work/installed/pg | data directory of the backend.
+ backend_flag1            | ALLOW_TO_FAILOVER       | Controls various backend behavior.
+ other_pgpool_hostname0   | localhost               | Hostname of other pgpool node for watchdog connection.
+ .
+ .
+ .
+ ssl                      | off                     | Enables SSL support for frontend and backend connections
+ (138 rows)&#13;</PRE
+><P></P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5932"
+></A
+><H2
+>関連項目</H2
+><A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="sql-pgpool-set.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>SQL 型コマンド</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>PGPOOL SET</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

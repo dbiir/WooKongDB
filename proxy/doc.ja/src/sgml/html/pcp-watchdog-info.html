@@ -1,0 +1,413 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pcp_watchdog_info</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="PCP コマンド"
+HREF="pcp-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="pcp_node_info"
+HREF="pcp-node-info.html"><LINK
+REL="NEXT"
+TITLE="pcp_proc_count"
+HREF="pcp-proc-count.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pcp_node_info"
+HREF="pcp-node-info.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pcp-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pcp_proc_count"
+HREF="pcp-proc-count.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PCP-WATCHDOG-INFO"
+></A
+>pcp_watchdog_info</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN5121"
+></A
+><H2
+>名前</H2
+>pcp_watchdog_info&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の watchdog ステータスを表示します</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN5125"
+></A
+><H2
+>概要</H2
+><P
+><TT
+CLASS="COMMAND"
+>pcp_watchdog_info</TT
+> [<TT
+CLASS="REPLACEABLE"
+><I
+>options</I
+></TT
+>...] [<TT
+CLASS="REPLACEABLE"
+><I
+>watchdog_id</I
+></TT
+>]</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="R1-PCP-WATCHDOG-INFO-1"
+></A
+><H2
+>説明</H2
+><P
+>  <TT
+CLASS="COMMAND"
+>pcp_watchdog_info</TT
+> は、
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+>
+    の watchdog セクションで定義された <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の watchdog ステータスを表示します。
+    watchdog_id は情報を取得する watchdog ノードのインデックです。
+    省略された場合には、クラスタ中の全ての Pgpool-II の watchdog ノードのステータスが表示されます。
+    </P
+><P
+>    watchdog_id = 0 はローカルの <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> ノードのために予約されています。
+    そのため、リモートの watchdog ノードのインデックスは 1 から始まります。
+    <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+> ではリモート watchdog ノードのインデックスは 0 をベースにしていますが、
+    <TT
+CLASS="COMMAND"
+>pcp_watchdog_info</TT
+> ではそれが 1 から始まることに注意してください。
+    </P
+><P
+>    <TT
+CLASS="COMMAND"
+>pcp_watchdog_info</TT
+> コマンドで情報を取得する際には、他の watchdog のインデックスに 1 を足す必要があります。
+    </P
+><P
+>    例えば、<TT
+CLASS="VARNAME"
+>other_pgpool_hostname0</TT
+> パラメータで定義されている、添字 0 である最初のリモート watchdog ノードの情報を取得するには、
+    <TT
+CLASS="COMMAND"
+>pcp_watchdog_info</TT
+> で watchdog_id = 1 を指定します。
+    </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5148"
+></A
+><H2
+>オプション</H2
+><P
+>    <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="OPTION"
+>-n <TT
+CLASS="REPLACEABLE"
+><I
+>watcgdog_id</I
+></TT
+></TT
+><BR><TT
+CLASS="OPTION"
+>--node-id=<TT
+CLASS="REPLACEABLE"
+><I
+>watcgdog_id</I
+></TT
+></TT
+></DT
+><DD
+><P
+>       
+     情報を取得する他の <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のインデックスを指定します。
+       </P
+><P
+>       
+     0 の場合ははローカルの watchdog の情報を取得します。
+       </P
+><P
+>       
+     省略された場合は、全ての watchdog ノードの情報を取得します。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>その他 </TT
+></DT
+><DD
+><P
+>       
+	 <A
+HREF="pcp-common-options.html"
+>pcp_common_options</A
+> を参照してください。
+       </P
+></DD
+></DL
+></DIV
+><P>
+   </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5170"
+></A
+><H2
+>出力例</H2
+><P
+>   
+    ここでは，出力例を示します。
+    </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pcp_watchdog_info -h localhost -u postgres
+
+3 NO Linux_host1.localdomain_9991 host1
+
+Linux_host1.localdomain_9991 host1 9991 9001 7 STANDBY
+Linux_host2.localdomain_9992 host2 9992 9002 4 MASTER
+Linux_host3.localdomain_9993 host3 9993 9003 7 STANDBY
+    </PRE
+><P>
+  </P
+><P
+>  
+    結果は以下の順のとおりです。
+</P><PRE
+CLASS="LITERALLAYOUT"
+>最初に出力される行は、watchdog クラスタの情報を示しています:
+
+1. クラスタ内の全 watchdog ノード数
+2. 仮想 IP がこのノードで起動しているか？
+3. マスターノード名
+4. マスターノードホスト</PRE
+><P>
+</P><PRE
+CLASS="LITERALLAYOUT"
+>それ以降は watchdog ノードのリストが出力されます:
+
+1. ノード名
+2. ホスト名
+3. pgpool ポート番号
+4. watchdog ポート番号
+5. 現在のノードステータス
+6. 現在のノードステータス名</PRE
+><P>
+  </P
+><P
+>	<TT
+CLASS="OPTION"
+>verbose</TT
+> モードは結果の詳細を表示できます。例えば:
+  </P
+><PRE
+CLASS="PROGRAMLISTING"
+>$ pcp_watchdog_info -h localhost -v -u postgres
+
+Watchdog Cluster Information
+Total Nodes          : 3
+Remote Nodes         : 2
+Quorum state         : QUORUM EXIST
+Alive Remote Nodes   : 2
+VIP up on local node : NO
+Master Node Name     : Linux_host2.localdomain_9992
+Master Host Name     : localhost
+
+Watchdog Node Information
+Node Name      : Linux_host1.localdomain_9991
+Host Name      : host1
+Delegate IP    : 192.168.1.10
+Pgpool port    : 9991
+Watchdog port  : 9001
+Node priority  : 1
+Status         : 7
+Status Name    : STANDBY
+
+Node Name      : Linux_host2.localdomain_9992
+Host Name      : host2
+Delegate IP    : 192.168.1.10
+Pgpool port    : 9992
+Watchdog port  : 9002
+Node priority  : 1
+Status         : 4
+Status Name    : MASTER
+
+Node Name      : Linux_host3.localdomain_9993
+Host Name      : host3
+Delegate IP    : 192.168.1.10
+Pgpool port    : 9993
+Watchdog port  : 9003
+Node priority  : 1
+Status         : 7
+Status Name    : STANDBY
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pcp-node-info.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pcp-proc-count.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pcp_node_info</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="pcp-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pcp_proc_count</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

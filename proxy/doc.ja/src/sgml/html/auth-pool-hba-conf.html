@@ -1,0 +1,727 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pool_hba.confファイル</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="クライアント認証"
+HREF="client-authentication.html"><LINK
+REL="PREVIOUS"
+TITLE="クライアント認証"
+HREF="client-authentication.html"><LINK
+REL="NEXT"
+TITLE="認証方式"
+HREF="auth-methods.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="クライアント認証"
+HREF="client-authentication.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="client-authentication.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 6章クライアント認証</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="認証方式"
+HREF="auth-methods.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AUTH-POOL-HBA-CONF"
+>6.1. <TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>ファイル</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の<TT
+CLASS="FILENAME"
+>pg_hba.conf</TT
+>と同じよう<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>でも<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>とよばれる設定ファイルを使った同様のクライアント認証機能をサポートしています。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>インストールするとデフォルトインストール先の設定ファイルディレクトリ（<TT
+CLASS="LITERAL"
+>"/usr/local/etc"</TT
+>）にサンプルの<TT
+CLASS="FILENAME"
+>pool_hba.conf.sample</TT
+>が含まれています。
+デフォルトではpool_hbaによる認証は無効になっており、<TT
+CLASS="VARNAME"
+>enable_pool_hba</TT
+>を<TT
+CLASS="LITERAL"
+>on</TT
+>に設定することで有効になります。
+<A
+HREF="runtime-config-connection.html#GUC-ENABLE-POOL-HBA"
+>enable_pool_hba</A
+>設定パラメータをご覧ください。
+  </P
+><P
+><TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>のフォーマットは<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の<TT
+CLASS="FILENAME"
+>pg_hba.conf</TT
+>のものとほとんど同じです。
+<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>ファイルの一般的な書式は、1行につき1つのレコードというレコードの集合です。
+空行はコメント用の<TT
+CLASS="LITERAL"
+>#</TT
+>文字以降の文字と同じく無視されます。
+レコードは行をまたいで続けることはできません。
+レコードはスペースもしくはタブ、もしくはその両方で区切られた、複数のフィールドで構成されています。
+フィールドには、フィールド値が二重引用符付きの場合空白文字を含むことができます。
+データベース、ユーザもしくはアドレスフィールド内のキーワード(例：<TT
+CLASS="LITERAL"
+>all</TT
+>または<TT
+CLASS="LITERAL"
+>replication</TT
+>)の一つを引用するとその特別な意味が失われ、その名称のデータベース、ユーザもしくはホストと一致するようになります。
+  </P
+><P
+>それぞれのレコードは接続形式、（接続形式に対して意味を持つのであれば）クライアントのIPアドレス範囲、データベースの名前、ユーザ名およびこれらのパラメータに一致する接続で使用される認証方法を指定します。
+接続形式、クライアントアドレス、要求されたデータベース、およびユーザ名に一致する最初のレコードが認証処理に使用されます。
+「失敗時の継続」や、 あるいは「バックアップ」はありません。
+これは、もしあるレコードが選択されて認証に失敗した場合、後続のレコードは考慮されないということです。
+どのレコードも一致しない時はアクセスが拒否されます。
+  </P
+><P
+>レコードは以下の書式のうちの1つの形式を取ります。
+</P><PRE
+CLASS="SYNOPSIS"
+>local      <TT
+CLASS="REPLACEABLE"
+><I
+>database</I
+></TT
+>  <TT
+CLASS="REPLACEABLE"
+><I
+>user</I
+></TT
+>  <TT
+CLASS="REPLACEABLE"
+><I
+>auth-method</I
+></TT
+>  [<SPAN
+CLASS="OPTIONAL"
+><TT
+CLASS="REPLACEABLE"
+><I
+>auth-options</I
+></TT
+></SPAN
+>]
+host       <TT
+CLASS="REPLACEABLE"
+><I
+>database</I
+></TT
+>  <TT
+CLASS="REPLACEABLE"
+><I
+>user</I
+></TT
+>  <TT
+CLASS="REPLACEABLE"
+><I
+>CIDR-address</I
+></TT
+>  <TT
+CLASS="REPLACEABLE"
+><I
+>auth-method</I
+></TT
+>  [<SPAN
+CLASS="OPTIONAL"
+><TT
+CLASS="REPLACEABLE"
+><I
+>auth-options</I
+></TT
+></SPAN
+>]</PRE
+><P>
+フィールドの意味は以下のようになっています。
+
+   <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="LITERAL"
+>local</TT
+></DT
+><DD
+><P
+>このレコードはUnixドメインソケットを使用する接続に対応します。
+この種類のレコードを使用しないと、Unixドメインソケット経由の接続は拒否されます
+      </P
+></DD
+><DT
+><TT
+CLASS="LITERAL"
+>host</TT
+></DT
+><DD
+><P
+>このレコードは、TCP/IPを使用した接続に対応します。
+<TT
+CLASS="LITERAL"
+>host</TT
+>レコードは、<ACRONYM
+CLASS="ACRONYM"
+>SSL</ACRONYM
+>もしくは非<ACRONYM
+CLASS="ACRONYM"
+>SSL</ACRONYM
+>接続のいずれかに対応します。
+      </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>サーバのデフォルトの動作は、ローカルループバックアドレスである<TT
+CLASS="LITERAL"
+>localhost</TT
+>のみTCP/IP接続を監視しています。
+よってサーバにおいて<A
+HREF="runtime-config-connection.html#GUC-LISTEN-ADDRESSES"
+>listen_addresses</A
+>パラメータが適切な値に設定された状態で起動されていない限り、リモートのTCP/IP接続はできません。
+      </P
+></BLOCKQUOTE
+></DIV
+></DD
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>database</I
+></TT
+></DT
+><DD
+><P
+>このレコードで対応するデータベース名を指定します。
+<TT
+CLASS="LITERAL"
+>all</TT
+>という値は、全てのデータベースと対応することを指定します。
+      </P><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>databaseフィールド値として<TT
+CLASS="LITERAL"
+>"samegroup"</TT
+>はサポートされません
+       </P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドサーバにあるユーザ情報を事前に知る事ができないため、データベース名は<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>にあるdatabaseフィールドの項目のみと比較されます。
+       </P
+></BLOCKQUOTE
+></DIV
+><P>
+      </P
+></DD
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>user</I
+></TT
+></DT
+><DD
+><P
+>このレコードで対応するデータベースユーザ名を指定します。
+<TT
+CLASS="LITERAL"
+>all</TT
+>という値は、全てのユーザが対応することを指定します。
+それ以外の場合には特定のデータベースユーザの名前となります。
+       </P><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>userフィールド値として"+"を使ったグループ指定はサポートされません
+
+       </P
+><P
+>上記の<TT
+CLASS="LITERAL"
+>"samegroup"</TT
+>と同じ理由で、ユーザ名は単純に<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>にあるuserフィールドの項目のみ対してチェックされます。
+       </P
+></BLOCKQUOTE
+></DIV
+><P>
+      </P
+></DD
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>address</I
+></TT
+></DT
+><DD
+><P
+>このレコードに対応しているクライアントマシンのアドレスを指定します。
+IPアドレスの範囲は、範囲の開始アドレス、続いてスラッシュ(<TT
+CLASS="LITERAL"
+>/</TT
+>)と<ACRONYM
+CLASS="ACRONYM"
+>CIDR</ACRONYM
+>マスクの長さという標準の数値表記で指定されます。
+CIDRマスク長とは、クライアントIPアドレスが一致しなければならない、高位のビット数を表すものです。
+指定するIPアドレスのこれより右側のビットには、0を指定しなければなりません。
+IPアドレスと<TT
+CLASS="LITERAL"
+>/</TT
+>、およびCIDRマスク長の間には空白を入れてはいけません。
+       </P><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>現在、IPv6アドレス/マスク表記法はサポートされません
+       </P
+></BLOCKQUOTE
+></DIV
+><P>
+      </P
+><P
+>このフィールドは<TT
+CLASS="LITERAL"
+>host</TT
+>レコードにのみ適用されます。
+      </P
+></DD
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>auth-method</I
+></TT
+></DT
+><DD
+><P
+>接続がこのレコードに一致する場合に使用する認証方式を指定します。
+使用できる選択肢は以下にまとめていますが、詳しく<A
+HREF="auth-methods.html"
+>項6.2</A
+>を参照してください。
+
+       <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="LITERAL"
+>trust</TT
+></DT
+><DD
+><P
+>接続を無条件で許可します。
+この方式は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に接続できる全てのユーザを許可します。
+         </P
+></DD
+><DT
+><TT
+CLASS="LITERAL"
+>reject</TT
+></DT
+><DD
+><P
+>接続を無条件に拒否します。
+特定のホストをあるグループから「除外」するために便利です。
+例えば、1行の<TT
+CLASS="LITERAL"
+>reject</TT
+>は特定のホストが接続することを拒否します。
+         </P
+></DD
+><DT
+><TT
+CLASS="LITERAL"
+>md5</TT
+></DT
+><DD
+><P
+>クライアントに対して認証時に二重MD5ハッシュ化パスワードを要求します。
+
+        </P><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><TT
+CLASS="LITERAL"
+>md5</TT
+>認証を使うには、ユーザ名とパスワードを<TT
+CLASS="FILENAME"
+>pool_passwd</TT
+>というパスワードファイルに登録する必要があります。
+詳細は<A
+HREF="auth-methods.html#AUTH-MD5"
+>項6.2.2</A
+>を参照してください。
+         </P
+></BLOCKQUOTE
+></DIV
+><P>
+         </P
+></DD
+><DT
+><TT
+CLASS="LITERAL"
+>pam</TT
+></DT
+><DD
+><P
+>オペレーティングシステムによって提供されるPAM（Pluggable Authentication Modules）サービスを使用した認証です。
+詳細は<A
+HREF="auth-methods.html#AUTH-PAM"
+>項6.2.3</A
+>を参照してください
+         </P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が稼働するホスト上のユーザ情報を使ったPAM認証を利用することができます。
+PAMサポートを有効にするには、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が<TT
+CLASS="COMMAND"
+>"--with-pam"</TT
+>をつけてconfigureされていなければなりません。
+         </P
+><P
+>PAM認証を有効にするには、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のサービス設定ファイルをシステムのPAM設定ディレクトリ（通常は<TT
+CLASS="LITERAL"
+>"/etc/pam.d"</TT
+>にあります）に作成しなければなりません。
+サービス設定ファイルのサンプルはインストールディレクトリ下に<TT
+CLASS="LITERAL"
+>"share/pgpool.pam"</TT
+>としてインストールされています。
+         </P
+></DD
+></DL
+></DIV
+><P>
+
+      </P
+></DD
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>auth-options</I
+></TT
+></DT
+><DD
+><P
+><TT
+CLASS="REPLACEABLE"
+><I
+>auth-method</I
+></TT
+>フィールドの後ろに、認証方式のオプションを指定する、<TT
+CLASS="REPLACEABLE"
+><I
+>name</I
+></TT
+>=<TT
+CLASS="REPLACEABLE"
+><I
+>value</I
+></TT
+>の形式のフィールドが存在する可能性があります。
+      </P
+></DD
+></DL
+></DIV
+><P>
+  </P
+><P
+><TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>レコードは接続が試みられる度に順番に検査されますので、レコードの順序はとても大切です。
+典型的には、始めの方のレコードには厳しい接続照合パラメータと緩い認証方式があるのに対し、終わりの方のレコードにはより緩い照合パラメータとより厳しい認証方式があります。
+例えば、ローカルTCP接続では<TT
+CLASS="LITERAL"
+>trust</TT
+>認証方式、リモートTCP接続に対してはパスワードを要求したいとします。
+この場合、広範囲にわたって許可されるクライアントのIPアドレスに対するパスワード認証を指定するレコードの前に127.0.0.1からの接続に対する<TT
+CLASS="LITERAL"
+>trust</TT
+>認証指定のレコードが置かれなければなりません。
+  </P
+><DIV
+CLASS="TIP"
+><BLOCKQUOTE
+CLASS="TIP"
+><P
+><B
+>ティップ: </B
+>ここで説明された全てのpool_hba認証のオプションはクライアントと<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の間についてだということに注意してください。
+クラインアントは依然として、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>による認証を通過しなければなりませんし、バックエンド<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバ上のデータベースに対して<TT
+CLASS="LITERAL"
+>CONNECT</TT
+>権限を持っていなければなりません。
+    </P
+><P
+>pool_hbaにとってはクライアントに指定されたユーザ名やデータベース名(例. psql -U testuser testdb)が実際にバックエンド上に存在するかどうかは問題ではありません。
+pool_hbaは<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>の値とマッチするかどうかのみを気にします。
+    </P
+></BLOCKQUOTE
+></DIV
+><P
+>   Some examples of <TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+> entries are below.
+   See the next section for details on the different authentication methods.
+<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>ファイルの例をいくつか以下に示します。
+各種認証方式の詳細については次の節をご覧ください。
+  </P
+><DIV
+CLASS="EXAMPLE"
+><A
+NAME="EXAMPLE-PG-HBA.CONF"
+></A
+><P
+><B
+>例 6-1. <TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>の項目の例</B
+></P
+><PRE
+CLASS="PROGRAMLISTING"
+># Allow any user on the local system to connect to any database with
+# any database user name using Unix-domain sockets (the default for local
+# connections).
+#
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+local   all             all                                     trust
+
+# The same using local loopback TCP/IP connections.
+#
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+host    all             all             127.0.0.1/32            trust
+
+# Allow any user from host 192.168.12.10 to connect to database
+# "postgres" if the user's password is correctly supplied.
+#
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+host    postgres        all             192.168.12.10/32        md5</PRE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="client-authentication.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="auth-methods.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>クライアント認証</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="client-authentication.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>認証方式</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

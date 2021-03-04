@@ -1,0 +1,93 @@
+'\" t
+.\"     Title: pg_md5
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "PG_MD5" "1" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pg_md5 \- produces encrypted password in md5
+.SH "SYNOPSIS"
+.HP \w'\fBpg_md5\fR\ 'u
+\fBpg_md5\fR [\fIoption\fR...]
+.HP \w'\fBpg_md5\fR\ 'u
+\fBpg_md5\fR [\fIpassword\fR]
+.SH "DESCRIPTION"
+.PP
+\fBpg_md5\fR
+produces encrypted password in md5\&.
+.SH "OPTIONS"
+.PP
+.PP
+\fB\-p\fR
+.br
+\fB\-\-prompt\fR
+.RS 4
+Prompt password using standard input\&.
+.RE
+.PP
+\fB\-m\fR
+.br
+\fB\-\-md5auth\fR
+.RS 4
+Produce md5 authentication password\&.
+.RE
+.PP
+\fB\-u \fR\fB\fIyour_username\fR\fR
+.br
+\fB\-\-username=\fR\fB\fIyour_username\fR\fR
+.RS 4
+When producing a md5 authentication password, create the pool_passwd entry for
+your_username\&.
+.RE
+.SH "EXAMPLE"
+.PP
+Here is an example output:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+pg_md5 \-p
+password: [your password]
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+or
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&./pg_md5 foo
+acbd18db4cc2f85cedef654fccc4a4d8
+    
+.fi
+.if n \{\
+.RE
+.\}

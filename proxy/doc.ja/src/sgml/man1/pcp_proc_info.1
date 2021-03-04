@@ -1,0 +1,125 @@
+'\" t
+.\"     Title: pcp_proc_info
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PCP_PROC_INFO" "1" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+pcp_proc_info \- Pgpool\-II の子プロセス情報を表示する
+.SH "概要"
+.HP \w'\fBpcp_proc_info\fR\ 'u
+\fBpcp_proc_info\fR [\fIoptions\fR...] [\fIprocessid\fR]
+.SH "説明"
+.PP
+\fBpcp_proc_info\fR
+は
+Pgpool\-II
+の子プロセス情報を表示します。
+.SH "オプション"
+.PP
+.PP
+\fB\-P \fR\fB\fIPID\fR\fR
+.br
+\fB\-\-process\-id=\fR\fB\fIPID\fR\fR
+.RS 4
+Pgpool\-II 子プロセスの PID を指定します。
+.RE
+.PP
+\fBその他\fR
+.RS 4
+\fBpcp_common_options\fR(1)
+を参照してください。
+.RE
+.SH "例"
+.PP
+ここでは例を示します。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_proc_info \-h localhost \-p 9898 \-U postgres 3815
+postgres_db postgres 1150769932 1150767351 3 0 1 1467 1
+postgres_db postgres 1150769932 1150767351 3 0 1 1468 1
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+結果は以下の順のとおりです。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+1\&. connected database name
+2\&. connected user name
+3\&. process start\-up timestamp
+4\&. connection created timestamp
+5\&. protocol major version
+6\&. protocol minor version
+7\&. connection\-reuse counter
+8\&. PostgreSQL backend process id
+9\&. 1 if frontend conncted 0 if not
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+コネクションがバックエンドに対して張られていない場合、データは表示されません。 コネクション情報が複数ある場合、複数行に 1 行 1 コネクション情報で表示されます。 時刻は EPOCH タイムからの秒数で表わされます。
+.PP
+\fB\-\-verbose\fR
+オプションは出力内容を理解するのに役に立ちます。例：
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_proc_info \-\-verbose \-U postgres 3815
+Database     : postgres_db
+Username     : postgres
+Start time   : 1150769932
+Creation time: 1150767351
+Major        : 3
+Minor        : 0
+Counter      : 1
+PID          : 1467
+Connected    : 1
+Database     : postgres_db
+Username     : postgres
+Start time   : 1150769932
+Creation time: 1150767351
+Major        : 3
+Minor        : 0
+Counter      : 1
+PID          : 1468
+Connected    : 1
+    
+.fi
+.if n \{\
+.RE
+.\}

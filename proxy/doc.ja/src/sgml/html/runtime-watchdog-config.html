@@ -1,0 +1,1511 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Watchdog</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="Secure Sockect Layer (SSL)"
+HREF="runtime-ssl.html"><LINK
+REL="NEXT"
+TITLE="その他の設定パラメータ"
+HREF="runtime-misc.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="Secure Sockect Layer (SSL)"
+HREF="runtime-ssl.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="その他の設定パラメータ"
+HREF="runtime-misc.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-WATCHDOG-CONFIG"
+>5.14. Watchdog</A
+></H1
+><P
+>Watchdogの設定パラメータはpgpool.confに記述されています。
+<TT
+CLASS="FILENAME"
+>pgpool.conf.sample</TT
+>のWATCHDOG節に設定の例があります。
+以下のすべてのオプションがwatchdogプロセスでは指定されている必要があります。</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-ENABLE-WATCHDOG"
+>5.14.1. Watchdogを有効にする</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-USE-WATCHDOG"
+></A
+><TT
+CLASS="VARNAME"
+>use_watchdog</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+          </DT
+><DD
+><P
+>onならwatchdogを有効にします。
+デフォルトはoffです。
+          </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+          </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-COMMUNICATION-WATCHDOG"
+>5.14.2. Watchdog通信</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-WD-HOSTNAME"
+></A
+><TT
+CLASS="VARNAME"
+>wd_hostname</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+          </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>サーバのホスト名またはIPアドレスを指定します。
+クエリやパケットの送受信の他、watchdogの識別子としても用います。
+          </P
+><P
+>          </P
+></DD
+><DT
+><A
+NAME="GUC-WD-PORT"
+></A
+><TT
+CLASS="VARNAME"
+>wd_port</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+          </DT
+><DD
+><P
+>watchdogが接続を受け付けるために監視するポート番号です。
+デフォルト値は9000です。
+          </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+          </P
+></DD
+><DT
+><A
+NAME="GUC-WD-AUTHKEY"
+></A
+><TT
+CLASS="VARNAME"
+>wd_authkey</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+          </DT
+><DD
+><P
+>wachdog間通信で用いられる認証キーを指定します。
+全ての<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>で同じキーを指定する必要があります。
+認証キーが異なるwatchdogからの通信は拒絶されます。
+死活監視を<TT
+CLASS="LITERAL"
+>heartbeat</TT
+>モードで行う場合には、この認証はハートビート信号にも適用されます。
+        </P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+><SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.5</I
+></SPAN
+>以降では<TT
+CLASS="VARNAME"
+>wd_authkey</TT
+>がwatchdog IPCクライアントの認証にも使われるため、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>と通信するwatchdogプロセスは、<TT
+CLASS="LITERAL"
+>"IPCAuthKey"</TT
+>のコマンドのJSONデータにwd_authkey値を設定しなければなりません。
+        </P
+><P
+>デフォルトは<TT
+CLASS="LITERAL"
+>''</TT
+>（空文字）で、この場合watchdogの認証は行われません。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-WATCHDOG-UPSTREAM-CONNECTIONS"
+>5.14.3. 上流サーバへの接続</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-TRUSTED-SERVERS"
+></A
+><TT
+CLASS="VARNAME"
+>trusted_servers</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+          </DT
+><DD
+><P
+>上位接続を確認するための信頼できるサーバのリストを指定します。
+リスト中の各サーバは、pingの応答に答える必要があります。
+<TT
+CLASS="LITERAL"
+>"hostA,hostB,hostC"</TT
+>のようにカンマで区切って複数のサーバを指定できます。
+全てのサーバに到達できなくなると、watchdogは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に障害が発生したと判断します。
+そのため、複数のサーバを指定することを推奨します。
+          </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+          </P
+></DD
+><DT
+><A
+NAME="GUC-PING-PATH"
+></A
+><TT
+CLASS="VARNAME"
+>ping_path</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+          </DT
+><DD
+><P
+>上位サーバへの接続監視に利用するpingコマンドのパスを指定します。
+<TT
+CLASS="LITERAL"
+>"/bin"</TT
+>のようにパスだけを指定します。
+           </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+          </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-WATCHDOG-VIP-CONTROL"
+>5.14.4. 仮想IP制御</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-DELEGATE-IP"
+></A
+><TT
+CLASS="VARNAME"
+>delegate_IP</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+          </DT
+><DD
+><P
+>（アプリケーションサーバなど）クライアントサーバから接続されるpgpool-IIの仮想IP（VIP） アドレスを指定します。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がスタンバイからアクティブに切り替わった時、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はこのVIPを引き継ぎます。
+デフォルトは<TT
+CLASS="LITERAL"
+>''</TT
+>（空文字）で、この場合仮想IPは決して立ち上がりません。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-IF-CMD-PATH"
+></A
+><TT
+CLASS="VARNAME"
+>if_cmd_path</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が仮想IPを切り替えるために使用するコマンドへのパスを指定します。
+<TT
+CLASS="LITERAL"
+>"/bin"</TT
+>のようにパスだけを指定します。
+         </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-IF-UP-CMD"
+></A
+><TT
+CLASS="VARNAME"
+>if_up_cmd</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>仮想IPを起動するために実行するコマンドを指定します。
+<TT
+CLASS="COMMAND"
+>"ip addr add $_IP_$/24 dev eth0 label eth0:0"</TT
+>のようにコマンドとパラメータを指定します。
+<TT
+CLASS="LITERAL"
+>$_IP_$</TT
+>は<A
+HREF="runtime-watchdog-config.html#GUC-DELEGATE-IP"
+>delegate_IP</A
+>で指定されたIPアドレスに置換されます。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-IF-DOWN-CMD"
+></A
+><TT
+CLASS="VARNAME"
+>if_down_cmd</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>仮想IPを停止するために実行するコマンドを指定します。
+<TT
+CLASS="LITERAL"
+>"ip addr del $_IP_$/24 dev eth0"</TT
+>のようにコマンドとパラメータを指定します。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-ARPING-PATH"
+></A
+><TT
+CLASS="VARNAME"
+>arping_path</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>IPアドレス切り替え後に<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がARPリクエストを送信するコマンドへのパス指定します。
+<TT
+CLASS="LITERAL"
+>"/usr/sbin"</TT
+>のようにパスだけを指定します。 
+         </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-ARPING-CMD"
+></A
+><TT
+CLASS="VARNAME"
+>arping_cmd</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>IPアドレス切り替え後にARPリクエストを送信するコマンドです。
+<TT
+CLASS="LITERAL"
+>"arping -U $_IP_$ -w 1"</TT
+>のようにコマンドとパラメータを指定します。
+<TT
+CLASS="LITERAL"
+>$_IP_$</TT
+>は<TT
+CLASS="VARNAME"
+>delegate_IP</TT
+>で指定されたIPアドレスに置換されます。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-WATCHDOG-ESCALATION-DE-ESCALATION"
+>5.14.5. 昇格および降格時の振る舞い</A
+></H2
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がアクティブ（仮想IPを保持しているステータス）に昇格した時の振る舞いを指定します。
+    </P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-CLEAR-MEMQCACHE-ON-ESCALATION"
+></A
+><TT
+CLASS="VARNAME"
+>clear_memqcache_on_escalation</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+          </DT
+><DD
+><P
+>このオプションがonの場合、pgpool-II がアクティブに昇格した時に、共有メモリ上のクエリキャッシュを全て削除します。
+    これにより、新しいアクティブの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が旧アクティブと非整合な古いクエリキャッシュが使うことを防止します。
+        </P
+><P
+>デフォルトはonです。
+        </P
+><P
+><A
+HREF="runtime-in-memory-query-cache.html#GUC-MEMQCACHE-METHOD"
+>memqcache_method</A
+>が'shmem'の場合のみ有効です。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-WD-ESCALATION-COMMAND"
+></A
+><TT
+CLASS="VARNAME"
+>wd_escalation_command</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>マスターwatchdogに昇格した時に、ここで指定したコマンドがwatchdogによって実行されます。
+        </P
+><P
+>コマンドは、そのノードに仮想/浮動IPが設定されていた場合、それが立ち上がる直前のタイミングで実行されます。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-WD-DE-ESCALATION-COMMAND"
+></A
+><TT
+CLASS="VARNAME"
+>wd_de_escalation_command</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のマスターwatchdogが責務を辞退し降格するときに、ここで指定したコマンドが実行されます。
+マスターwatchdogノードは、そのマスターノードの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が停止したとき、ネットワーク切断やクォーラムが失われたことを検出した時に、マスターから辞任します。
+        </P
+><P
+>このコマンドは、watchdogノードに仮想IPアドレスが設定されていた場合、それが停止される直前のタイミングで実行されます。
+        </P
+><P
+><TT
+CLASS="VARNAME"
+>wd_de_escalation_command</TT
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+><SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.5</I
+></SPAN
+>より前のバージョンには提供されていません。
+        </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+        </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-WATCHDOG-LIFECHECK"
+>5.14.6. <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の死活監視</A
+></H2
+><P
+>Watchdogは、定期的にpgpool-IIの状態を監視します。
+
+      </P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-WD-LIFECHECK-METHOD"
+></A
+><TT
+CLASS="VARNAME"
+>wd_lifecheck_method</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+>死活監視の方法を指定します。
+指定できる値は <TT
+CLASS="LITERAL"
+>'heartbeat'</TT
+> (デフォルト)、<TT
+CLASS="LITERAL"
+>'query'</TT
+>、または<TT
+CLASS="LITERAL"
+>'external'</TT
+> です。
+      </P
+><P
+><TT
+CLASS="LITERAL"
+>'heartbeat'</TT
+>を指定した場合には、監視は「ハートビートモード」で行われます。
+watchdog は一定間隔でハートビート信号（UDP パケット）を他の<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>へ送信します。
+またwatchdogは他の<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>から送られてくる信号を受信します。
+これが一定時間以上途絶えた場合にはその<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に障害が発生したと判断します。
+    </P
+><P
+><TT
+CLASS="LITERAL"
+>query</TT
+>: このモードではwatchdogは監視用のクエリを<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に発行し、それが成功するかどうかで pgpool-II が生きているかどうかを判断します。
+       <DIV
+CLASS="CAUTION"
+><P
+></P
+><TABLE
+CLASS="CAUTION"
+BORDER="1"
+WIDTH="90%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+>注意</B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>クエリモードでは、<A
+HREF="runtime-config-connection.html#GUC-NUM-INIT-CHILDREN"
+>num_init_children</A
+>を十分大きな値にしてください。
+watchdogプロセスも<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>にクライアントとして接続するからです。
+      </P
+></TD
+></TR
+></TABLE
+></DIV
+>
+    </P
+><P
+><TT
+CLASS="LITERAL"
+>external</TT
+>: このモードでは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に組み込みの死活監視は無効になり、watchdogはローカルとリモートのノード死活監視を行うために外部システムを使います。
+    </P
+><P
+><TT
+CLASS="LITERAL"
+>external</TT
+>モードは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.5</I
+></SPAN
+>よりも前のバージョンでは提供されていません。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-WD-MONITORING-INTERFACES-LIST"
+></A
+><TT
+CLASS="VARNAME"
+>wd_monitoring_interfaces_list</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+>watchdogプロセスがネットワークリンクの状態を監視するネットワークデバイス名をカンマ区切りのリストで指定します。
+リスト中の全てのネットワークインタフェースが（無効化あるいはケーブルを抜かれることで）非アクティブになると、watchdog はネットワークが完全に故障したと見なし自らを停止させませす。
+<TT
+CLASS="LITERAL"
+>''</TT
+>（空文字）を指定するとネットワークインタフェースの監視が無効になります。
+<TT
+CLASS="LITERAL"
+>'any'</TT
+>を指定すると、ループバック以外の存在する全てのネットワークインタフェースを監視します。
+デフォルトの値は<TT
+CLASS="LITERAL"
+>''</TT
+>空リスト '' （監視は無効）です。
+    </P
+><P
+><TT
+CLASS="VARNAME"
+>wd_monitoring_interfaces_list</TT
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.5</I
+></SPAN
+>よりも前のバージョンでは提供されていません。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-WD-INTERVAL"
+></A
+><TT
+CLASS="VARNAME"
+>wd_interval</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が死活監視を行う間隔を秒単位で指定します（１以上の数字）。
+デフォルトは10です。
+  </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+   </P
+></DD
+><DT
+><A
+NAME="GUC-WD-PRIORITY"
+></A
+><TT
+CLASS="VARNAME"
+>wd_priority</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+>このパラメータによってローカルのwatchdogノードがマスターに選ばれる優先度を上げることができます。
+クラスタの初期起動時や古いマスターノードが故障した状況でクラスタがマスターノードの選択を行う際に、<TT
+CLASS="VARNAME"
+>wd_priority</TT
+>が高いノードがマスターwatchdogノードに選ばれます。
+   </P
+><P
+><TT
+CLASS="VARNAME"
+>wd_priority</TT
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.5</I
+></SPAN
+>よりも前のバージョンでは提供されていません。
+  </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+  </P
+></DD
+><DT
+><A
+NAME="GUC-WD-IPC-SOCKET-DIR"
+></A
+><TT
+CLASS="VARNAME"
+>wd_ipc_socket_dir</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> watchdog の<ACRONYM
+CLASS="ACRONYM"
+>IPC</ACRONYM
+>通信で受け付ける UNIX ドメインソケットが作成されるディレクトリを指定します。
+デフォルトは<TT
+CLASS="LITERAL"
+>'/tmp'</TT
+>です。
+このソケットが cron ジョブで削除されることのないよう気をつけてください。
+この値は <TT
+CLASS="LITERAL"
+>'/var/run'</TT
+>などのディレクトリに設定することを推奨します。
+    </P
+><P
+><TT
+CLASS="VARNAME"
+>wd_ipc_socket_dir</TT
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.5</I
+></SPAN
+>よりも前のバージョンでは提供されていません。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-WATCHDOG-LIFECHECK-HEARTBEAT"
+>5.14.7. 死活監視：ハートビートモードの設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-WD-HEARTBEAT-PORT"
+></A
+><TT
+CLASS="VARNAME"
+>wd_heartbeat_port</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+>ハートビート信号を受信する<ACRONYM
+CLASS="ACRONYM"
+>UDP</ACRONYM
+>ポート番号を指定します。
+デフォルトは 9694 です。
+<A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'heartbeat'</TT
+>に設定されている場合のみ有効です。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-WD-HEARTBEAT-KEEPALIVE"
+></A
+><TT
+CLASS="VARNAME"
+>wd_heartbeat_keepalive</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+>ハートビート信号を送信する間隔（秒）を指定します。
+デフォルトは2です。
+<TT
+CLASS="VARNAME"
+>wd_heartbeat_keepalive</TT
+>は、<A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'heartbeat'</TT
+>に設定されている場合のみ有効です。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-WD-HEARTBEAT-DEADTIME"
+></A
+><TT
+CLASS="VARNAME"
+>wd_heartbeat_deadtime</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+>このオプションで指定された間隔（秒）の間ハートビート信号が途絶えた場合、リモートのwatchdogに障害が発生したとみなされます。
+デフォルトは<TT
+CLASS="LITERAL"
+>30</TT
+>です。
+  </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+   </P
+></DD
+><DT
+><A
+NAME="GUC-HEARTBEAT-DESTINATION"
+></A
+><TT
+CLASS="VARNAME"
+>heartbeat_destination0</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+     </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を送る先の<ACRONYM
+CLASS="ACRONYM"
+>IP</ACRONYM
+>アドレスまたは <ACRONYM
+CLASS="ACRONYM"
+>ホスト名</ACRONYM
+>を指定します。
+複数のハートビート信号の送り先が指定可能です。
+0から始まるパラメータの最後の部分は送り先の番号です。
+   </P
+><P
+><TT
+CLASS="VARNAME"
+>heartbeat_destination</TT
+>は、<A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'heartbeat'</TT
+>に設定されている場合のみ有効です。
+  </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+  </P
+></DD
+><DT
+><A
+NAME="GUC-HEARTBEAT-DESTINATION-PORT"
+></A
+><TT
+CLASS="VARNAME"
+>heartbeat_destination_port0</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を送る先のheartbeat_destinationXのポート番号を指定します。
+複数のハートビート信号の送り先が指定可能です。
+0から始まるパラメータの最後の部分は送り先の番号です。
+   </P
+><P
+>      <TT
+CLASS="VARNAME"
+>heartbeat_destination_port</TT
+> is only applicable if the
+      <A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+> is set to <TT
+CLASS="LITERAL"
+>'heartbeat'</TT
+>
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-HEARTBEAT-DEVICE"
+></A
+><TT
+CLASS="VARNAME"
+>heartbeat_device0</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+>heartbeat_destinationX:heartbeat_destination_portXで指定されるハートビートの送信先に用いるネットワークデバイス名を指定します。
+パラメータ名の最後にあるXの値（送信先番号）を変えることにより、ハートビートの送信先ごとに異なるハートビートデバイス番号を設定することが可能です。
+送信先番号は0から始まります。
+   </P
+><P
+><TT
+CLASS="VARNAME"
+>heartbeat_device</TT
+>は、<A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'heartbeat'</TT
+>に設定されている場合のみ有効です。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-WATCHDOG-LIFECHECK-QUERY"
+>5.14.8. 死活監視：クエリモードの設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-WD-LIFE-POINT"
+></A
+><TT
+CLASS="VARNAME"
+>wd_life_point</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+>監視クエリの応答が得られなかった場合のリトライ回数を指定します。
+有効な値は1以上の整数です。
+   </P
+><P
+><A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'query'</TT
+>の場合のみ、<TT
+CLASS="VARNAME"
+>wd_life_point</TT
+>は有効です。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-WD-LIFECHECK-QUERY"
+></A
+><TT
+CLASS="VARNAME"
+>wd_lifecheck_query</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+>リモートの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の死活監視に使うクエリを指定します。
+デフォルトは<TT
+CLASS="LITERAL"
+>"SELECT 1"</TT
+>です。
+   </P
+><P
+><A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'query'</TT
+>の場合のみ、<TT
+CLASS="VARNAME"
+>wd_life_check_query</TT
+>は有効です。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-WD-LIFECHECK-DBNAME"
+></A
+><TT
+CLASS="VARNAME"
+>wd_lifecheck_dbname</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+>リモートの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の死活監視用の接続先のデータベース名です。
+デフォルトは<TT
+CLASS="LITERAL"
+>'template1'</TT
+>です。
+   </P
+><P
+><A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'query'</TT
+>の場合のみ、<TT
+CLASS="VARNAME"
+>wd_life_check_dbname</TT
+>は有効です。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-WD-LIFECHECK-USER"
+></A
+><TT
+CLASS="VARNAME"
+>wd_lifecheck_user</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+>リモートの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の死活監視用の接続先のユーザ名です。
+デフォルトは<TT
+CLASS="LITERAL"
+>'nobody'</TT
+>です。
+   </P
+><P
+><A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'query'</TT
+>の場合のみ、<TT
+CLASS="VARNAME"
+>wd_life_check_user</TT
+>は有効です。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-WD-LIFECHECK-PASSWORD"
+></A
+><TT
+CLASS="VARNAME"
+>wd_lifecheck_password</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+>リモートの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の死活監視用の接続先のパスワードです。
+デフォルトは<TT
+CLASS="LITERAL"
+>''</TT
+>（空文字）です。
+   </P
+><P
+><A
+HREF="runtime-watchdog-config.html#GUC-WD-LIFECHECK-METHOD"
+>wd_lifecheck_method</A
+>が<TT
+CLASS="LITERAL"
+>'query'</TT
+>の場合のみ、<TT
+CLASS="VARNAME"
+>wd_life_check_password</TT
+>は有効です。
+    </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIG-WATCHDOG-SERVER-CONFIGURATION"
+>5.14.9. Watchdogサーバの設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-OTHER-PGPOOL-HOSTNAME"
+></A
+><TT
+CLASS="VARNAME"
+>other_pgpool_hostname0</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+    </DT
+><DD
+><P
+>リモートのwatchdogノードに対する<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>サーバのホスト名を指定します。
+パラメータ名の最後にある数字は「サーバ番号」で、0から始まります。
+   </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-OTHER-PGPOOL-PORT"
+></A
+><TT
+CLASS="VARNAME"
+>other_pgpool_port0</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+>リモートのwatchdogノードに対する<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>サーバのポート番号を指定します。
+パラメータ名の最後にある数字は「サーバ番号」で、0から始まります。
+   </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-OTHER-WD-PORT"
+></A
+><TT
+CLASS="VARNAME"
+>other_wd_port0</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+    </DT
+><DD
+><P
+>リモートの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>サーバにおけるwatchdogのポート番号を指定します。
+パラメータ名の最後にある数字は「サーバ番号」で、0から始まります。
+   </P
+><P
+>このパラメータは、サーバ起動時にのみ設定できます。
+    </P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-ssl.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-misc.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Secure Sockect Layer (SSL)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>その他の設定パラメータ</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

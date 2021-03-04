@@ -1,0 +1,66 @@
+'\" t
+.\"     Title: SHOW POOL NODES
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "SHOW POOL NODES" "1" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+SHOW_POOL_NODES \- sends back a list of all configured nodes
+.SH "SYNOPSIS"
+.sp
+.nf
+SHOW POOL_NODES
+    
+.fi
+.SH "DESCRIPTION"
+.PP
+\fBSHOW POOL_NODES\fR
+displays the node id, the hostname, the port, the status, the weight (only meaningful if you use the load balancing mode), the role, the SELECT query counts issued to each backend, whether each node is the load bakance node or not, and the replication delay (only if in streaming replication mode)\&. The possible values in the status column are explained in the
+\fBpcp_node_info\fR(1)
+reference\&. If the hostname is something like "/tmp", that means
+Pgpool\-II
+is connecting to backend by using UNIX domain sockets\&. The SELECT count does not include internal queries used by
+Pgoool\-II\&. Also the counters are reset to zero upon starting up of
+Pgpool\-II\&.
+.PP
+Here is an example session:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+test=# show pool_nodes;
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay
+\-\-\-\-\-\-\-\-\-+\-\-\-\-\-\-\-\-\-\-+\-\-\-\-\-\-\-+\-\-\-\-\-\-\-\-+\-\-\-\-\-\-\-\-\-\-\-+\-\-\-\-\-\-\-\-\-+\-\-\-\-\-\-\-\-\-\-\-\-+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+ 0       | /tmp     | 11002 | up     | 0\&.500000  | primary | 0          | false             | 0
+ 1       | /tmp     | 11003 | up     | 0\&.500000  | standby | 0          | true              | 0
+(2 rows)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+

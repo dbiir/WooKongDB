@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pg_md5</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="他のコマンド"
+HREF="other-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="他のコマンド"
+HREF="other-commands.html"><LINK
+REL="NEXT"
+TITLE="pgpool_setup"
+HREF="pgpool-setup.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="他のコマンド"
+HREF="other-commands.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="other-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pgpool_setup"
+HREF="pgpool-setup.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PG-MD5"
+></A
+>pg_md5</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN5543"
+></A
+><H2
+>名前</H2
+>pg_md5&nbsp;--&nbsp;  
+    md5 暗号化したパスワードを生成する</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN5546"
+></A
+><H2
+>概要</H2
+><P
+><TT
+CLASS="COMMAND"
+>pg_md5</TT
+> [<TT
+CLASS="REPLACEABLE"
+><I
+>option</I
+></TT
+>...]</P
+><P
+><TT
+CLASS="COMMAND"
+>pg_md5</TT
+> [<TT
+CLASS="REPLACEABLE"
+><I
+>password</I
+></TT
+>]</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="R1-PG-MD5-1"
+></A
+><H2
+>説明</H2
+><P
+>  <TT
+CLASS="COMMAND"
+>pg_md5</TT
+>
+  
+    md5 暗号化したパスワードを生成します。
+  </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5559"
+></A
+><H2
+>オプション</H2
+><P
+>    <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="OPTION"
+>-p</TT
+><BR><TT
+CLASS="OPTION"
+>--prompt</TT
+></DT
+><DD
+><P
+>       
+        パスワードを引数に渡したくない場合は <TT
+CLASS="COMMAND"
+>pg_md5 -p</TT
+> を実行すると標準入力からパスワードを読み込みます。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>-m</TT
+><BR><TT
+CLASS="OPTION"
+>--md5auth</TT
+></DT
+><DD
+><P
+>       
+        md5 認証パスワードを生成します。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>-u <TT
+CLASS="REPLACEABLE"
+><I
+>your_username</I
+></TT
+></TT
+><BR><TT
+CLASS="OPTION"
+>--username=<TT
+CLASS="REPLACEABLE"
+><I
+>your_username</I
+></TT
+></TT
+></DT
+><DD
+><P
+>       
+     md5 認証パスワードを生成し、<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+> に <TT
+CLASS="LITERAL"
+>your_username</TT
+> の md5 認証のエントリを作成します。
+       </P
+></DD
+></DL
+></DIV
+><P>
+   </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5589"
+></A
+><H2
+>例</H2
+><P
+>   
+    ここでは例を示します。
+    </P><PRE
+CLASS="PROGRAMLISTING"
+>pg_md5 -p
+password: [your password]
+    </PRE
+><P>
+  </P
+><P
+>  または
+  </P
+><PRE
+CLASS="PROGRAMLISTING"
+>./pg_md5 foo
+acbd18db4cc2f85cedef654fccc4a4d8
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="other-commands.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pgpool-setup.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>他のコマンド</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="other-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pgpool_setup</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

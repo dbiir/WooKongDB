@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>SHOW POOL_CACHE</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="SQL 型コマンド"
+HREF="sql-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="SHOW POOL_VERSION"
+HREF="sql-show-pool-version.html"><LINK
+REL="NEXT"
+TITLE="pgpool_admエクステンション"
+HREF="pgpool-adm.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="SHOW POOL_VERSION"
+HREF="sql-show-pool-version.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pgpool_admエクステンション"
+HREF="pgpool-adm.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="SQL-SHOW-POOL-CACHE"
+></A
+>SHOW POOL_CACHE</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN6216"
+></A
+><H2
+>名前</H2
+>SHOW POOL_CACHE&nbsp;--&nbsp;    
+      クエリキャッシュのヒット率や、キャッシュストレージの状況を表示する
+    </DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN6219"
+></A
+><H2
+>概要</H2
+><PRE
+CLASS="SYNOPSIS"
+>SHOW POOL_CACHE
+    </PRE
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN6221"
+></A
+><H2
+>説明</H2
+><P
+>      <TT
+CLASS="COMMAND"
+>SHOW POOL_CACHE</TT
+>
+      
+      は <A
+HREF="runtime-in-memory-query-cache.html"
+> インメモリクエリキャッシュ</A
+> が有効である場合に、
+      クエリキャッシュのヒット率や、キャッシュストレージの状況を表示します。 例を示します。
+</P><PRE
+CLASS="PROGRAMLISTING"
+>test=# \x
+\x
+Expanded display is on.
+test=# show pool_cache;
+show pool_cache;
+-[ RECORD 1 ]---------------+---------
+num_cache_hits              | 891703
+num_selects                 | 99995
+cache_hit_ratio             | 0.90
+num_hash_entries            | 131072
+used_hash_entries           | 99992
+num_cache_entries           | 99992
+used_cache_enrties_size     | 12482600
+free_cache_entries_size     | 54626264
+fragment_cache_entries_size | 0</PRE
+><P>
+
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-show-pool-version.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pgpool-adm.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>SHOW POOL_VERSION</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pgpool_admエクステンション</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

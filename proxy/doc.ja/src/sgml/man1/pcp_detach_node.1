@@ -1,0 +1,66 @@
+'\" t
+.\"     Title: pcp_detach_node
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PCP_DETACH_NODE" "1" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+pcp_detach_node \- Pgpool\-II のノードを切り離す
+.SH "概要"
+.HP \w'\fBpcp_detach_node\fR\ 'u
+\fBpcp_detach_node\fR [\fIoptions\fR...] [\fInode_id\fR] [\fIgracefully\fR]
+.SH "説明"
+.PP
+\fBpcp_detach_node\fR
+は
+Pgpool\-II
+のノードを切り離します。すでに
+Pgpool\-II
+に接続しているセッションは強制的に切断されます。
+.SH "オプション"
+.PP
+.PP
+\fB\-n \fR\fB\fInode_id\fR\fR
+.br
+\fB\-\-node_id=\fR\fB\fInode_id\fR\fR
+.RS 4
+切り離すバックエンドノードのインデックスを指定します。
+.RE
+.PP
+\fB\-g\fR
+.br
+\fB\-\-gracefully\fR
+.RS 4
+すべてのクライアントが接続を終了するまでノードを復帰しません。 （ただし、client_idle_limit_in_recovery
+が \-1 あるいは、recovery_timeout
+が設定されている場合を除く）
+.RE
+.PP
+\fBその他 \fR
+.RS 4
+\fBpcp_common_options\fR(1)
+を参照してください。
+.RE

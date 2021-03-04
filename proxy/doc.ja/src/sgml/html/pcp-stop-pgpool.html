@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pcp_stop_pgpool</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="PCP コマンド"
+HREF="pcp-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="pcp_promote_node"
+HREF="pcp-promote-node.html"><LINK
+REL="NEXT"
+TITLE="pcp_recovery_node"
+HREF="pcp-recovery-node.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pcp_promote_node"
+HREF="pcp-promote-node.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pcp-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pcp_recovery_node"
+HREF="pcp-recovery-node.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PCP-STOP-PGPOOL"
+></A
+>pcp_stop_pgpool</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN5445"
+></A
+><H2
+>名前</H2
+>pcp_stop_pgpool&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を指定されたモードでシャットダウンする</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN5449"
+></A
+><H2
+>概要</H2
+><P
+><TT
+CLASS="COMMAND"
+>pcp_stop_pgpool</TT
+> [<TT
+CLASS="REPLACEABLE"
+><I
+>options</I
+></TT
+>...] [<TT
+CLASS="REPLACEABLE"
+><I
+>mode</I
+></TT
+>]</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="R1-PCP-STOP-PGPOOL-1"
+></A
+><H2
+>説明</H2
+><P
+>  <TT
+CLASS="COMMAND"
+>pcp_stop_pgpool</TT
+>
+  
+  は <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を指定されたモードでシャットダウンします。
+  </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5461"
+></A
+><H2
+>オプション</H2
+><P
+>    <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="OPTION"
+>-m <TT
+CLASS="REPLACEABLE"
+><I
+>mode</I
+></TT
+></TT
+><BR><TT
+CLASS="OPTION"
+>--mode=<TT
+CLASS="REPLACEABLE"
+><I
+>mode</I
+></TT
+></TT
+></DT
+><DD
+><P
+>    
+    シャットダウンモードを指定します。
+       </P
+><P
+>    
+    指定できるモードは以下のとおりです。
+	<P
+></P
+></P><UL
+><LI
+><P
+>s, smart : smart モード </P
+></LI
+><LI
+><P
+>f, fast : fast モード </P
+></LI
+><LI
+><P
+>i, immediate : immediate モード </P
+></LI
+></UL
+><P>
+       </P
+><P
+>       ※ 現在は fast モードと immediate シャットダウンの処理に区別はありません。 命令を送った時点でクライアントがいる・いないに関わらずシャットダウン処理を即座に行います。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>その他 </TT
+></DT
+><DD
+><P
+>    
+	 <A
+HREF="pcp-common-options.html"
+>pcp_common_options</A
+> を参照してください。
+       </P
+></DD
+></DL
+></DIV
+><P>
+   </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pcp-promote-node.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pcp-recovery-node.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pcp_promote_node</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="pcp-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pcp_recovery_node</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

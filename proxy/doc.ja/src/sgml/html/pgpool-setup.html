@@ -1,0 +1,591 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pgpool_setup</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="他のコマンド"
+HREF="other-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="pg_md5"
+HREF="pg-md5.html"><LINK
+REL="NEXT"
+TITLE="watchdog_setup"
+HREF="watchdog-setup.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pg_md5"
+HREF="pg-md5.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="other-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="watchdog_setup"
+HREF="watchdog-setup.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PGPOOL-SETUP"
+></A
+>pgpool_setup</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN5602"
+></A
+><H2
+>名前</H2
+>pgpool_setup&nbsp;--&nbsp;  
+  <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> クラスタのテスト環境を構築するツール</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN5606"
+></A
+><H2
+>概要</H2
+><P
+><TT
+CLASS="COMMAND"
+>pgpool_setup</TT
+> [<TT
+CLASS="REPLACEABLE"
+><I
+>option</I
+></TT
+>...]</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="R1-PGPOOL-SETUP-1"
+></A
+><H2
+>説明</H2
+><P
+>  <SPAN
+CLASS="APPLICATION"
+>pgpool_setup</SPAN
+>
+  
+  はカレントディレクトリで <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>
+  とノード数が指定できる複数の <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>
+  のクラスタテスト環境を構築するツールです。
+  カレントディレクトリは空である必要があります。
+  </P
+><P
+>  
+    <SPAN
+CLASS="APPLICATION"
+>pgpool_setup</SPAN
+> はテストのために使うツールなので、
+    実際の業務システムで利用することはおすすめしません。
+  </P
+><P
+>  
+    現在、「ストリーミングレプリケーションモード」、「ネイティブレプリケーションモード」及び「raw モード」に対応しています。
+    Watchdog  の対応については  <A
+HREF="watchdog-setup.html"
+>watchdog_setup</A
+> をご参照下さい。
+  </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5621"
+></A
+><H2
+>オプション</H2
+><P
+>   
+    <SPAN
+CLASS="APPLICATION"
+>pgpool_setup</SPAN
+> 以下のコマンドライン引数を受け付けます:
+
+    <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="OPTION"
+>-m <TT
+CLASS="REPLACEABLE"
+><I
+>mode</I
+></TT
+></TT
+></DT
+><DD
+><P
+>       
+        動作モードを指定します。<TT
+CLASS="REPLACEABLE"
+><I
+>mode</I
+></TT
+>は
+        <TT
+CLASS="LITERAL"
+>r</TT
+> (ネイティブレプリケーションモード), <TT
+CLASS="LITERAL"
+>s</TT
+> (ストリーミングレプリケーションモード)、または
+        <TT
+CLASS="LITERAL"
+>n</TT
+> (raw モード)を指定できます。
+        指定しない場合は、<TT
+CLASS="LITERAL"
+>s</TT
+> (ストリーミングレプリケーションモード) です。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>-n <TT
+CLASS="REPLACEABLE"
+><I
+>num_clusters</I
+></TT
+></TT
+></DT
+><DD
+><P
+>       
+        PostgreSQL のノード数を指定します。指定しない場合は、ノード数が 2 です。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>-p <TT
+CLASS="REPLACEABLE"
+><I
+>base_port</I
+></TT
+></TT
+></DT
+><DD
+><P
+>       
+         ベースとなるポート番号を指定します。
+         Pgpool-II のポートは base_port、pcp のポートは base_port + 1、
+         最初の PostgreSQL ノードのポートは base_port + 2、
+         2 番目の PostgreSQL ノードのポートは base_port + 3 というようになります。
+       </P
+><P
+>       
+         -pg オプションを指定した場合、 最初の PostgreSQL ノードのポートは pg_base_port、
+         2 番目の PostgreSQL ノードのポートは pg_base_port + 1 というように割り当てていきます。
+
+       </P
+><P
+>       
+        指定しない場合、ベースとなるポート番号は 11000 です。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>-pg <TT
+CLASS="REPLACEABLE"
+><I
+>pg_base_port</I
+></TT
+></TT
+></DT
+><DD
+><P
+>       
+         PostgreSQL のベースとなるポート番号を指定します。
+         最初の PostgreSQL ノードのポートは base_port + 2、
+         2 番目の PostgreSQL ノードのポートは base_port + 3 というようになります。
+       </P
+><P
+>       
+        省略した場合は、 <TT
+CLASS="LITERAL"
+>base_port</TT
+>+2 が使われます。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>--no-stop</TT
+></DT
+><DD
+><P
+>       
+        セットアップ終了後に <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>, PostgreSQL を終了しません。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>-d</TT
+></DT
+><DD
+><P
+>       
+        デバッグモードで <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を起動します。
+       </P
+></DD
+></DL
+></DIV
+><P>
+   </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5671"
+></A
+><H2
+>環境変数</H2
+><P
+>   
+    <SPAN
+CLASS="APPLICATION"
+>pgpool_setup</SPAN
+> 以下の環境変数を使用します:
+
+    <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="OPTION"
+>PGPOOL_INSTALL_DIR</TT
+></DT
+><DD
+><P
+>       
+        <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のインストールディレクトリを指定します。
+        <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> バイナリーは PGPOOL_INSTALL_DIR/bin ディレクトリ以下、
+        <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+> と <TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>
+        などは PGPOOL_INSTALL_DIR/etc ディレクトリ以にインストールされます。
+        デフォルトでは /usr/local ディレクトリ以下にインストールされます。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>PGPOOLDIR</TT
+></DT
+><DD
+><P
+>       
+        <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> 設定ファイルへのパスを指定します。
+        デフォルトでは PGPOOL_INSTALL_DIR/etc です。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>PGBIN</TT
+></DT
+><DD
+><P
+>       
+        initdb、pg_ctl と psql など <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> コマンドへのパスを指定します。
+        デフォルトでは、/usr/local/pgsql/bin です。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>PGLIB</TT
+></DT
+><DD
+><P
+>       
+        <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> の共有ライブラリへのパスを指定します。
+        デフォルトでは、/usr/local/pgsql/lib です。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>PGSOCKET_DIR</TT
+></DT
+><DD
+><P
+>       
+        Unixソケットのディレクトリへのパスを指定します。
+        デフォルトでは /tmp です。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>INITDBARG</TT
+></DT
+><DD
+><P
+>       
+        initdb コマンドの引数を指定します。
+        デフォルトでは "--no-locale -E UTF_8" です。
+       </P
+></DD
+></DL
+></DIV
+><P>
+
+   </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5713"
+></A
+><H2
+>出力例</H2
+><P
+></P><PRE
+CLASS="SCREEN"
+>$ pgpool_setup
+Satrting set up in streaming replication mode
+creating startall and shutdownall
+creating failover script
+creating database cluster /home/t-ishii/tmp/test/data0...done.
+update postgreql.conf
+creating pgpool_remote_start
+creating basebackup.sh
+creating recovery.conf
+creating database cluster /home/t-ishii/tmp/test/data1...done.
+update postgreql.conf
+creating pgpool_remote_start
+creating basebackup.sh
+creating recovery.conf
+temporarily start data0 cluster to create extensions
+temporarily start pgpool-II to create standby nodes
+INFO:  unrecognized configuration parameter "debug_level"
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay
+---------+----------+-------+--------+-----------+---------+------------+-------------------+-------------------
+ 0       | /tmp     | 11002 | up     | 0.500000  | primary | 0          | true              | 0
+ 1       | /tmp     | 11003 | down   | 0.500000  | standby | 0          | false             | 0
+(2 rows)
+
+recovery node 1...pcp_recovery_node -- Command Successful
+done.
+creating follow master script
+Pager usage is off.
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay
+---------+----------+-------+--------+-----------+---------+------------+-------------------+-------------------
+ 0       | /tmp     | 11002 | up     | 0.500000  | primary | 0          | false             | 0
+ 1       | /tmp     | 11003 | up     | 0.500000  | standby | 0          | true              | 0
+(2 rows)
+
+shutdown all
+
+pgpool-II setting for streaming replication mode is done.
+To start the whole system, use /home/t-ishii/tmp/test/startall.
+To shutdown the whole system, use /home/t-ishii/tmp/test/shutdownall.
+pcp command user name is "t-ishii", password is "t-ishii".
+Each PostgreSQL, pgpool-II and pcp port is as follows:
+#1 port is 11002
+#2 port is 11003
+pgpool port is 11000
+pcp port is 11001
+The info above is in README.port.
+
+$ ls
+README.port  bashrc.ports  data1  log	   pgpool_reload     run	  startall
+archivedir   data0	   etc	  pcppass  pgpool_setup.log  shutdownall
+
+$ ./startall
+waiting for server to start....11840 2016-08-18 13:08:51 JST LOG:  redirecting log output to logging collector process
+11840 2016-08-18 13:08:51 JST HINT:  Future log output will appear in directory "pg_log".
+ done
+server started
+waiting for server to start....11853 2016-08-18 13:08:52 JST LOG:  redirecting log output to logging collector process
+11853 2016-08-18 13:08:52 JST HINT:  Future log output will appear in directory "pg_log".
+ done
+server started
+$ psql -p 11000 test
+Pager usage is off.
+psql (9.5.4)
+Type "help" for help.
+
+test=# show pool_nodes;
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay
+---------+----------+-------+--------+-----------+---------+------------+-------------------+-------------------
+ 0       | /tmp     | 11002 | up     | 0.500000  | primary | 0          | false             | 0
+ 1       | /tmp     | 11003 | up     | 0.500000  | standby | 0          | true              | 0
+(2 rows)&#13;</PRE
+><P></P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pg-md5.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="watchdog-setup.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pg_md5</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="other-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>watchdog_setup</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

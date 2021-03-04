@@ -1,0 +1,92 @@
+'\" t
+.\"     Title: pcp_stop_pgpool
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PCP_STOP_PGPOOL" "1" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+pcp_stop_pgpool \- Pgpool\-II を指定されたモードでシャットダウンする
+.SH "概要"
+.HP \w'\fBpcp_stop_pgpool\fR\ 'u
+\fBpcp_stop_pgpool\fR [\fIoptions\fR...] [\fImode\fR]
+.SH "説明"
+.PP
+\fBpcp_stop_pgpool\fR
+は
+Pgpool\-II
+を指定されたモードでシャットダウンします。
+.SH "オプション"
+.PP
+.PP
+\fB\-m \fR\fB\fImode\fR\fR
+.br
+\fB\-\-mode=\fR\fB\fImode\fR\fR
+.RS 4
+シャットダウンモードを指定します。
+.sp
+指定できるモードは以下のとおりです。
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+s, smart : smart モード
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+f, fast : fast モード
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+i, immediate : immediate モード
+.RE
+.sp
+※ 現在は fast モードと immediate シャットダウンの処理に区別はありません。 命令を送った時点でクライアントがいる・いないに関わらずシャットダウン処理を即座に行います。
+.RE
+.PP
+\fBその他 \fR
+.RS 4
+\fBpcp_common_options\fR(1)
+を参照してください。
+.RE

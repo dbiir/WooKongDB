@@ -1,0 +1,378 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>サーバ管理</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="watchdogの構造"
+HREF="tutorial-advanced-arch.html"><LINK
+REL="NEXT"
+TITLE="Pgpool-IIのインストール"
+HREF="installation.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="PART"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="watchdogの構造"
+HREF="tutorial-advanced-arch.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="Pgpool-IIのインストール"
+HREF="installation.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="PART"
+><A
+NAME="ADMIN"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+>II. サーバ管理</H1
+><DIV
+CLASS="PARTINTRO"
+><A
+NAME="AEN725"
+></A
+><P
+>ここでは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>管理者にとって関心のある事項を扱います。
+   </P
+></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>目次</B
+></DT
+><DT
+>3章<A
+HREF="installation.html"
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストール</A
+></DT
+><DD
+><DL
+><DT
+>3.1. <A
+HREF="install-source.html"
+>Pgpool-IIのインストール</A
+></DT
+><DT
+>3.2. <A
+HREF="install-requirements.html"
+>必要条件</A
+></DT
+><DT
+>3.3. <A
+HREF="install-getsource.html"
+>ソースの入手</A
+></DT
+><DT
+>3.4. <A
+HREF="install-pgpool.html"
+>Pgpool-IIのインストール</A
+></DT
+><DT
+>3.5. <A
+HREF="install-pgpool-recovery.html"
+>pgpool_recoveryのインストール</A
+></DT
+><DT
+>3.6. <A
+HREF="install-pgpool-regclass.html"
+>pgpool-regclassのインストール</A
+></DT
+><DT
+>3.7. <A
+HREF="create-installlock-table.html"
+>insert_lockテーブルの作成</A
+></DT
+><DT
+>3.8. <A
+HREF="setting-up-pgpool-conf.html"
+>pgpool.confの設定</A
+></DT
+><DT
+>3.9. <A
+HREF="install-rpm.html"
+>RPMからのインストール</A
+></DT
+></DL
+></DD
+><DT
+>4章<A
+HREF="runtime.html"
+>サーバの準備と運用</A
+></DT
+><DD
+><DL
+><DT
+>4.1. <A
+HREF="pgpool-ii-user.html"
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>ユーザアカウント</A
+></DT
+><DT
+>4.2. <A
+HREF="configuring-pcp-conf.html"
+>pcp.confの設定</A
+></DT
+><DT
+>4.3. <A
+HREF="configuring-pgpool.html"
+>Pgpool-IIの設定</A
+></DT
+><DT
+>4.4. <A
+HREF="configuring-backend-info.html"
+>バックエンド情報の設定</A
+></DT
+></DL
+></DD
+><DT
+>5章<A
+HREF="runtime-config.html"
+>サーバの設定</A
+></DT
+><DD
+><DL
+><DT
+>5.1. <A
+HREF="config-setting.html"
+>パラメータの設定</A
+></DT
+><DT
+>5.2. <A
+HREF="runtime-config-connection.html"
+>接続と認証</A
+></DT
+><DT
+>5.3. <A
+HREF="runtime-config-runnung-mode.html"
+>動作モード</A
+></DT
+><DT
+>5.4. <A
+HREF="runtime-config-backend-settings.html"
+>バックエンドの設定</A
+></DT
+><DT
+>5.5. <A
+HREF="runtime-config-connection-pooling.html"
+>コネクションプーリング</A
+></DT
+><DT
+>5.6. <A
+HREF="runtime-config-logging.html"
+>エラー報告とログ取得</A
+></DT
+><DT
+>5.7. <A
+HREF="runtime-config-load-balancing.html"
+>負荷分散</A
+></DT
+><DT
+>5.8. <A
+HREF="runtime-config-health-check.html"
+>ヘルスチェック</A
+></DT
+><DT
+>5.9. <A
+HREF="runtime-config-failover.html"
+>フェイルオーバとフェイルバック</A
+></DT
+><DT
+>5.10. <A
+HREF="runtime-online-recovery.html"
+>オンラインリカバリ</A
+></DT
+><DT
+>5.11. <A
+HREF="runtime-streaming-replication-check.html"
+>ストリーミングレプリケーションのチェック</A
+></DT
+><DT
+>5.12. <A
+HREF="runtime-in-memory-query-cache.html"
+>インメモリキャッシュ</A
+></DT
+><DT
+>5.13. <A
+HREF="runtime-ssl.html"
+>Secure Sockect Layer (SSL)</A
+></DT
+><DT
+>5.14. <A
+HREF="runtime-watchdog-config.html"
+>Watchdog</A
+></DT
+><DT
+>5.15. <A
+HREF="runtime-misc.html"
+>その他の設定パラメータ</A
+></DT
+></DL
+></DD
+><DT
+>6章<A
+HREF="client-authentication.html"
+>クライアント認証</A
+></DT
+><DD
+><DL
+><DT
+>6.1. <A
+HREF="auth-pool-hba-conf.html"
+><TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>ファイル</A
+></DT
+><DT
+>6.2. <A
+HREF="auth-methods.html"
+>認証方式</A
+></DT
+></DL
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-advanced-arch.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>watchdogの構造</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストール</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

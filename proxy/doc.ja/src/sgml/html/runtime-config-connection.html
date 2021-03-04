@@ -1,0 +1,589 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>接続と認証</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="パラメータの設定"
+HREF="config-setting.html"><LINK
+REL="NEXT"
+TITLE="動作モード"
+HREF="runtime-config-runnung-mode.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="パラメータの設定"
+HREF="config-setting.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="動作モード"
+HREF="runtime-config-runnung-mode.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-CONFIG-CONNECTION"
+>5.2. 接続と認証</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-CONNECTION-SETTINGS"
+>5.2.1. 接続設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-LISTEN-ADDRESSES"
+></A
+><TT
+CLASS="VARNAME"
+>listen_addresses</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+		</DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がTCP/IP接続を受け付けるホスト名またはIPアドレスを指定します。
+<TT
+CLASS="LITERAL"
+>*</TT
+>を指定すると入ってくる全ての接続を受け付けます。
+<TT
+CLASS="LITERAL"
+>''</TT
+>を指定するとTCP/IP接続を受け付けません。
+デフォルト値は<TT
+CLASS="LITERAL"
+>'localhost'</TT
+>です。
+UNIXドメインソケット経由の接続は常に受け付けます。
+		</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-PORT"
+></A
+><TT
+CLASS="VARNAME"
+>port</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+		</DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が接続を受け付けるために監視するポート番号です。
+デフォルト値は9999です。
+		</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-SOCKET-DIR"
+></A
+><TT
+CLASS="VARNAME"
+>socket_dir</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+		</DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が接続を受け付けるUNIXドメインソケットを置くディレクトリです。
+デフォルト値は<TT
+CLASS="LITERAL"
+>/tmp</TT
+>です。
+このソケットは、cron によって削除されることがあるので注意してください。
+<TT
+CLASS="LITERAL"
+>/var/run</TT
+>などのディレクトリに変更することをお勧めします。
+		</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-PCP-LISTEN-ADDRESSES"
+></A
+><TT
+CLASS="VARNAME"
+>pcp_listen_addresses</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+		</DT
+><DD
+><P
+>PCPプロセスがTCP/IP接続を受け付けるホスト名またはIPアドレスを指定します。
+<TT
+CLASS="LITERAL"
+>*</TT
+>を指定すると入ってくる全てのの接続を受け付けます。
+<TT
+CLASS="LITERAL"
+>''</TT
+>を指定するとTCP/IP接続を受け付けません。
+デフォルト値は<TT
+CLASS="LITERAL"
+>*</TT
+>です。
+UNIXドメインソケット経由のコネクションは常に受け付けます。
+		</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-PCP-PORT"
+></A
+><TT
+CLASS="VARNAME"
+>pcp_port</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+		</DT
+><DD
+><P
+>PCPプロセスが接続を受け付けるために監視するポート番号です。
+デフォルト値は9898です。
+		</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-PCP-SOCKET-DIR"
+></A
+><TT
+CLASS="VARNAME"
+>pcp_socket_dir</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+		</DT
+><DD
+><P
+>PCPプロセスが接続を受け付けるUNIXドメインソケットを置くディレクトリです。
+デフォルト値は<TT
+CLASS="LITERAL"
+>/tmp</TT
+>です。
+このソケットは、cron によって削除されることがあるので注意してください。
+<TT
+CLASS="LITERAL"
+>/var/run</TT
+>などのディレクトリに変更することをお勧めします。
+		</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-NUM-INIT-CHILDREN"
+></A
+><TT
+CLASS="VARNAME"
+>num_init_children</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+		</DT
+><DD
+><P
+>preforkする<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のサーバプロセスの数です。
+デフォルト値は32です。
+num_init_childrenは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に対してクライアントが同時に接続できる上限の数でもあります。
+num_init_childrenより多いクライアントが<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に接続しようとした場合、<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>それらのクライアントは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のどれかのプロセスへの接続が閉じられるまで待たされます(<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>のように接続拒否エラーにはなりません。)</I
+></SPAN
+>。
+
+待たされる数の上限は、<A
+HREF="runtime-config-connection-pooling.html#GUC-LISTEN-BACKLOG-MULTIPLIER"
+>listen_backlog_multiplier</A
+> * num_init_children です。
+		</P
+><P
+>待ち行列は、OS内部に作られ、「listenキュー」と呼ばれます。
+listenキューの長さは「バックログ」と呼ばれます。
+システムによってはバックログの上限が設定されており、<A
+HREF="runtime-config-connection-pooling.html#GUC-LISTEN-BACKLOG-MULTIPLIER"
+>listen_backlog_multiplier</A
+>*num_init_childrenがこれを越える場合はバックログを大きく設定する必要があります。
+さもないと高負荷時に以下のような問題が発生する可能性があります:
+1) <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>への接続が失敗する。
+2) カーネル内で行われるリトライにより<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>への接続が遅くなる。
+実際にlistenキューが溢れているかどうかは、"netstat -s"コマンドを使って確認できます。
+もし、以下のような出力があった場合、
+			</P><PRE
+CLASS="PROGRAMLISTING"
+>535 times the listen queue of a socket overflowed
+			</PRE
+><P>
+listenキューが溢れています。
+この場合にはバックログを増やす必要があります（スーパユーザ権限が権限が必要になります)。
+
+			</P><PRE
+CLASS="PROGRAMLISTING"
+># sysctl net.core.somaxconn
+net.core.somaxconn = 128
+# sysctl -w net.core.somaxconn = 256
+			</PRE
+><P>
+/etc/sysctl.confに以下のように書いても構いません。
+			</P><PRE
+CLASS="PROGRAMLISTING"
+>net.core.somaxconn = 256
+			</PRE
+><P>
+		</P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>へ貼られる接続数は大まかにはmax_pool*num_init_childrenとなります。
+		</P
+><P
+>ただし、問い合わせのキャンセルを行うとバックエンドに対して別の接続が張られます。
+したがって、すべての接続が使用中の場合には問い合わせのキャンセルができなくなります。
+問い合わせのキャンセルを必ず保証したい場合は、想定されるコネクション数の倍の値を設定してください。
+		</P
+><P
+>また、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>は一般ユーザによる同時接続をmax_connections - superuser_reserved_connections個まで許しています。
+		</P
+><P
+>まとめると、max_pool、num_init_children、max_connections、superuser_reserved_connectionsは、以下の式を満たいていなければなりません。
+			</P><PRE
+CLASS="PROGRAMLISTING"
+>max_pool*num_init_children &lt;= (max_connections - superuser_reserved_connections) (クエリのキャンセルを考慮しない場合)
+max_pool*num_init_children*2 &lt;= (max_connections - superuser_reserved_connections) (クエリのキャンセルを考慮する場合)
+			</PRE
+><P>
+		</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+		</P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-AUTHENTICATION-SETTINGS"
+>5.2.2. 認証設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-ENABLE-POOL-HBA"
+></A
+><TT
+CLASS="VARNAME"
+>enable_pool_hba</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+					</DT
+><DD
+><P
+><TT
+CLASS="LITERAL"
+>true</TT
+>の場合、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はクライアント認証に<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>を使用します。
+クライアント認証のため<TT
+CLASS="FILENAME"
+>pool_hba.conf</TT
+>を設定する方法について、詳細は<A
+HREF="auth-pool-hba-conf.html"
+>項6.1</A
+>を参照してください。
+デフォルトは<TT
+CLASS="LITERAL"
+>false</TT
+>です。
+
+					</P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+					</P
+></DD
+><DT
+><A
+NAME="GUC-POOL-PASSWD"
+></A
+><TT
+CLASS="VARNAME"
+>pool_passwd</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+					</DT
+><DD
+><P
+>md5 認証で用いるパスワードのファイルのファイル名を指定します。
+デフォルト値は<TT
+CLASS="LITERAL"
+>"pool_passwd"</TT
+>です。
+<TT
+CLASS="LITERAL"
+>''</TT
+>（空文字列）を指定すると パスワードファイルの使用は無効になります。
+詳細は<A
+HREF="auth-methods.html#AUTH-MD5"
+>項6.2.2</A
+>を参照してください
+					</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+					</P
+></DD
+><DT
+><A
+NAME="GUC-AUTHENTICATION-TIMEOUT"
+></A
+><TT
+CLASS="VARNAME"
+>authentication_timeout</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+					</DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の認証処理のタイムアウト時間を秒単位で指定します。
+0 を指定するとタイムアウトを無効にします。
+デフォルト値は60です。
+					</P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+					</P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="config-setting.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-config-runnung-mode.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>パラメータの設定</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>動作モード</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

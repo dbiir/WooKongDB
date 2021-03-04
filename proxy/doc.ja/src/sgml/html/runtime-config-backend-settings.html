@@ -1,0 +1,483 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>バックエンドの設定</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="動作モード"
+HREF="runtime-config-runnung-mode.html"><LINK
+REL="NEXT"
+TITLE="コネクションプーリング"
+HREF="runtime-config-connection-pooling.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="動作モード"
+HREF="runtime-config-runnung-mode.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="コネクションプーリング"
+HREF="runtime-config-connection-pooling.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-CONFIG-BACKEND-SETTINGS"
+>5.4. バックエンドの設定</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-BACKEND-CONNECTION-SETTINGS"
+>5.4.1. バックエンド接続の設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-BACKEND-HOSTNAME"
+></A
+><TT
+CLASS="VARNAME"
+>backend_hostname</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+		</DT
+><DD
+><P
+><TT
+CLASS="VARNAME"
+>backend_hostname</TT
+>には接続先の<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドを指定します。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がサーバと通信するのに使われます。
+		</P
+><P
+>TCP/IP通信では、このパラメータはホスト名またはIPアドレスをとることができます。
+スラッシュ（<TT
+CLASS="LITERAL"
+>/</TT
+>）で始まる場合、TCP/IPではなくUNIXドメインでの通信が使用され、値はソケットファイルが作成されるディレクトリ名となります。
+となしてそこにソケットファイルが作成されることになります。
+<TT
+CLASS="VARNAME"
+>backend_hostname</TT
+>に空文字(<TT
+CLASS="LITERAL"
+>''</TT
+>)が指定された場合のデフォルトの動作は、<TT
+CLASS="FILENAME"
+>/tmp</TT
+>に作成したUNIXドメインソケットで接続します。
+		</P
+><P
+>パラメータ名の末尾に数字を付加することで複数のバックエンドを指定することができます(たとえばbackend_hostname0)。
+この数字のことを「DBノードID」と呼び、0から開始します。
+DBノードIDが0のバックエンドは「マスターノード」と呼ばれます。
+複数のDBノードを定義している場合、条件によってはマスターノードがダウンしても運用を続けることができます（いくつかのモードを除きます）。
+この場合は、稼働中かつDBノードIDがもっとも若いものが新しいマスターノードになります。
+		</P
+><P
+>ストリーミングレプリケーションモードで運用している場合は、DBノードIDが0のノードには特別な意味はないことに注意して下さい。
+むしろ、そのDBノードが「プライマリノード」かどうかを気にするべきです。
+詳細は<A
+HREF="runtime-config-load-balancing.html"
+>項5.7</A
+>、 <A
+HREF="runtime-config-failover.html"
+>項5.9</A
+>、<A
+HREF="runtime-streaming-replication-check.html"
+>項5.11</A
+>をご覧ください。
+		</P
+><P
+>1台しか<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>を使用しない場合は、backend_hostname0で指定してください。
+		</P
+><P
+>新しいノードはパラメータ行を追加して、設定ファイル再読み込みすることで追加できます。
+ただし、既存の値を変更することはできないので、その場合には<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を再起動してください。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-BACKEND-PORT"
+></A
+><TT
+CLASS="VARNAME"
+>backend_port</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+		</DT
+><DD
+><P
+><TT
+CLASS="VARNAME"
+>backend_port</TT
+>にはバックエンドのポート番号を指定します。
+パラメータ名の末尾に数字を付加することで複数のバックエンドを指定することができます(たとえばbackend_port0)。
+1台しか<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>を使用しない場合は、backend_port0で指定してください。
+		</P
+><P
+>新しいノードはパラメータ行を追加して、設定ファイル再読み込みすることで追加できます。
+ただし、既存の値を変更することはできないので、その場合には<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を再起動してください。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-BACKEND-WEIGHT"
+></A
+><TT
+CLASS="VARNAME"
+>backend_weight</TT
+> (<TT
+CLASS="TYPE"
+>floating point</TT
+>)
+		</DT
+><DD
+><P
+><TT
+CLASS="VARNAME"
+>backend_weight</TT
+>にはバックエンドの負荷分散の比率を指定します。
+0以上の整数または浮動小数点を指定できます。
+パラメータ名の末尾に数字を付加することで複数のバックエンドを指定することができます(たとえばbackend_weight0)。
+1台しか<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>を使用しない場合は、backend_weight0で指定してください。
+		</P
+><P
+>新しい<TT
+CLASS="VARNAME"
+>backend_weight</TT
+>はパラメータ行を追加して、設定ファイル再読み込みすることで追加できます。
+backend_weight は新しく追加した行を設定ファイル再読み込みで追加することができます。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V2.2.6</I
+></SPAN
+>、<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V2.3</I
+></SPAN
+>以降では、設定ファイルの再読込みで値を変更できます。
+ただし、この効果が反映されるのは新しく確立されたクライアントセッションからです。
+マスタースレーブモードにおいて、スレーブに対して管理業務を実施する都合上、問い合わせがそのスレーブに送られるのを防ぎたい場合に有用です。
+		</P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-BACKEND-DATA"
+>5.4.2. バックエンドデータの設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-BACKEND-DATA-DIRECTORY"
+></A
+><TT
+CLASS="VARNAME"
+>backend_data_directory</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+		</DT
+><DD
+><P
+><TT
+CLASS="VARNAME"
+>backend_data_directory</TT
+>にはバックエンドのデータベースクラスタのディレクトリを指定します。
+パラメータ名の末尾に数字を付加することで複数のバックエンドを指定することができます(たとえばbackend_data_directory0)。
+1台しか<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>を使用しない場合は、backend_data_diarectory0で指定してください。
+    使用する PostgreSQL サーバのデータベースクラスタのパスを指定します。 実際には、"backend_data_directory"の後にDBノードIDを付加して使用する複数のPostgreSQLを区別します。 このパラメータはオンラインリカバリの際に使用します。 オンラインリカバリを使用しない場合には設定する必要はありません。
+		</P
+><P
+>新しい<TT
+CLASS="VARNAME"
+>backend_data_directory</TT
+>はパラメータ行を追加して、設定ファイル再読み込みすることで追加できます。
+ただし、既存の値を変更することはできないので、その場合には<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を再起動してください。
+		</P
+></DD
+><DT
+><A
+NAME="GUC-BACKEND-FLAG"
+></A
+><TT
+CLASS="VARNAME"
+>backend_flag</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+		</DT
+><DD
+><P
+><TT
+CLASS="VARNAME"
+>backend_flag</TT
+>はバックエンド単位での様々な挙動を制御するフラグです。
+パラメータ名の末尾に数字を付加することで複数のバックエンドを指定することができます(たとえばbackend_flag0)。
+1台しか<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>を使用しない場合は、backend_flag0で指定してください。
+		</P
+><P
+>新しいバックエンドフラグはパラメータ行を追加して、設定ファイル再読み込みすることで追加できます。
+現在以下のものがあります。
+複数のフラグを"|"で連結して指定することができます。
+		</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="BACKEND-FLAG-TABLE"
+></A
+><P
+><B
+>表 5-3. バックエンドフラグ</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>フラグ</TH
+><TH
+>説明</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+><TT
+CLASS="LITERAL"
+>ALLOW_TO_FAILOVER</TT
+></TD
+><TD
+>フェイルオーバやデタッチが可能になります。
+			これがデフォルトの動作です。
+			DISALLOW_TO_FAILOVERと同時には指定できません。
+			</TD
+></TR
+><TR
+><TD
+><TT
+CLASS="LITERAL"
+>DISALLOW_TO_FAILOVER</TT
+></TD
+><TD
+>フェイルオーバやデタッチを禁止します。
+			<SPAN
+CLASS="PRODUCTNAME"
+>Heartbeat</SPAN
+>や<SPAN
+CLASS="PRODUCTNAME"
+>Pacemaker</SPAN
+>などのHA(High Availability)ソフトでバックエンドを保護しているなどの場合に有用です。
+			ALLOW_TO_FAILOVERと同時には指定できません。
+			</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+		</P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config-runnung-mode.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-config-connection-pooling.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>動作モード</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>コネクションプーリング</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

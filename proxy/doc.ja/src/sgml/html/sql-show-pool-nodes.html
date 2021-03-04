@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>SHOW POOL NODES</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="SQL 型コマンド"
+HREF="sql-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="SHOW POOL STATUS"
+HREF="sql-show-pool-status.html"><LINK
+REL="NEXT"
+TITLE="SHOW POOL_PROCESSES"
+HREF="sql-show-pool-processes.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="SHOW POOL STATUS"
+HREF="sql-show-pool-status.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="SHOW POOL_PROCESSES"
+HREF="sql-show-pool-processes.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="SQL-SHOW-POOL-NODES"
+></A
+>SHOW POOL NODES</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN6071"
+></A
+><H2
+>名前</H2
+>SHOW POOL_NODES&nbsp;--&nbsp;    
+      DB ノードのリストを表示する
+    </DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN6074"
+></A
+><H2
+>概要</H2
+><PRE
+CLASS="SYNOPSIS"
+>SHOW POOL_NODES
+    </PRE
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN6076"
+></A
+><H2
+>説明</H2
+><P
+>    
+
+    <TT
+CLASS="COMMAND"
+>SHOW POOL_NODES</TT
+> はホスト名、ポート番号、状態、
+    重み(ロードバランスモードで運用しているときにのみ意味があります)、
+    ノードの役割、発行された SELECT の数、ロードバランスノードであるかどうか、
+    レプリケーション遅延 (ストリーミングレプリケーションモードのみ) が表示されます。
+    状態(status)の意味については、 <A
+HREF="pcp-node-info.html"
+>pcp_node_info</A
+> リファレンスで説明されています。
+    ホスト名が "/tmp" のように表示される場合、UNIX ドメインソケットを使用して
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> が <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> に接続していることを意味します。
+    SELECT の数には、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> 内部で発行されるクエリの数は含まれません。
+    また、このカウンタは <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> がスタートした時に 0にリセットされます。
+    </P
+><P
+>    
+    ここでは例を示します。
+</P><PRE
+CLASS="PROGRAMLISTING"
+>test=# show pool_nodes;
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay
+---------+----------+-------+--------+-----------+---------+------------+-------------------+-------------------
+ 0       | /tmp     | 11002 | up     | 0.500000  | primary | 0          | false             | 0
+ 1       | /tmp     | 11003 | up     | 0.500000  | standby | 0          | true              | 0
+(2 rows)</PRE
+><P>
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-show-pool-status.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="sql-show-pool-processes.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>SHOW POOL STATUS</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>SHOW POOL_PROCESSES</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

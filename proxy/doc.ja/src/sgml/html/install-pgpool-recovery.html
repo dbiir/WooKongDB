@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pgpool_recoveryのインストール</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Pgpool-IIのインストール"
+HREF="installation.html"><LINK
+REL="PREVIOUS"
+TITLE="Pgpool-IIのインストール"
+HREF="install-pgpool.html"><LINK
+REL="NEXT"
+TITLE="pgpool-regclassのインストール"
+HREF="install-pgpool-regclass.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="Pgpool-IIのインストール"
+HREF="install-pgpool.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 3章<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストール</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pgpool-regclassのインストール"
+HREF="install-pgpool-regclass.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="INSTALL-PGPOOL-RECOVERY"
+>3.5. pgpool_recoveryのインストール</A
+></H1
+><P
+>これは全ての<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストールで必要です。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ cd pgpool-II-x.x.x/sql/pgpool-recovery
+$ make
+$ make install
+      </PRE
+><P>
+この後に以下か、
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ psql template1
+=# CREATE EXTENSION pgpool_recovery;
+      </PRE
+><P>
+
+または
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ psql -f pgpool-recovery.sql template1
+      </PRE
+><P>
+を実行します。
+
+    </P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> 3.3 以降では、<TT
+CLASS="FILENAME"
+>postgresql.conf</TT
+>を変更する必要があります。
+<TT
+CLASS="COMMAND"
+>pg_ctl</TT
+>へのパスが<TT
+CLASS="FILENAME"
+>/usr/local/pgsql/bin/pg_ctl</TT
+>であるとします。
+その場合、<TT
+CLASS="FILENAME"
+>postgresql.conf</TT
+>に以下を追加してください。
+
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>pgpool.pg_ctl = '/usr/local/pgsql/bin/pg_ctl'
+      </PRE
+><P>
+
+もしかするとその後に以下を実行する必要があるかもしれません。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pg_ctl reload -D /usr/local/pgsql/data
+      </PRE
+><P>
+
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="install-pgpool.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="install-pgpool-regclass.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Pgpool-IIのインストール</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pgpool-regclassのインストール</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

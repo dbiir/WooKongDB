@@ -1,0 +1,124 @@
+'\" t
+.\"     Title: pcp_proc_info
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "PCP_PROC_INFO" "1" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pcp_proc_info \- displays the information on the given Pgpool\-II child process ID
+.SH "SYNOPSIS"
+.HP \w'\fBpcp_proc_info\fR\ 'u
+\fBpcp_proc_info\fR [\fIoptions\fR...] [\fIprocessid\fR]
+.SH "DESCRIPTION"
+.PP
+\fBpcp_proc_info\fR
+displays the information on the given Pgpool\-II child process ID\&.
+.SH "OPTIONS"
+.PP
+.PP
+\fB\-P \fR\fB\fIPID\fR\fR
+.br
+\fB\-\-process\-id=\fR\fB\fIPID\fR\fR
+.RS 4
+PID of Pgpool\-II child process\&.
+.RE
+.PP
+\fBOther options \fR
+.RS 4
+See
+\fBpcp_common_options\fR(1)\&.
+.RE
+.SH "EXAMPLE"
+.PP
+Here is an example output:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_proc_info \-h localhost \-p 9898 \-U postgres 3815
+postgres_db postgres 1150769932 1150767351 3 0 1 1467 1
+postgres_db postgres 1150769932 1150767351 3 0 1 1468 1
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The result is in the following order:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+1\&. connected database name
+2\&. connected user name
+3\&. process start\-up timestamp
+4\&. connection created timestamp
+5\&. protocol major version
+6\&. protocol minor version
+7\&. connection\-reuse counter
+8\&. PostgreSQL backend process id
+9\&. 1 if frontend conncted 0 if not
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+If there is no connection to the backends, nothing will be displayed\&. If there are multiple connections, one connection\*(Aqs information will be displayed on each line multiple times\&. Timestamps are displayed in EPOCH format\&.
+.PP
+The
+\fB\-\-verbose\fR
+option can help understand the output\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_proc_info \-\-verbose \-U postgres 3815
+Database     : postgres_db
+Username     : postgres
+Start time   : 1150769932
+Creation time: 1150767351
+Major        : 3
+Minor        : 0
+Counter      : 1
+PID          : 1467
+Connected    : 1
+Database     : postgres_db
+Username     : postgres
+Start time   : 1150769932
+Creation time: 1150767351
+Major        : 3
+Minor        : 0
+Counter      : 1
+PID          : 1468
+Connected    : 1
+    
+.fi
+.if n \{\
+.RE
+.\}

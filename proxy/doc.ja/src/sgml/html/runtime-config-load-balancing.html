@@ -1,0 +1,1331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>負荷分散</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="エラー報告とログ取得"
+HREF="runtime-config-logging.html"><LINK
+REL="NEXT"
+TITLE="ヘルスチェック"
+HREF="runtime-config-health-check.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="エラー報告とログ取得"
+HREF="runtime-config-logging.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="ヘルスチェック"
+HREF="runtime-config-health-check.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-CONFIG-LOAD-BALANCING"
+>5.7. 負荷分散</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のSELECTクエリの負荷分散はマスタースレーブモード（<A
+HREF="runtime-config-runnung-mode.html#RUNTIME-CONFIG-MASTER-SLAVE-MODE"
+>項5.3.1</A
+>）とレプリケーションモード（<A
+HREF="runtime-config-runnung-mode.html#RUNTIME-CONFIG-REPLICATION-MODE"
+>項5.3.2</A
+>）で動作します。
+有効時、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は更新を伴うクエリを、マスタースレーブモードでは<ACRONYM
+CLASS="ACRONYM"
+>プライマリノード</ACRONYM
+>に、レプリケーションモードでは全てのバックエンドノードに対し送信します。
+そして、その他のクエリは全てのバックエンドの間で負荷分散されます。
+負荷分散メカニズムが参照クエリをどのノードに送信するかはセッション開始時に決められ、セッションの終了まで変更されません。
+唯一の例外は特別なSQLコマンドが発行されたときです。
+詳細については以下をご覧ください。
+  </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>負荷分散ができないためにプリマリノードまたは全バックエンドノードに送られクエリもまた、負荷分散アルゴリズムで判断されます。
+    </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>もし負荷分散対象のクエリを<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に負荷分散してほしくない場合には、<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>文の前の<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>/*NO LOAD BALANCE*/</I
+></SPAN
+>コメントを付与することができます。
+これにより、そのクエリの負荷分散は無効となり、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はこれをマスターノード（マスタースレーブモードではプライマリノード）に送信します。
+    </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>どのDBノードが負荷分散ノードになっているかは、<A
+HREF="sql-show-pool-nodes.html"
+>SHOW POOL NODES</A
+>を利用して確認できます。
+    </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-LOAD-BALANCING-CONDITION"
+>5.7.1. 負荷分散の条件について</A
+></H2
+><P
+>クエリが負荷分散されるためには、以下の全ての条件を満たす必要があります：
+  <P
+></P
+></P><UL
+><LI
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>のバージョンが7.4以降である
+      </P
+></LI
+><LI
+><P
+>レプリケーションモードまたはマスタースレーブモードである
+      </P
+></LI
+><LI
+><P
+>問い合わせが明示的なトランクザションブロックの内側にない(つまり、BEGINを発行していない)
+      </P
+><P
+></P
+><UL
+><LI
+><P
+>ただし、以下の条件が満たされればトランザクションブロックの内側であっても負荷分散の対象となります。
+          <P
+></P
+></P><UL
+><LI
+><P
+>トランザクション分離レベルがSERIALIZABLEでない
+              </P
+></LI
+><LI
+><P
+>トランザクション内で更新を伴うクエリが実行されていない
+(更新を伴うクエリが実行されるまでは負荷分散されます。
+ここで「更新を伴うクエリ」とは、SELECT以外のDDLやDMLを指します。
+black/white function listで指定される更新関数を含むSELECTは更新を伴うクエリとは見なされません。
+この仕様は将来変更される可能性があります)
+              </P
+></LI
+><LI
+><P
+>もしblack/white function listが空の場合は、関数を持つSELECTは、更新を伴うクエリとは見なされません。
+              </P
+></LI
+></UL
+><P>
+          </P
+></LI
+></UL
+></LI
+><LI
+><P
+>SELECT INTO 文ではない
+      </P
+></LI
+><LI
+><P
+>SELECT FOR UPDATE/SELECT FOR SHARE文ではない
+      </P
+></LI
+><LI
+><P
+>SELECT または COPY TO STDOUT, EXPLAIN, EXPLAIN ANALYZE SELECT... から始まる。
+(<A
+HREF="runtime-config-load-balancing.html#GUC-BLACK-FUNCTION-LIST"
+>black_function_list</A
+>または<A
+HREF="runtime-config-load-balancing.html#GUC-WHITE-FUNCTION-LIST"
+>white_function_list</A
+>で指定された書き込み関数を含むSELECTを除く)
+<A
+HREF="runtime-config-load-balancing.html#GUC-IGNORE-LEADING-WHITE-SPACE"
+>ignore_leading_white_space</A
+> = <TT
+CLASS="LITERAL"
+>true</TT
+>の場合は最初の空白文字は無視されます。
+     </P
+></LI
+><LI
+><P
+>マスタースレーブモードの場合、更に以下の条件が満たされなければなりません。
+      </P
+><P
+></P
+><UL
+><LI
+><P
+>一時テーブルを使っていない
+            </P
+></LI
+><LI
+><P
+>unloggedテーブルを使っていない
+            </P
+></LI
+><LI
+><P
+>システムカタログを使っていない
+            </P
+></LI
+></UL
+></LI
+></UL
+><P>
+  </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>SELECTクエリの前に任意のコメントを挿入することにより負荷分散を抑制することができます。
+    </P
+><PRE
+CLASS="PROGRAMLISTING"
+>/*REPLICATION*/ SELECT ...
+    </PRE
+><P
+>SQLコメントの記述が負荷分散に影響を与えないようにするには、<A
+HREF="runtime-config-load-balancing.html#GUC-ALLOW-SQL-COMMENTS"
+>allow_sql_comments</A
+>をonにします。
+<A
+HREF="runtime-config-runnung-mode.html#GUC-REPLICATE-SELECT"
+>replicate_select</A
+>も参照してください。
+    </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>JDBC ドライバにはautocommitオプションがあります。
+autocommit を無効にすると、ドライバが内部でBEGINおよびCOMMITコマンドを実行し、明示的なトランザクションが開始されます。
+この場合、トランザクション内における上記の負荷分散の制限事項が適用されます。
+    </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-LOAD-BALANCING-IN-STREAMING-RAPLICATION"
+>5.7.2. ストリーミングレプリケーションにおける負荷分散</A
+></H2
+><P
+>ストリーミングレプリケーションとHot Standbyを利用している環境では、プライマリノードに送ってよい問い合わせ、スタンバイに送ってもよい問い合わせ、両方に送らなければならない問い合わせを厳密に管理する必要があります。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のストリーミングレプリケーションモードは、こうした振り分けを自動的に行ないます。
+   </P
+><P
+> クエリそのものから、どのクエリがどのノードに送られるべきかを区別します。
+     <P
+></P
+></P><UL
+><LI
+><P
+>プライマリノードにしか送られない問い合わせ
+         <P
+></P
+></P><UL
+><LI
+><P
+>             INSERT, UPDATE, DELETE, COPY FROM, TRUNCATE, CREATE, DROP, ALTER, COMMENT
+             </P
+></LI
+><LI
+><P
+>             SELECT ... FOR SHARE | UPDATE
+             </P
+></LI
+><LI
+><P
+>トランザクションの分離レベルがシリアライザブルの場合のSELECT
+             </P
+></LI
+><LI
+><P
+>OW EXCLUSIVE MODEよりも強いLOCK
+             </P
+></LI
+><LI
+><P
+>                DECLARE, FETCH, CLOSE
+             </P
+></LI
+><LI
+><P
+>             SHOW
+             </P
+></LI
+><LI
+><P
+>トランザクションコマンドの一部
+             <P
+></P
+></P><UL
+><LI
+><P
+>                 BEGIN READ WRITE, START TRANSACTION READ WRITE
+                 </P
+></LI
+><LI
+><P
+>                 SET TRANSACTION READ WRITE, SET SESSION CHARACTERISTICS AS TRANSACTION READ WRITE
+                 </P
+></LI
+><LI
+><P
+>                 SET transaction_read_only = off
+                 </P
+></LI
+></UL
+><P>
+             </P
+></LI
+><LI
+><P
+>二相コミット関連のコマンド。PREPARE TRANSACTION, COMMIT PREPARED, ROLLBACK PREPARED
+             </P
+></LI
+><LI
+><P
+>             LISTEN, UNLISTEN, NOTIFY
+             </P
+></LI
+><LI
+><P
+>             VACUUM
+             </P
+></LI
+><LI
+><P
+>シーケンス関連の関数(nextvalやsetvalなど)の呼び出し。
+             </P
+></LI
+><LI
+><P
+>ラージオブジェクトの生成
+             </P
+></LI
+></UL
+><P>
+       </P
+></LI
+><LI
+><P
+>プライマリノードとスタンバイノードのどちらにも送ることのできる問い合わせ。
+負荷分散設定が有効ならば、スタンバイノードにも送信されます。
+レプリケーションの遅延が<A
+HREF="runtime-streaming-replication-check.html#GUC-DELAY-THRESHOLD"
+>delay_threshold</A
+>を上回っている場合は問い合わせはプライマリノードに送られます。
+
+         <P
+></P
+></P><UL
+><LI
+><P
+>             SELECT not listed above
+             </P
+></LI
+><LI
+><P
+>             COPY TO
+             </P
+></LI
+></UL
+><P>
+        </P
+></LI
+><LI
+><P
+>プライマリノードとスタンバイノードのどちらにも送られる問い合わせ
+          <P
+></P
+></P><UL
+><LI
+><P
+>             SET
+             </P
+></LI
+><LI
+><P
+>             DISCARD
+             </P
+></LI
+><LI
+><P
+>             DEALLOCATE ALL
+             </P
+></LI
+></UL
+><P>
+        </P
+></LI
+></UL
+><P>
+   </P
+><P
+>明示的なトランザクションでは、以下のようになります。
+     <P
+></P
+></P><UL
+><LI
+><P
+>BEGINなどのトランザクション開始コマンドは、プライマリノードに送られます。
+         </P
+></LI
+><LI
+><P
+>続くSELECTなど、プライマリ/スタンバイのどちらにも送ることのできる問い合わせは、プライマリのトランザクション内でそのまま実行されるか、スタンバイノードで実行されます。
+         </P
+></LI
+><LI
+><P
+>INSERTなど、スタンバイに送ることのできない問い合わせが現われた場合はプライマリに送られます。
+そういったコマンドの後は、SELECTであってもプライマリノードに送られます。
+これは、INSERTなどの問い合わせの結果を SELECTが直ちに参照できるようにするためです。
+この状態は、トランザクションが閉じるか、アボートするまで続きます。
+         </P
+></LI
+></UL
+><P>
+   </P
+><P
+>問い合わせが、拡張問い合わせモードで実行される場合は、問い合わせのparse段階で、問い合わせがスタンバイに送信可能かが決まります。
+その際の判断ルールは通常のSQLと同じです。
+たとえば問い合わせがINSERTならば、プライマリノードに送られます。
+それに後に続くbind, describe, executeも同じくプライマリに送られます。
+   </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>負荷分散によりSELECT文のparseがスタンバイノードに送信され、その後INSERTなどのDML文が<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に送られた場合、parse済のSELECTはプライマリノードで実行されなければなりません。
+そのため、同じSELECTがプライマリノードで再度パースされることになります。
+     </P
+></BLOCKQUOTE
+></DIV
+><P
+>最後に、pgpool-IIのパーサが構文エラーと判断した問い合わせはプライマリノードだけに送られます。
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-LOAD-BALANCING-SETTINGS"
+>5.7.3. 負荷分散の設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-LOAD-BALANCE-MODE"
+></A
+><TT
+CLASS="VARNAME"
+>load_balance_mode</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+        </DT
+><DD
+><P
+>onの設定すると、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は入ってきた<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリに対する負荷分散を有効にします。
+すなわち、クライアントからの<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリは設定された<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドに振り分けます。
+デフォルトはoffです。
+        </P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-IGNORE-LEADING-WHITE-SPACE"
+></A
+><TT
+CLASS="VARNAME"
+>ignore_leading_white_space</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+        </DT
+><DD
+><P
+>onに設定すると、負荷分散の際にSQL文行頭の空白を無視します(全角スペースは無視されません)。
+これは、DBI/DBD:Pgのように、ユーザの意図に反してに空白を追加するようなAPIを使っているときに有用です。
+        </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-WHITE-FUNCTION-LIST"
+></A
+><TT
+CLASS="VARNAME"
+>white_function_list</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>データベースに対して更新を<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>行なわない</I
+></SPAN
+>関数名をコンマ区切りで指定します。
+このリストに<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>指定されていない</I
+></SPAN
+>関数呼び出しを含むSELECTは負荷分散されません。
+これらのクエリはレプリケーションモードにおいてはすべてのDBノードで複製され、マスタースレーブモードにおいてはプライマリノードにのみ送信されます。
+        </P
+><P
+>関数名のマッチングに正規表現を使うことができます。
+正規表現には自動的に<TT
+CLASS="LITERAL"
+>^</TT
+>と<TT
+CLASS="LITERAL"
+>$</TT
+>が付与されます。
+        </P
+><DIV
+CLASS="EXAMPLE"
+><A
+NAME="EXAMPLE-WHITE-FUNCTION-LIST-1"
+></A
+><P
+><B
+>例 5-2. 正規表現の使用</B
+></P
+><P
+>もし読み出しのみを行う関数が"get_"あるいは"select_"で始まるようにしてあるのであれば、<A
+HREF="runtime-config-load-balancing.html#GUC-WHITE-FUNCTION-LIST"
+>white_function_list</A
+>を以下のように設定可能です。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>white_function_list = 'get_.*,select_.*'
+          </PRE
+><P>
+          </P
+></DIV
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-BLACK-FUNCTION-LIST"
+></A
+><TT
+CLASS="VARNAME"
+>black_function_list</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>データベースに対して更新を<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>行う</I
+></SPAN
+>関数名をコンマ区切りで指定します。
+このリストに<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>指定された</I
+></SPAN
+>関数呼び出しを含むSELECTは負荷分散されません。
+これらのクエリはレプリケーションモードにおいてはすべてのDBノードで複製され、マスタースレーブモードにおいてはプライマリノードにのみ送信されます。
+        </P
+><P
+>関数名のマッチングに正規表現を使うことができます。
+正規表現には自動的に<TT
+CLASS="LITERAL"
+>^</TT
+>と<TT
+CLASS="LITERAL"
+>$</TT
+>が付与されます。
+        </P
+><DIV
+CLASS="EXAMPLE"
+><A
+NAME="EXAMPLE-BLACK-FUNCTION-LIST-1"
+></A
+><P
+><B
+>例 5-3. 正規表現の使用</B
+></P
+><P
+>もし更新を行う関数が"set_"、"update_"、"delete_"、あるいは"insert_"で始まるようにしてあるのであれば、<A
+HREF="runtime-config-load-balancing.html#GUC-BLACK-FUNCTION-LIST"
+>black_function_list</A
+>を以下のように設定可能です。
+          </P><PRE
+CLASS="PROGRAMLISTING"
+>black_function_list = 'nextval,setval,set_.*,update_.*,delete_.*,insert_.*'
+          </PRE
+><P>
+          </P
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><A
+HREF="runtime-config-load-balancing.html#GUC-BLACK-FUNCTION-LIST"
+>black_function_list</A
+>と<A
+HREF="runtime-config-load-balancing.html#GUC-WHITE-FUNCTION-LIST"
+>white_function_list</A
+>は互いに排他的で、２つのリストの内、どちらか一方のみ設定することができます。
+          </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="EXAMPLE"
+><A
+NAME="EXAMPLE-BLACK-FUNCTION-LIST-2"
+></A
+><P
+><B
+>例 5-4. <TT
+CLASS="LITERAL"
+>nextval()</TT
+>と<TT
+CLASS="LITERAL"
+>setval()</TT
+>を適切なバックエンドに送る設定</B
+></P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.0</I
+></SPAN
+>より前のバージョンでは、固定で<TT
+CLASS="LITERAL"
+>nextval()</TT
+>と<TT
+CLASS="LITERAL"
+>setval()</TT
+>がデータベースに書き込みを行なう関数であると認識されていました。
+以下のように<A
+HREF="runtime-config-load-balancing.html#GUC-BLACK-FUNCTION-LIST"
+>black_function_list</A
+>と<A
+HREF="runtime-config-load-balancing.html#GUC-BLACK-FUNCTION-LIST"
+>black_function_list</A
+>を設定することで、それと同じように動作させることができます。
+              </P><PRE
+CLASS="PROGRAMLISTING"
+>white_function_list = ''
+black_function_list = 'nextval,setval,lastval,currval'
+              </PRE
+><P>
+          </P
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>には<TT
+CLASS="LITERAL"
+>nextval()</TT
+>と<TT
+CLASS="LITERAL"
+>setval()</TT
+>に加え、<TT
+CLASS="LITERAL"
+>lastval()</TT
+>と<TT
+CLASS="LITERAL"
+>currval</TT
+>があります。
+<TT
+CLASS="LITERAL"
+>lastval()</TT
+>と<TT
+CLASS="LITERAL"
+>currval()</TT
+>は書き込みを行う関数ではありませんが、これらの関数が負荷分散されることで発生するエラーを防ぐため、<TT
+CLASS="LITERAL"
+>lastval()</TT
+>と<TT
+CLASS="LITERAL"
+>curval()</TT
+>を書き込みを行う関数として扱うのが望ましいです。
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-DATABASE-REDIRECT-PREFERENCE-LIST"
+></A
+><TT
+CLASS="VARNAME"
+>database_redirect_preference_list</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>特定のデータベース接続では<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリが特定のバックエンドノードに送信されるように、"<TT
+CLASS="REPLACEABLE"
+><I
+>データベース名:ノードID</I
+></TT
+>"ペアのリストを指定します。
+たとえば"test:1"とした場合、"test"データベースへの接続においては、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は全ての<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリをIDが1のバックエンドノードに送信します。
+複数の"<TT
+CLASS="REPLACEABLE"
+><I
+>データベース名:ノードID</I
+></TT
+>"のペアを カンマ(,)で区切って指定することができます。
+        </P
+><P
+>データベース名には正規表現を指定することできます。
+<TT
+CLASS="REPLACEABLE"
+><I
+>ノードID</I
+></TT
+>には特別なキーワードを使うことができます。
+"<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>primary</I
+></SPAN
+>"が指定された場合にはクエリはプライマリノードに送られます。
+また、"<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>standby</I
+></SPAN
+>"が指定された場合はスタンバイノードのうちどれかをウェイトに応じてランダムに選択します。
+        </P
+><DIV
+CLASS="EXAMPLE"
+><A
+NAME="EXAMPLE-DATABASE-REDIRECT-LIST"
+></A
+><P
+><B
+>例 5-5. database_redirect_preference_listの利用</B
+></P
+><P
+><ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリのルーティングルールを以下のように設定したい場合：
+          </P
+><P
+></P
+><UL
+><LI
+><P
+>全ての<TT
+CLASS="LITERAL"
+>postgres</TT
+>データベースにおける<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリはプライマリバックエンドノードに送る。
+              </P
+></LI
+><LI
+><P
+>全ての<TT
+CLASS="LITERAL"
+>mydb0</TT
+>または<TT
+CLASS="LITERAL"
+>mydb1</TT
+>データベースにおける<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリはIDが1のバックエンドノードに送る。
+              </P
+></LI
+><LI
+><P
+>全ての<TT
+CLASS="LITERAL"
+>mydb2</TT
+>データベースにおける<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリはスタンバイバックエンドノードに送る。
+              </P
+></LI
+></UL
+><P
+><A
+HREF="runtime-config-load-balancing.html#GUC-DATABASE-REDIRECT-PREFERENCE-LIST"
+>database_redirect_preference_list</A
+>は以下のように設定します。
+              </P><PRE
+CLASS="PROGRAMLISTING"
+>database_redirect_preference_list = 'postgres:primary,mydb[01]:1,mydb2:standby'
+              </PRE
+><P>
+          </P
+></DIV
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-APP-NAME-REDIRECT-PREFERENCE-LIST"
+></A
+><TT
+CLASS="VARNAME"
+>app_name_redirect_preference_list</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>特定のクライアントアプリケーションの接続では<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリが特定のバックエンドノードに送信されるように、"<TT
+CLASS="REPLACEABLE"
+><I
+>アプリケーション名:ノードID</I
+></TT
+>"ペアのリストを指定します。
+        </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>「アプリケーション名」とはクライアントがデータベースに接続する時に指定する名称で、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V9.0</I
+></SPAN
+>以降で利用可能です。
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+>たとえば、<TT
+CLASS="COMMAND"
+>psql</TT
+>コマンドのアプリケーション名は"<TT
+CLASS="LITERAL"
+>psql</TT
+>"です。
+        </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は、クライアントから送信されたスタートアップパケットに含まれるアプリケーション名だけを認識します。
+クライアントは事後にセッションの中でアプリケーション名を指定できますが、それは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のクエリルーティングでは考慮されません。
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+><A
+HREF="runtime-config-load-balancing.html#GUC-APP-NAME-REDIRECT-PREFERENCE-LIST"
+>app_name_redirect_preference_list</A
+>の記法は<A
+HREF="runtime-config-load-balancing.html#GUC-DATABASE-REDIRECT-PREFERENCE-LIST"
+>database_redirect_preference_list</A
+>と同じですので、アプリケーション名には正規表現も使用できます。
+同様に特別なキーワード"<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>primary</I
+></SPAN
+>"はプライマリノードを、"<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>standby</I
+></SPAN
+>"はスタンバイサーバのいずれかを意味します。
+        </P
+><DIV
+CLASS="EXAMPLE"
+><A
+NAME="EXAMPLE-APP-NAME-REDIRECT-LIST"
+></A
+><P
+><B
+>例 5-6. app_name_redirect_preference_listの利用</B
+></P
+><P
+><ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリのルーティングルールを以下のように設定したい場合：
+          </P
+><P
+></P
+><UL
+><LI
+><P
+>全ての<TT
+CLASS="LITERAL"
+>psql</TT
+>クライアントからの<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリはプライマリバックエンドノードに送る。
+              </P
+></LI
+><LI
+><P
+>全ての<TT
+CLASS="LITERAL"
+>myapp1</TT
+>クライアントからの<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリはIDが1のバックエンドノードに送る。
+              </P
+></LI
+><LI
+><P
+>全ての<TT
+CLASS="LITERAL"
+>myapp2</TT
+>クライアントからの<ACRONYM
+CLASS="ACRONYM"
+>SELECT</ACRONYM
+>クエリはスタンバイバックエンドノードに送る。
+              </P
+></LI
+></UL
+><P
+><A
+HREF="runtime-config-load-balancing.html#GUC-APP-NAME-REDIRECT-PREFERENCE-LIST"
+>app_name_redirect_preference_list</A
+>は以下のように設定します。
+              </P><PRE
+CLASS="PROGRAMLISTING"
+>app_name_redirect_preference_list = 'psql:primary,myapp1:1,myapp2:standby'
+              </PRE
+><P>
+          </P
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><A
+HREF="runtime-config-load-balancing.html#GUC-APP-NAME-REDIRECT-PREFERENCE-LIST"
+>app_name_redirect_preference_list</A
+>は、<A
+HREF="runtime-config-load-balancing.html#GUC-DATABASE-REDIRECT-PREFERENCE-LIST"
+>database_redirect_preference_list</A
+>よりも優先されます。
+          </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="CAUTION"
+><P
+></P
+><TABLE
+CLASS="CAUTION"
+BORDER="1"
+WIDTH="90%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+>注意</B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+><ACRONYM
+CLASS="ACRONYM"
+>JDBC</ACRONYM
+>ドライバのpostgresql-9.3以前のバージョンでは、<ACRONYM
+CLASS="ACRONYM"
+>JDBC</ACRONYM
+>ドライバの"<TT
+CLASS="LITERAL"
+>ApplicationName</TT
+>" と "<TT
+CLASS="LITERAL"
+>assumeMinServerVersion=9.0</TT
+>"オプションを指定してもスタートアップパケットの中にアプリケーション名を含ません。
+<ACRONYM
+CLASS="ACRONYM"
+>JDBC</ACRONYM
+>から<A
+HREF="runtime-config-load-balancing.html#GUC-APP-NAME-REDIRECT-PREFERENCE-LIST"
+>app_name_redirect_preference_list</A
+>機能を使用したければ、postgresql-9.4 以降のドライバをお使いください
+          </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-ALLOW-SQL-COMMENTS"
+></A
+><TT
+CLASS="VARNAME"
+>allow_sql_comments</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+        </DT
+><DD
+><P
+>onに設定すると、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は負荷分散やクエリキャッシュができるかどうかの判定の際に<ACRONYM
+CLASS="ACRONYM"
+>SQL</ACRONYM
+>コメントを無視します。
+このパラメータがoffに設定されている場合、クエリの<ACRONYM
+CLASS="ACRONYM"
+>SQL</ACRONYM
+>コメントにより、クエリの負荷分散やキャッシュを防止することができます。
+（<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.4</I
+></SPAN
+>より前のバージョンの動作です）。
+        </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+現在のセッションでのパラメータ値は、<A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+>コマンドで変更することもできます。
+        </P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config-logging.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-config-health-check.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>エラー報告とログ取得</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ヘルスチェック</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

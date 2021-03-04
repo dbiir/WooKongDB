@@ -1,0 +1,105 @@
+'\" t
+.\"     Title: PGPOOL RESET
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PGPOOL RESET" "1" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+PGPOOL_RESET \- 設定パラメータの値をデフォルト値に戻す
+.SH "概要"
+.sp
+.nf
+RESET \fIconfiguration_parameter\fR
+RESET ALL
+.fi
+.SH "説明"
+.PP
+\fBPGPOOL RESET\fR
+はPgpool\-II
+のパラメータの値をデフォルト値に戻します。 デフォルト値とは、現行セッション内で
+\fBPGPOOL SET\fR
+コマンドが発行されなかった場合に変数が保持していた値として定義されます。 このコマンドは
+PostgreSQL
+の
+\m[blue]\fB\fBRESET\fR\fR\m[]\&\s-2\u[1]\d\s+2
+コマンドと似っていますが、
+PostgreSQL
+の
+\fBRESET\fR
+コマンドと区別するために、
+PGPOOL
+というキーワードが追加されました。
+.SH "パラメータ"
+.PP
+\fIconfiguration_parameter\fR
+.RS 4
+設定可能な
+Pgpool\-II
+パラメータの名前です。 設定できるパラメータについては
+5章サーバの設定
+で説明します。
+.RE
+.PP
+ALL
+.RS 4
+設定可能な全ての
+Pgpool\-II
+のパラメータをデフォルト値に戻します。
+.RE
+.SH "例"
+.PP
+client_idle_limit
+設定変数をデフォルト値に設定します。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+PGPOOL RESET client_idle_limit;
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+全パラメータの設定値をデフォルト値に戻します。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+PGPOOL RESET ALL;
+.fi
+.if n \{\
+.RE
+.\}
+.SH "関連項目"
+PGPOOL SET (\fBPGPOOL_SET\fR(1)), PGPOOL SHOW (\fBPGPOOL_SHOW\fR(1))
+.SH "注記"
+.IP " 1." 4
+    \fBRESET\fR
+.RS 4
+\%http://www.postgresql.jp/document/9.5/html/sql-reset.html
+.RE

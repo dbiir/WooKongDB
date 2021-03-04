@@ -1,0 +1,704 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>オンラインリカバリ</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="フェイルオーバとフェイルバック"
+HREF="runtime-config-failover.html"><LINK
+REL="NEXT"
+TITLE="ストリーミングレプリケーションのチェック"
+HREF="runtime-streaming-replication-check.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="フェイルオーバとフェイルバック"
+HREF="runtime-config-failover.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="ストリーミングレプリケーションのチェック"
+HREF="runtime-streaming-replication-check.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-ONLINE-RECOVERY"
+>5.10. オンラインリカバリ</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> はサービスを止めることなくデータベースノード同期させ、ノードを復帰させることができます。
+この機能は「<ACRONYM
+CLASS="ACRONYM"
+>オンラインリカバリ</ACRONYM
+>」と呼ばれます。
+  </P
+><P
+>オンラインリカバリを実施するためには、リカバリ対象のノードは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>から切り離されている必要があります。
+新しい<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバを動的に追加したい場合には、<A
+HREF="runtime-config-backend-settings.html#GUC-BACKEND-HOSTNAME"
+>backend_hostname</A
+>および関連パラメータを追加した後に<TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+>を再読み込みします。
+これにより新しいサーバが切り離された状態のバックエンドノードとして<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に登録されます。
+  </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>オンラインリカバリ実行のためには、対象となる<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバは稼働していてはいけません。
+対象の<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>がすでに動作中であれば、オンラインリカバリを開始する前にシャットダウンしておいてください。 
+    </P
+></BLOCKQUOTE
+></DIV
+><P
+>オンラインリカバリは2段階に分けて実施されます。
+ファーストステージではデータの更新や読み取りができますが、セカンドステージではクライアントからの接続は許されていません。
+オンラインリカバリでは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は以下の手順を実施します。
+  </P
+><P
+></P
+><UL
+><LI
+><P
+>        CHECKPOINT.
+      </P
+></LI
+><LI
+><P
+>オンラインリカバリのファーストステージ。
+      </P
+></LI
+><LI
+><P
+>全てのクライアント接続が切断されるまで待機
+      </P
+></LI
+><LI
+><P
+>        CHECKPOINT.
+      </P
+></LI
+><LI
+><P
+>オンラインリカバリのセカンドステージ。
+      </P
+></LI
+><LI
+><P
+>postmasterの起動（<TT
+CLASS="LITERAL"
+>pgpool_remote_start</TT
+>の実施）
+      </P
+></LI
+><LI
+><P
+>ノードの復帰
+      </P
+></LI
+></UL
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>オンラインリカバリには制限事項があります。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が複数のホストにインストールされている場合、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はオンラインリカバリの2ndステージの間全てのクライアントを止める必要があるため、オンラインリカバリは正しく動作しません。
+複数の<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>ホストがある場合、そのうちの１台のみがオンラインリカバコマンドを受け取り、クライアントからの接続をブロックします。
+    </P
+></BLOCKQUOTE
+></DIV
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-RECOVERY-USER"
+></A
+><TT
+CLASS="VARNAME"
+>recovery_user</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>オンラインリカバリを行うための<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>ユーザ名です。
+      </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-RECOVERY-PASSWORD"
+></A
+><TT
+CLASS="VARNAME"
+>recovery_password</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>オンラインリカバリを行うための PostgreSQL ユーザパスワードです。
+          <A
+HREF="runtime-online-recovery.html#GUC-RECOVERY-USER"
+>recovery_user</A
+> to perform online recovery.
+        </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-RECOVERY-1ST-STAGE-COMMAND"
+></A
+><TT
+CLASS="VARNAME"
+>recovery_1st_stage_command</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>オンラインリカバリのファーストステージでマスタ（プライマリ）ノードで実行されるコマンドを指定します。
+コマンドファイルはセキュリティ上の観点からデータベースクラスタ内に配置される必要があります。
+例えば、<TT
+CLASS="VARNAME"
+>recovery_1st_stage_command</TT
+> = <TT
+CLASS="LITERAL"
+>'sync-command'</TT
+>となっている場合、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はコマンドスクリプトを<TT
+CLASS="LITERAL"
+>$PGDATA</TT
+>ディレクトリの中で探し、<TT
+CLASS="COMMAND"
+>$PGDATA/sync-command</TT
+>を起動しようとします。
+        </P
+><P
+><TT
+CLASS="VARNAME"
+>recovery_1st_stage_command</TT
+>は次の4つの引数を受けとります。 
+        </P
+><P
+></P
+><UL
+><LI
+><P
+>マスター（プライマリ）ノードのデータベースクラスタへのパス
+            </P
+></LI
+><LI
+><P
+>リカバリされるバックエンドノードのホスト名
+            </P
+></LI
+><LI
+><P
+>リカバリされるノードのデータベースクラスタへのパス
+            </P
+></LI
+><LI
+><P
+>リカバリーされるノードのポート番号
+            </P
+></LI
+></UL
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><TT
+CLASS="VARNAME"
+>recovery_1st_stage_command</TT
+>の実行中は<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は接続やクエリを受け付けており、データの参照や更新を行うことができます。
+          </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="CAUTION"
+><P
+></P
+><TABLE
+CLASS="CAUTION"
+BORDER="1"
+WIDTH="90%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+>注意</B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+><TT
+CLASS="VARNAME"
+>recovery_1st_stage_command</TT
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>から見ると、一つの<ACRONYM
+CLASS="ACRONYM"
+>SQL</ACRONYM
+>として実行されます。
+そのため、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の<TT
+CLASS="VARNAME"
+>statement_timeout</TT
+>が<TT
+CLASS="VARNAME"
+>recovery_1st_stage_command</TT
+>の完了にかかる時間よりも短く設定されていると、<TT
+CLASS="VARNAME"
+>recovery_1st_stagecommand</TT
+>コマンドの実行が途中でキャンセルされます。
+          </P
+><P
+>典型的なエラーは以下のようなものです。
+            </P><PRE
+CLASS="PROGRAMLISTING"
+>rsync used in the command is killed by signal 2 for example.
+            </PRE
+><P>
+          </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-RECOVERY-2ND-STAGE-COMMAND"
+></A
+><TT
+CLASS="VARNAME"
+>recovery_2nd_stage_command</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>オンラインリカバリのセカンドステージでマスタ（プライマリ）ノードで実行されるコマンドを指定します。
+コマンドファイルはセキュリティ上の観点からデータベースクラスタ内に配置される必要があります。
+例えば、<TT
+CLASS="VARNAME"
+>recovery_2nd_stage_command</TT
+> = <TT
+CLASS="LITERAL"
+>'sync-command'</TT
+>となっている場合、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はコマンドスクリプトを<TT
+CLASS="LITERAL"
+>$PGDATA</TT
+>ディレクトリの中で探し、<TT
+CLASS="COMMAND"
+>$PGDATA/sync-command</TT
+>を起動しようとします。
+        </P
+><P
+><TT
+CLASS="VARNAME"
+>recovery_2nd_stage_command</TT
+>は次の4つの引数を受けとります。 
+        </P
+><P
+></P
+><UL
+><LI
+><P
+>マスター（プライマリ）ノードのデータベースクラスタへのパス
+            </P
+></LI
+><LI
+><P
+>リカバリされるバックエンドノードのホスト名
+            </P
+></LI
+><LI
+><P
+>リカバリされるノードのデータベースクラスタへのパス
+            </P
+></LI
+><LI
+><P
+>マスター（プライマリ）ノードのポート番号
+            </P
+></LI
+></UL
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><TT
+CLASS="VARNAME"
+>recovery_2nd_stage_command</TT
+>の実行中は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はクライアントからの接続およびクエリを<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>受け付けません</I
+></SPAN
+>。
+また、コマンドを実行する前に既存のクライアントが接続を閉じるのを待ちます。
+そのため、長時間接続したままのクライアントがいる場合、<TT
+CLASS="VARNAME"
+>recovery_2nd_stage_command</TT
+>は実行されない可能性があります。
+          </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="CAUTION"
+><P
+></P
+><TABLE
+CLASS="CAUTION"
+BORDER="1"
+WIDTH="90%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+>注意</B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+><TT
+CLASS="VARNAME"
+>recovery_2nd_stage_command</TT
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>から見ると、一つの<ACRONYM
+CLASS="ACRONYM"
+>SQL</ACRONYM
+>として実行されます。
+そのため、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の<TT
+CLASS="VARNAME"
+>statement_timeout</TT
+>が<TT
+CLASS="VARNAME"
+>recovery_2nd_stage_command</TT
+>の完了にかかる時間よりも短く設定されていると、<TT
+CLASS="VARNAME"
+>recovery_1st_stagecommand</TT
+>コマンドの実行が途中でキャンセルされます。
+          </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-RECOVERY-TIMEOUT"
+></A
+><TT
+CLASS="VARNAME"
+>recovery_timeout</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+>時間内にオンラインリカバリが完了しなかった場合に、これをキャンセルするためのタイムアウトを秒単位で指定します。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は、オンラインリカバリのセカンドステージの間は接続を受け付けけないので、このパラメータはオンラインリカバリの最中のサーバがダウンした時にオンラインリカバリをキャンセルするのに使えます。
+        </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+        </P
+></DD
+><DT
+><A
+NAME="GUC-CLIENT-IDLE-LIMIT-IN-RECOVERY"
+></A
+><TT
+CLASS="VARNAME"
+>client_idle_limit_in_recovery</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+        </DT
+><DD
+><P
+>オンラインリカバリの最中で、クライアントが前回のクエリからアイドル状態のままでいるときに、それを切断するまでの時間を秒単位で指定します。
+<TT
+CLASS="VARNAME"
+>client_idle_limit_in_recovery</TT
+>は<A
+HREF="runtime-config-connection-pooling.html#GUC-CLIENT-IDLE-LIMIT"
+>client_idle_limit</A
+>と似ていますが、オンラインリカバリのセカンドステージでのみ効果を持ちます。
+        </P
+><P
+>これは、だらしないクライアントや<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の間のTCP/IPコネクションの不調（例えばケーブルの切断など）によって、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のリカバリが邪魔されるのを防止するのに役立ちます。
+        </P
+><P
+>-1に設定すると、オンラインリカバリのセカンドステージが始まると全てのクライアントは直ちに切断されます。
+デフォルト値は0で、この機能は無効です。
+        </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+現在のセッションでのパラメータ値は、<A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+>コマンドで変更することもできます。
+        </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config-failover.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-streaming-replication-check.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>フェイルオーバとフェイルバック</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ストリーミングレプリケーションのチェック</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

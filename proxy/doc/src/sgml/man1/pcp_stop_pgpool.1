@@ -1,0 +1,89 @@
+'\" t
+.\"     Title: pcp_stop_pgpool
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "PCP_STOP_PGPOOL" "1" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pcp_stop_pgpool \- terminates the Pgpool\-II process
+.SH "SYNOPSIS"
+.HP \w'\fBpcp_stop_pgpool\fR\ 'u
+\fBpcp_stop_pgpool\fR [\fIoptions\fR...] [\fImode\fR]
+.SH "DESCRIPTION"
+.PP
+\fBpcp_stop_pgpool\fR
+terminates the Pgpool\-II process\&.
+.SH "OPTIONS"
+.PP
+.PP
+\fB\-m \fR\fB\fImode\fR\fR
+.br
+\fB\-\-mode=\fR\fB\fImode\fR\fR
+.RS 4
+Shutdown mode for terminating the Pgpool\-II process\&.
+.sp
+The available modes are as follows:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+s, smart : smart mode
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+f, fast : fast mode
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+i, immediate : immediate mode
+.RE
+.sp
+.RE
+.PP
+\fBOther options \fR
+.RS 4
+See
+\fBpcp_common_options\fR(1)\&.
+.RE

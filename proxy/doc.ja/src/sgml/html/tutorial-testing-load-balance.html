@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>負荷分散を試してみる</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="さあ始めましょう"
+HREF="tutorial-start.html"><LINK
+REL="PREVIOUS"
+TITLE="はじめてのレプリケーション"
+HREF="tutorial-replication.html"><LINK
+REL="NEXT"
+TITLE="レプリケーションを試してみる"
+HREF="tutorial-testing-replication.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="はじめてのレプリケーション"
+HREF="tutorial-replication.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-start.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 1章さあ始めましょう</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="レプリケーションを試してみる"
+HREF="tutorial-testing-replication.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="TUTORIAL-TESTING-LOAD-BALANCE"
+>1.3. 負荷分散を試してみる</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>では、読み込みクエリの負荷分散が可能です。
+デフォルトでこの機能は有効です。
+その効果を確かめるために、<TT
+CLASS="COMMAND"
+>pgbench -S</TT
+>コマンドを使ってみましょう。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgbench -p 11000 -c 10 -S -T 10 test
+starting vacuum...end.
+transaction type: &lt;builtin: select only&#62;
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+duration: 10 s
+number of transactions actually processed: 148044
+latency average = 0.676 ms
+tps = 14802.897506 (including connections establishing)
+tps = 14810.213749 (excluding connections establishing)
+
+$ psql -p 11000 -c "show pool_nodes" test
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay 
+---------+----------+-------+--------+-----------+---------+------------+-------------------+-------------------
+ 0       | /tmp     | 11002 | up     | 0.500000  | primary | 75152      | true              | 0
+ 1       | /tmp     | 11003 | up     | 0.500000  | standby | 72893      | false             | 0
+(2 rows)
+      </PRE
+><P>
+"select_cnt"カラムは、いくつSELECTが各々のノードに送られたかを示します。
+設定がデフォルトで、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は同じ数のSELECTを送ろうとするので、そのカラムはほぼ同じ値を示しています。
+    </P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>では、負荷分散の更に洗練された戦略の利用が可能です。
+詳細は<A
+HREF="runtime-config-load-balancing.html"
+>項5.7</A
+>をご覧ください。
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-replication.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="tutorial-testing-replication.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>はじめてのレプリケーション</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="tutorial-start.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>レプリケーションを試してみる</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

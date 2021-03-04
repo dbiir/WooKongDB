@@ -1,0 +1,169 @@
+'\" t
+.\"     Title: pgpool
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "PGPOOL" "8" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pgpool \- Pgpool\-II main server
+.SH "SYNOPSIS"
+.HP \w'\fBpgpool\fR\ 'u
+\fBpgpool\fR [\fIoption\fR...]
+.HP \w'\fBpgpool\fR\ 'u
+\fBpgpool\fR [\fIoption\fR...] \fIstop\fR
+.HP \w'\fBpgpool\fR\ 'u
+\fBpgpool\fR [\fIoption\fR...] \fIreload\fR
+.SH "DESCRIPTION"
+.PP
+the
+Pgpool\-II
+main server
+.SH "USAGES"
+.PP
+\fBpgpool\fR
+runs in 3 modes: start, stop and reload\&.
+.SH "COMMON OPTIONS"
+.PP
+These are common options for 3 modes\&.
+.PP
+\fB\-a \fR\fB\fIhba_config_file\fR\fR
+.br
+\fB\-\-hba\-file=\fR\fB\fIhba_config_file\fR\fR
+.RS 4
+Set the path to the
+pool_hba\&.conf
+configuration file\&. Mandatory if the file is placed other than the standard location\&.
+.RE
+.PP
+\fB\-f \fR\fB\fIconfig_file\fR\fR
+.br
+\fB\-\-config\-file=\fR\fB\fIconfig_file\fR\fR
+.RS 4
+Set the path to the
+pgpool\&.conf
+configuration file\&. Mandatory if the file is placed other than the standard location\&.
+.RE
+.PP
+\fB\-F \fR\fB\fIpc_config_file\fR\fR
+.br
+\fB\-\-pcp\-file=\fR\fB\fIpcp_config_file\fR\fR
+.RS 4
+Set the path to the
+pcp\&.conf
+configuration file\&. Mandatory if the file is placed other than the standard location\&.
+.RE
+.PP
+\fB\-h\fR
+.br
+\fB\-\-help\fR
+.RS 4
+Print help\&.
+.RE
+.SH "STARTING PGPOOL\-II MAIN SERVER"
+.PP
+Here are options for the start mode\&.
+.PP
+\fB\-d\fR
+.br
+\fB\-\-debug\fR
+.RS 4
+Run
+Pgpool\-II
+in debug mode\&. Lots of debug messages are produced\&.
+.RE
+.PP
+\fB\-n\fR
+.br
+\fB\-\-dont\-detach\fR
+.RS 4
+Don\*(Aqt run in daemon mode, does not detach control ttys\&.
+.RE
+.PP
+\fB\-x\fR
+.br
+\fB\-\-debug\-assertions\fR
+.RS 4
+Turns on various assertion checks, This is a debugging aid\&.
+.RE
+.PP
+\fB\-C\fR
+.br
+\fB\-\-clear\-oidmaps\fR
+.RS 4
+Clear query cache oidmaps when
+memqcache_method
+is
+\fImemcached\fR\&.
+.sp
+If memqcache_method is
+\fIshmem\fR,
+Pgpool\-II
+always discards oidmaps at the start\-up time\&. So this option is not necessary\&.
+.RE
+.PP
+\fB\-D\fR
+.br
+\fB\-\-discard\-status\fR
+.RS 4
+Discard
+pgpool_status
+file and do not restore previous status\&.
+.RE
+.SH "STOPPING PGPOOL\-II MAIN SERVER"
+.PP
+Here are options for the stop mode\&.
+.PP
+\fB\-m \fR\fB\fIshutdown_mode\fR\fR
+.br
+\fB\-\-mode=\fR\fB\fIshutdown_mode\fR\fR
+.RS 4
+Stop
+Pgpool\-II\&.
+\fIshutdown_mode\fR
+is either
+smart,
+fast
+or
+immediate\&. If
+smart
+is specified,
+Pgpool\-II
+will wait for all clients are disconnected\&. If
+fast
+or
+immediate
+are specified,
+Pgpool\-II
+immediately stops itself without waiting for all clients are disconnected\&. There\*(Aqs no difference between
+fast
+and
+immediate
+in the current implementation\&.
+.RE
+.SH "RELOADING PGPOOL\-II CONFIGURATION FILES"
+.PP
+Reload configuration file of
+Pgpool\-II\&. No specific options exist for realod mode\&. Common options are applicable\&.

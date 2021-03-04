@@ -1,0 +1,60 @@
+'\" t
+.\"     Title: pcp_detach_node
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "PCP_DETACH_NODE" "1" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pcp_detach_node \- detaches the given node from Pgpool\-II\&. Exisiting connections to Pgpool\-II are forced to be disconnected\&.
+.SH "SYNOPSIS"
+.HP \w'\fBpcp_detach_node\fR\ 'u
+\fBpcp_detach_node\fR [\fIoptions\fR...] [\fInode_id\fR] [\fIgracefully\fR]
+.SH "DESCRIPTION"
+.PP
+\fBpcp_detach_node\fR
+detaches the given node from Pgpool\-II\&. Exisiting connections to Pgpool\-II are forced to be disconnected\&.
+.SH "OPTIONS"
+.PP
+.PP
+\fB\-n \fR\fB\fInode_id\fR\fR
+.br
+\fB\-\-node_id=\fR\fB\fInode_id\fR\fR
+.RS 4
+The index of backend node to detach\&.
+.RE
+.PP
+\fB\-g\fR
+.br
+\fB\-\-gracefully\fR
+.RS 4
+wait until all clients are disconnected (unless client_idle_limit_in_recovery is \-1 or recovery_timeout is expired)\&.
+.RE
+.PP
+\fBOther options \fR
+.RS 4
+See
+\fBpcp_common_options\fR(1)\&.
+.RE

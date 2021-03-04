@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pgpool_adm_pcp_node_count</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="pgpool-II 3.6.4 Documentation"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="pgpool_adm extension"
+HREF="pgpool-adm.html"><LINK
+REL="PREVIOUS"
+TITLE="pgpool_adm_pcp_pool_status"
+HREF="pgpool-adm-pcp-pool-status.html"><LINK
+REL="NEXT"
+TITLE="pgpool_adm_pcp_attach_node"
+HREF="pgpool-adm-pcp-attach-node.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=ISO-8859-1"><META
+NAME="creation"
+CONTENT="2017-05-11T09:56:13"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>pgpool-II 3.6.4 Documentation</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pgpool_adm_pcp_pool_status"
+HREF="pgpool-adm-pcp-pool-status.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pgpool-adm.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pgpool_adm_pcp_attach_node"
+HREF="pgpool-adm-pcp-attach-node.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PGPOOL-ADM-PCP-NODE-COUNT"
+></A
+>pgpool_adm_pcp_node_count</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN6368"
+></A
+><H2
+>Name</H2
+>pgpool_adm_pcp_node_count&nbsp;--&nbsp;    a function to retrieves number of backend nodes.
+  </DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN6371"
+></A
+><H2
+>Synopsis</H2
+><DIV
+CLASS="FUNCSYNOPSIS"
+><P
+></P
+><A
+NAME="AEN6372"
+></A
+><P
+><CODE
+><CODE
+CLASS="FUNCDEF"
+>pcp_node_count returns integer</CODE
+>(text <TT
+CLASS="PARAMETER"
+>host</TT
+>, integer <TT
+CLASS="PARAMETER"
+>port</TT
+>, text <TT
+CLASS="PARAMETER"
+>username</TT
+>, text <TT
+CLASS="PARAMETER"
+>password</TT
+>);</CODE
+></P
+><P
+><CODE
+><CODE
+CLASS="FUNCDEF"
+>pcp_node_count returns integer</CODE
+>(text <TT
+CLASS="PARAMETER"
+>pcp_server</TT
+>);</CODE
+></P
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="R3-PCP-NODE-COUNT-3"
+></A
+><H2
+>Description</H2
+><P
+>    <CODE
+CLASS="FUNCTION"
+>pcp_node_count</CODE
+> retrieves number of DB nodes.
+  </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN6393"
+></A
+><H2
+>Arguments</H2
+><P
+>    <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>pcp_server</I
+></TT
+></DT
+><DD
+><P
+>	  The foreign server name for pcp server.
+	</P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>Other arguments </TT
+></DT
+><DD
+><P
+>	 See <A
+HREF="pcp-common-options.html"
+>pcp_common_options</A
+>.
+       </P
+></DD
+></DL
+></DIV
+><P>
+   </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN6408"
+></A
+><H2
+>Example</H2
+><P
+>	Here is an example output:
+	</P><PRE
+CLASS="PROGRAMLISTING"
+>test=# SELECT * FROM pcp_node_count('localhost',11001,'t-ishii','t-ishii');
+ node_count 
+------------
+          2
+(1 row)
+	</PRE
+><P>
+  </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pgpool-adm-pcp-pool-status.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pgpool-adm-pcp-attach-node.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pgpool_adm_pcp_pool_status</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="pgpool-adm.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pgpool_adm_pcp_attach_node</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,558 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>watchdogに外部死活監視を組み込む</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Watchdog"
+HREF="tutorial-watchdog.html"><LINK
+REL="PREVIOUS"
+TITLE="はじめに"
+HREF="tutorial-watchdog-intro.html"><LINK
+REL="NEXT"
+TITLE="watchdogの制限事項"
+HREF="tutorial-watchdog-restrictions.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="はじめに"
+HREF="tutorial-watchdog-intro.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-watchdog.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 2章Watchdog</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="watchdogの制限事項"
+HREF="tutorial-watchdog-restrictions.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="TUTORIAL-WATCHDOG-INTEGRATING-EXTERNAL-LIFECHECK"
+>2.2. watchdogに外部死活監視を組み込む</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> watchdogプロセスは、すべての<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>プロセスと<ACRONYM
+CLASS="ACRONYM"
+>BSD</ACRONYM
+>ソケットを使って通信します。
+その<ACRONYM
+CLASS="ACRONYM"
+>BSD</ACRONYM
+>ソケットは、ローカルとリモートの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> watchdogノードをサードパーティのシステムが死活監視するために使用することができます。
+IPCのための<ACRONYM
+CLASS="ACRONYM"
+>BSD</ACRONYM
+>ソケットの名前は、<TT
+CLASS="LITERAL"
+>"s.PGPOOLWD_CMD."</TT
+>文字列の後に<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のwd_portを付けたもので、そのソケットファイルは<A
+HREF="runtime-watchdog-config.html#GUC-WD-IPC-SOCKET-DIR"
+>wd_ipc_socket_dir</A
+>ディレクトリに置かれます。
+    </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TUTORIAL-WATCHDOG-IPC-COMMAND-PACKET"
+>2.2.1. watchdogのIPCコマンドパケットフォーマット</A
+></H2
+><P
+>watchdogのIPCコマンドパケットは3つのフィールドから構成されます。
+以下のテーブルはメッセージフィールドの詳細な説明です。
+    </P
+><DIV
+CLASS="TABLE"
+><A
+NAME="WD-IPC-COMMAND-FORMAT-TABLE"
+></A
+><P
+><B
+>表 2-1. watchdogのIPCコマンドパケットフォーマット</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>フィールド</TH
+><TH
+>型</TH
+><TH
+>説明</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>TYPE</TD
+><TD
+>BYTE1</TD
+><TD
+>コマンド型</TD
+></TR
+><TR
+><TD
+>LENGTH</TD
+><TD
+>ネットワークバイトオーダーのINT32</TD
+><TD
+>データ部の長さ</TD
+></TR
+><TR
+><TD
+>DATA</TD
+><TD
+><ACRONYM
+CLASS="ACRONYM"
+>JSON</ACRONYM
+>フォーマットのデータ</TD
+><TD
+><ACRONYM
+CLASS="ACRONYM"
+>JSON</ACRONYM
+>フォーマットのコマンドデータ</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TUTORIAL-WATCHDOG-IPC-RESULT-PACKET"
+>2.2.2. watchdogのIPC結果パケットフォーマット</A
+></H2
+><P
+>watchdogのIPCコマンド結果パケットは3つのフィールドから構成されます。
+以下のテーブルはメッセージフィールドの詳細な説明です。
+    </P
+><DIV
+CLASS="TABLE"
+><A
+NAME="WD-IPC-RESUTL-FORMAT-TABLE"
+></A
+><P
+><B
+>表 2-2. watchdogのIPC結果パケットフォーマット</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>フィールド</TH
+><TH
+>型</TH
+><TH
+>説明</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>TYPE</TD
+><TD
+>BYTE1</TD
+><TD
+>コマンド型</TD
+></TR
+><TR
+><TD
+>LENGTH</TD
+><TD
+>ネットワークバイトオーダーのINT32</TD
+><TD
+>データ部の長さ</TD
+></TR
+><TR
+><TD
+>DATA</TD
+><TD
+><ACRONYM
+CLASS="ACRONYM"
+>JSON</ACRONYM
+>フォーマットのデータ</TD
+><TD
+><ACRONYM
+CLASS="ACRONYM"
+>JSON</ACRONYM
+>フォーマットのコマンドデータ</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TUTORIAL-WATCHDOG-IPC-COMMAND-PACKET-TYPES"
+>2.2.3. watchdogのIPCコマンドパケット型</A
+></H2
+><P
+>watchdogプロセスに送られ、またwatchdogプロセスから返却されるIPCコマンドのパケットの最初のバイトは、コマンドまたはコマンド結果型と認識されます。
+    </P
+><DIV
+CLASS="TABLE"
+><A
+NAME="WD-IPC-COMMAND-PACKET--TYPES-TABLE"
+></A
+><P
+><B
+>表 2-3. Watchdog IPC command packet types</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><COL><COL><THEAD
+><TR
+><TH
+>名前</TH
+><TH
+>バイト値</TH
+><TH
+>型</TH
+><TH
+>説明</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>REGISTER FOR NOTIFICATIONS</TD
+><TD
+>'0'</TD
+><TD
+>コマンドパケット</TD
+><TD
+>現在の接続をwatchdog通知を受け取るために登録するコマンド</TD
+></TR
+><TR
+><TD
+>NODE STATUS CHANGE</TD
+><TD
+>'2'</TD
+><TD
+>コマンドパケット</TD
+><TD
+>watchdogノードの状態変化をwatchdogに通知するためのコマンド</TD
+></TR
+><TR
+><TD
+>GET NODES LIST</TD
+><TD
+>'3'</TD
+><TD
+>コマンドパケット</TD
+><TD
+>Command to get the list of all configured watchdog nodes</TD
+></TR
+><TR
+><TD
+>NODES LIST DATA</TD
+><TD
+>'4'</TD
+><TD
+>結果パケット</TD
+><TD
+>パケット中の<ACRONYM
+CLASS="ACRONYM"
+>JSON</ACRONYM
+>データにすべてのwatchdogノードのリストが含まれます</TD
+></TR
+><TR
+><TD
+>CLUSTER IN TRANSITION</TD
+><TD
+>'7'</TD
+><TD
+>結果パケット</TD
+><TD
+>クラスタが遷移中なのでコマンドを処理できないときにwatchdogはこのパケットを返します</TD
+></TR
+><TR
+><TD
+>RESULT BAD</TD
+><TD
+>'8'</TD
+><TD
+>結果パケット</TD
+><TD
+>IPCコマンドが失敗すると、watchdogはこのパケット型を返します</TD
+></TR
+><TR
+><TD
+>RESULT OK</TD
+><TD
+>'9'</TD
+><TD
+>結果パケット</TD
+><TD
+>IPCコマンドが成功すると、watchdogはこのパケット型を返します</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TUTORIAL-WATCHDOG-EXTERNAL-LIFECHECK-IPC"
+>2.2.4. 外部死活監視のIPCパケットとデータ</A
+></H2
+><P
+>watchdogの"GET NODES LIST"、"NODES LIST DATA"、"NODE STATUS CHANGE"IPCメッセージは、外部死活監視システムを統合するために使用できます。
+pgpoolの組み込み死活監視も同じチャンネルと技術を使っていることに注意してください。
+    </P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="TUTORIAL-WATCHDOG-EXTERNAL-LIFECHECK-GET-NODES"
+>2.2.4.1. 構成されているwatchdogノードのリストの取得</A
+></H3
+><P
+>サードパーティの死活監視システムは、<A
+HREF="runtime-watchdog-config.html#GUC-WD-AUTHKEY"
+>wd_authkey</A
+>が設定されている時は認証キーとデータを含む<ACRONYM
+CLASS="ACRONYM"
+>JSON</ACRONYM
+>データを、<A
+HREF="runtime-watchdog-config.html#GUC-WD-AUTHKEY"
+>wd_authkey</A
+>が設定されていない時は空のパケットデータを含む"GET NODES LIST"パケットをwatchdogのIPCソケットに送ることにより、"NODES LIST DATA"結果パケットを入手できます。
+      </P
+><P
+>"GET NODES LIST"に対するwatchdogに返却される結果パケットは、死活監視を実施する対象となる、構成されているすべてのwatchdogノードのリストを含む<ACRONYM
+CLASS="ACRONYM"
+>JSON</ACRONYM
+>フォーマットです。
+      </P
+><P
+>        </P><PRE
+CLASS="PROGRAMLISTING"
+>    -- The example JSON data contained in "NODES LIST DATA"
+
+      {
+      "NodeCount":3,
+      "WatchdogNodes":
+        [
+          {
+            "ID":0,
+            "State":1,
+            "NodeName":"Linux_ubuntu_9999",
+            "HostName":"watchdog-host1",
+            "DelegateIP":"172.16.5.133",
+            "WdPort":9000,
+            "PgpoolPort":9999
+          },
+          {
+            "ID":1,
+            "State":1,
+            "NodeName":"Linux_ubuntu_9991",
+            "HostName":"watchdog-host2",
+            "DelegateIP":"172.16.5.133",
+            "WdPort":9000,
+            "PgpoolPort":9991
+          },
+          {
+            "ID":2,
+            "State":1,
+            "NodeName":"Linux_ubuntu_9992",
+            "HostName":"watchdog-host3",
+            "DelegateIP":"172.16.5.133",
+            "WdPort":9000,
+            "PgpoolPort":9992
+          }
+        ]
+      }
+
+    -- Note that ID 0 is always reserved for local watchdog node
+
+        </PRE
+><P>
+      </P
+><P
+>構成されているwatchdogノード情報をwatchdogから入手したら、外部死活監視システムはwatchdogノードの死活監視を実施できます。
+ノードの状態変化を検知したら、watchdogの"NODE STATUS CHANGE"IPCメッセージを使って、watchdogに通知できます。
+メッセージには、状態変化したノードIDとノードの新しい状態を伴う<ACRONYM
+CLASS="ACRONYM"
+>JSON</ACRONYM
+>でデータを格納してください（ノードIDは、watchdogから返却されたWatchdogNodesリスト中のノードと同じノードIDを使わなければなりません）。
+      </P
+><P
+>        </P><PRE
+CLASS="PROGRAMLISTING"
+>  -- The example JSON to inform pgpool-II watchdog about health check
+  failed on node with ID 1 will look like
+
+    {
+    "NodeID":1,
+    "NodeStatus":1,
+    "Message":"optional message string to log by watchdog for this event"
+    "IPCAuthKey":"wd_authkey configuration parameter value"
+    }
+
+  -- NodeStatus values meanings are as follows
+  NODE STATUS DEAD  =  1
+  NODE STATUS ALIVE =  2
+
+        </PRE
+><P>
+      </P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-watchdog-intro.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="tutorial-watchdog-restrictions.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>はじめに</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="tutorial-watchdog.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>watchdogの制限事項</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

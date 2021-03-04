@@ -1,0 +1,131 @@
+'\" t
+.\"     Title: pgpool
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PGPOOL" "8" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+pgpool \- Pgpool\-IIメインサーバ
+.SH "概要"
+.HP \w'\fBpgpool\fR\ 'u
+\fBpgpool\fR [\fIoption\fR...]
+.HP \w'\fBpgpool\fR\ 'u
+\fBpgpool\fR [\fIoption\fR...] \fIstop\fR
+.HP \w'\fBpgpool\fR\ 'u
+\fBpgpool\fR [\fIoption\fR...] \fIreload\fR
+.SH "説明"
+.PP
+Pgpool\-IIメインサーバ
+.SH "使用方法"
+.PP
+\fBpgpool\fRは3つのモードで実行されます。すなわち、start、stop、reloadです。
+.SH "共通オプション"
+.PP
+3つのモードに共通のオプションです。
+.PP
+\fB\-a \fR\fB\fIhba_config_file\fR\fR
+.br
+\fB\-\-hba\-file=\fR\fB\fIhba_config_file\fR\fR
+.RS 4
+pool_hba\&.conf設定ファイルへのパスを指定します。 そのファイルが標準の場所以外にある場合には必須です。
+.RE
+.PP
+\fB\-f \fR\fB\fIconfig_file\fR\fR
+.br
+\fB\-\-config\-file=\fR\fB\fIconfig_file\fR\fR
+.RS 4
+pgpool\&.conf設定ファイルへのパスを指定します。 そのファイルが標準の場所以外にある場合には必須です。
+.RE
+.PP
+\fB\-F \fR\fB\fIpc_config_file\fR\fR
+.br
+\fB\-\-pcp\-file=\fR\fB\fIpcp_config_file\fR\fR
+.RS 4
+pcp\&.conf設定ファイルへのパスを指定します。 そのファイルが標準の場所以外にある場合には必須です。
+.RE
+.PP
+\fB\-h\fR
+.br
+\fB\-\-help\fR
+.RS 4
+使用法を印字します。
+.RE
+.SH "PGPOOL\-IIメインサーバの起動"
+.PP
+startモードのオプションです。
+.PP
+\fB\-d\fR
+.br
+\fB\-\-debug\fR
+.RS 4
+Pgpool\-IIをデバッグモードで起動します。 大量のデバッグメッセージが出力されます。
+.RE
+.PP
+\fB\-n\fR
+.br
+\fB\-\-dont\-detach\fR
+.RS 4
+デーモンモードで起動しません。制御端末は切り離されません。
+.RE
+.PP
+\fB\-x\fR
+.br
+\fB\-\-debug\-assertions\fR
+.RS 4
+アサーションチェックが有効になります。 これはデバッグ用の機能です。
+.RE
+.PP
+\fB\-C\fR
+.br
+\fB\-\-clear\-oidmaps\fR
+.RS 4
+memqcache_methodの設定が\fImemcached\fRのときにクエリキャッシュのoidmapをクリアします。
+.sp
+memqcache_methodの設定が\fIshmem\fRのときは、Pgpool\-IIの起動時に常にoidmapをクリアするので、このオプションは不要です。
+.RE
+.PP
+\fB\-D\fR
+.br
+\fB\-\-discard\-status\fR
+.RS 4
+pgpool_statusファイルを破棄し、以前の状態を復元しません。
+.RE
+.SH "PGPOOL\-IIメインサーバの停止"
+.PP
+stopモードのオプションです。
+.PP
+\fB\-m \fR\fB\fIshutdown_mode\fR\fR
+.br
+\fB\-\-mode=\fR\fB\fIshutdown_mode\fR\fR
+.RS 4
+Pgpool\-IIを停止します。
+\fIshutdown_mode\fRは、smart、fast、immediateのいずれかです。
+smartが指定されると、Pgpool\-IIはすべてのクライアントが接続を切るまで待ちます。
+fastあるいはimmediateが指定されると、すべてのクライアントが接続を切るまで待たず、直ちに終了します。 現在の実装では、fastとimmediateの間に挙動の違いはありません。
+.RE
+.SH "PGPOOL\-II設定ファイルの再読み込み"
+.PP
+Pgpool\-IIの設定ファイルを再読み込みします。 reloadモードには専用のオプションはありません。 共通オプションが使えます。

@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pcp_proc_info</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="PCP コマンド"
+HREF="pcp-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="pcp_proc_count"
+HREF="pcp-proc-count.html"><LINK
+REL="NEXT"
+TITLE="pcp_pool_status"
+HREF="pcp-pool-status.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pcp_proc_count"
+HREF="pcp-proc-count.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pcp-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pcp_pool_status"
+HREF="pcp-pool-status.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PCP-PROC-INFO"
+></A
+>pcp_proc_info</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN5212"
+></A
+><H2
+>名前</H2
+>pcp_proc_info&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセス情報を表示する</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN5216"
+></A
+><H2
+>概要</H2
+><P
+><TT
+CLASS="COMMAND"
+>pcp_proc_info</TT
+> [<TT
+CLASS="REPLACEABLE"
+><I
+>options</I
+></TT
+>...] [<TT
+CLASS="REPLACEABLE"
+><I
+>processid</I
+></TT
+>]</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="R1-PCP-PROC-INFO-1"
+></A
+><H2
+>説明</H2
+><P
+>  <TT
+CLASS="COMMAND"
+>pcp_proc_info</TT
+>
+  
+    は <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセス情報を表示します。
+  </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5228"
+></A
+><H2
+>オプション</H2
+><P
+>    <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="OPTION"
+>-P <TT
+CLASS="REPLACEABLE"
+><I
+>PID</I
+></TT
+></TT
+><BR><TT
+CLASS="OPTION"
+>--process-id=<TT
+CLASS="REPLACEABLE"
+><I
+>PID</I
+></TT
+></TT
+></DT
+><DD
+><P
+>       
+        Pgpool-II 子プロセスの PID を指定します。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>その他</TT
+></DT
+><DD
+><P
+>       
+	    <A
+HREF="pcp-common-options.html"
+>pcp_common_options</A
+> を参照してください。
+       </P
+></DD
+></DL
+></DIV
+><P>
+   </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5247"
+></A
+><H2
+>例</H2
+><P
+>   
+    ここでは例を示します。
+    </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pcp_proc_info -h localhost -p 9898 -U postgres 3815
+postgres_db postgres 1150769932 1150767351 3 0 1 1467 1
+postgres_db postgres 1150769932 1150767351 3 0 1 1468 1
+    </PRE
+><P>
+  </P
+><P
+>  
+    結果は以下の順のとおりです。
+</P><PRE
+CLASS="LITERALLAYOUT"
+>1. connected database name
+2. connected user name
+3. process start-up timestamp
+4. connection created timestamp
+5. protocol major version
+6. protocol minor version
+7. connection-reuse counter
+8. PostgreSQL backend process id
+9. 1 if frontend conncted 0 if not</PRE
+><P>
+  </P
+><P
+>  
+  コネクションがバックエンドに対して張られていない場合、データは表示されません。 コネクション情報が複数ある場合、複数行に 1 行 1 コネクション情報で表示されます。 時刻は EPOCH タイムからの秒数で表わされます。
+  </P
+><P
+>  
+    <TT
+CLASS="OPTION"
+>--verbose</TT
+> オプションは出力内容を理解するのに役に立ちます。例：
+  </P
+><PRE
+CLASS="PROGRAMLISTING"
+>$ pcp_proc_info --verbose -U postgres 3815
+Database     : postgres_db
+Username     : postgres
+Start time   : 1150769932
+Creation time: 1150767351
+Major        : 3
+Minor        : 0
+Counter      : 1
+PID          : 1467
+Connected    : 1
+Database     : postgres_db
+Username     : postgres
+Start time   : 1150769932
+Creation time: 1150767351
+Major        : 3
+Minor        : 0
+Counter      : 1
+PID          : 1468
+Connected    : 1
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pcp-proc-count.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pcp-pool-status.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pcp_proc_count</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="pcp-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pcp_pool_status</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

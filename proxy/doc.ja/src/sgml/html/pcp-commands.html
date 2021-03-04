@@ -1,0 +1,373 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>PCP コマンド</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="リファレンス"
+HREF="reference.html"><LINK
+REL="PREVIOUS"
+TITLE="pgpool"
+HREF="pgpool.html"><LINK
+REL="NEXT"
+TITLE="pcp_common_options"
+HREF="pcp-common-options.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFERENCE"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pgpool"
+HREF="pgpool.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="reference.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pcp_common_options"
+HREF="pcp-common-options.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="REFERENCE"
+><A
+NAME="PCP-COMMANDS"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+>II. PCP コマンド</H1
+><DIV
+CLASS="PARTINTRO"
+><A
+NAME="AEN4901"
+></A
+><P
+>     
+       ここには <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の PCP コマンドのリファレンス情報があります。
+       PCP コマンドはネットワーク経由で複数の <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を操作する UNIX コマンドです。
+       注意：<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> 3.5 より、全ての PCP コマンドのパラメータ書式が変更されています。
+     </P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="PCP-CONNECTION-AUTHENTICATION"
+>1. PCP 接続認証</A
+></H1
+><P
+>    
+     PCP ユーザ名とパスワードが <TT
+CLASS="FILENAME"
+>$prefix/etc</TT
+> ディレクトリ内の <TT
+CLASS="FILENAME"
+>pcp.conf</TT
+>
+     で宣言されている必要があります。<TT
+CLASS="FILENAME"
+>pcp.conf</TT
+> が他の場所にある場合には、
+     <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の起動時に <TT
+CLASS="OPTION"
+>-F</TT
+> オプションで指定することができます。
+       </P
+></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="PCP-PASSWORD-FILE"
+>2. PCP パスワードファイル</A
+></H1
+><P
+>     
+     PCP 接続時にパスワードが指定されなかった場合、ユーザのホームディレクトリに配置された <TT
+CLASS="FILENAME"
+>.pcppass</TT
+> ファイルか、
+     環境変数 PCPPASSFILE で参照されるファイルに格納されたパスワードが使用可能です。
+       </P
+><P
+>    
+     このファイルの各行の書式は以下のとおりです：
+
+	 </P><PRE
+CLASS="PROGRAMLISTING"
+>hostname:port:username:password
+	 </PRE
+><P>
+       </P
+><P
+>       
+     （この文字列の行頭に # を付けてからファイルにコピーしておけば備忘録のコメントになります。）
+     最初の３つのフィールドはそれぞれリテラル値か、任意のものにマッチする * を指定します。
+     現在の接続パラメータにマッチした最初の行の password フィールドが使用されます。
+     （したがって、ワイルドーカードを使用する場合には、具体的なエントリーの方を先に書きます。）
+     エントリーの中に 「:」 か 「\」 を含む必要がある場合には、その文字を 「\」 をつかってエスケープしてください。
+     ホスト名 localhost はローカルマシンからの TCP と Unix ドメインソケットの両方の接続にマッチします。
+       </P
+><P
+>       
+     <TT
+CLASS="FILENAME"
+>.pcppass</TT
+> のパーミッションはグループおよび全ユーザからのアクセスを許してはいけません。
+     chmod 0600 ~/.pcppass を実行してください。これよりパーミッションの制限が弱い場合には、 このファイルは無視されます。
+       </P
+></DIV
+></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>目次</B
+></DT
+><DT
+><A
+HREF="pcp-common-options.html"
+>pcp_common_options</A
+>&nbsp;--&nbsp;  PCP コマンドには共通する引数</DT
+><DT
+><A
+HREF="pcp-node-count.html"
+>pcp_node_count</A
+>&nbsp;--&nbsp;  <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+> で定義されたノードの総数を表示する</DT
+><DT
+><A
+HREF="pcp-node-info.html"
+>pcp_node_info</A
+>&nbsp;--&nbsp;  
+	指定されたノードの情報を表示する</DT
+><DT
+><A
+HREF="pcp-watchdog-info.html"
+>pcp_watchdog_info</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の watchdog ステータスを表示します</DT
+><DT
+><A
+HREF="pcp-proc-count.html"
+>pcp_proc_count</A
+>&nbsp;--&nbsp;  
+	<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセスのプロセス ID を一覧表示する</DT
+><DT
+><A
+HREF="pcp-proc-info.html"
+>pcp_proc_info</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセス情報を表示する</DT
+><DT
+><A
+HREF="pcp-pool-status.html"
+>pcp_pool_status</A
+>&nbsp;--&nbsp;  
+    <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+> のパラメータ設定値を取得する</DT
+><DT
+><A
+HREF="pcp-detach-node.html"
+>pcp_detach_node</A
+>&nbsp;--&nbsp;  
+	<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のノードを切り離す</DT
+><DT
+><A
+HREF="pcp-attach-node.html"
+>pcp_attach_node</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のノードを復帰させる</DT
+><DT
+><A
+HREF="pcp-promote-node.html"
+>pcp_promote_node</A
+>&nbsp;--&nbsp;  
+	<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のノードをマスターに昇格させる</DT
+><DT
+><A
+HREF="pcp-stop-pgpool.html"
+>pcp_stop_pgpool</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を指定されたモードでシャットダウンする</DT
+><DT
+><A
+HREF="pcp-recovery-node.html"
+>pcp_recovery_node</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のノードのデータを再同期させた上で復帰させる</DT
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pgpool.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pcp-common-options.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pgpool</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="reference.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pcp_common_options</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

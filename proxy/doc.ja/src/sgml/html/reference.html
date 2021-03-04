@@ -1,0 +1,464 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>リファレンス</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="AWS設定の例"
+HREF="example-aws.html"><LINK
+REL="NEXT"
+TITLE="サーバコマンド"
+HREF="server-commands.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="PART"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="AWS設定の例"
+HREF="example-aws.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="サーバコマンド"
+HREF="server-commands.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="PART"
+><A
+NAME="REFERENCE"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+>IV. リファレンス</H1
+><DIV
+CLASS="PARTINTRO"
+><A
+NAME="AEN4734"
+></A
+><P
+>  
+    ここには <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のリファレンス情報があります。
+  </P
+><P
+>  
+    このリファレンスは伝統的な <SPAN
+CLASS="QUOTE"
+>"man"</SPAN
+> ページとしても入手できます。
+  </P
+></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>目次</B
+></DT
+><DT
+>I. <A
+HREF="server-commands.html"
+>サーバコマンド</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="pgpool.html"
+>pgpool</A
+>&nbsp;--&nbsp;	<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>メインサーバ</DT
+></DL
+></DD
+><DT
+>II. <A
+HREF="pcp-commands.html"
+>PCP コマンド</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="pcp-common-options.html"
+>pcp_common_options</A
+>&nbsp;--&nbsp;  PCP コマンドには共通する引数</DT
+><DT
+><A
+HREF="pcp-node-count.html"
+>pcp_node_count</A
+>&nbsp;--&nbsp;  <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+> で定義されたノードの総数を表示する</DT
+><DT
+><A
+HREF="pcp-node-info.html"
+>pcp_node_info</A
+>&nbsp;--&nbsp;  
+	指定されたノードの情報を表示する</DT
+><DT
+><A
+HREF="pcp-watchdog-info.html"
+>pcp_watchdog_info</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の watchdog ステータスを表示します</DT
+><DT
+><A
+HREF="pcp-proc-count.html"
+>pcp_proc_count</A
+>&nbsp;--&nbsp;  
+	<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセスのプロセス ID を一覧表示する</DT
+><DT
+><A
+HREF="pcp-proc-info.html"
+>pcp_proc_info</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセス情報を表示する</DT
+><DT
+><A
+HREF="pcp-pool-status.html"
+>pcp_pool_status</A
+>&nbsp;--&nbsp;  
+    <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+> のパラメータ設定値を取得する</DT
+><DT
+><A
+HREF="pcp-detach-node.html"
+>pcp_detach_node</A
+>&nbsp;--&nbsp;  
+	<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のノードを切り離す</DT
+><DT
+><A
+HREF="pcp-attach-node.html"
+>pcp_attach_node</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のノードを復帰させる</DT
+><DT
+><A
+HREF="pcp-promote-node.html"
+>pcp_promote_node</A
+>&nbsp;--&nbsp;  
+	<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のノードをマスターに昇格させる</DT
+><DT
+><A
+HREF="pcp-stop-pgpool.html"
+>pcp_stop_pgpool</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> を指定されたモードでシャットダウンする</DT
+><DT
+><A
+HREF="pcp-recovery-node.html"
+>pcp_recovery_node</A
+>&nbsp;--&nbsp;  
+    <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のノードのデータを再同期させた上で復帰させる</DT
+></DL
+></DD
+><DT
+>III. <A
+HREF="other-commands.html"
+>他のコマンド</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="pg-md5.html"
+>pg_md5</A
+>&nbsp;--&nbsp;  
+    md5 暗号化したパスワードを生成する</DT
+><DT
+><A
+HREF="pgpool-setup.html"
+>pgpool_setup</A
+>&nbsp;--&nbsp;  
+  <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> クラスタのテスト環境を構築するツール</DT
+><DT
+><A
+HREF="watchdog-setup.html"
+>watchdog_setup</A
+>&nbsp;--&nbsp;  
+  watchdog 機能を有効にした <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> クラスタのテスト環境を構築するツール</DT
+></DL
+></DD
+><DT
+>IV. <A
+HREF="sql-commands.html"
+>SQL 型コマンド</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="sql-pgpool-show.html"
+>PGPOOL SHOW</A
+>&nbsp;--&nbsp;パラメータの設定値を表示する</DT
+><DT
+><A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+>&nbsp;--&nbsp;実行時パラメータの設定を変更する</DT
+><DT
+><A
+HREF="sql-pgpool-reset.html"
+>PGPOOL RESET</A
+>&nbsp;--&nbsp;設定パラメータの値をデフォルト値に戻す</DT
+><DT
+><A
+HREF="sql-show-pool-status.html"
+>SHOW POOL STATUS</A
+>&nbsp;--&nbsp;    
+      設定パラメータの名前と値、説明を表示する
+    </DT
+><DT
+><A
+HREF="sql-show-pool-nodes.html"
+>SHOW POOL NODES</A
+>&nbsp;--&nbsp;    
+      DB ノードのリストを表示する
+    </DT
+><DT
+><A
+HREF="sql-show-pool-processes.html"
+>SHOW POOL_PROCESSES</A
+>&nbsp;--&nbsp;    
+      接続待ち、あるいは接続中 <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセスの状態を表示する
+    </DT
+><DT
+><A
+HREF="sql-show-pool-pools.html"
+>SHOW POOL_POOLS</A
+>&nbsp;--&nbsp;    
+      <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のコネクションプールの状態を表示する
+    </DT
+><DT
+><A
+HREF="sql-show-pool-version.html"
+>SHOW POOL_VERSION</A
+>&nbsp;--&nbsp;    
+      <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のバージョン情報を表示する
+    </DT
+><DT
+><A
+HREF="sql-show-pool-cache.html"
+>SHOW POOL_CACHE</A
+>&nbsp;--&nbsp;    
+      クエリキャッシュのヒット率や、キャッシュストレージの状況を表示する
+    </DT
+></DL
+></DD
+><DT
+>V. <A
+HREF="pgpool-adm.html"
+>pgpool_admエクステンション</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="pgpool-adm-pcp-node-info.html"
+>pgpool_adm_pcp_node_info</A
+>&nbsp;--&nbsp;指定ノードIDの情報を表示する関数
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-pool-status.html"
+>pgpool_adm_pcp_pool_status</A
+>&nbsp;--&nbsp;pgpool.confのパラメータを取得する関数
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-node-count.html"
+>pgpool_adm_pcp_node_count</A
+>&nbsp;--&nbsp;ノード数を取得する関数
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-attach-node.html"
+>pgpool_adm_pcp_attach_node</A
+>&nbsp;--&nbsp;指定ノードをアタッチする関数
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-detach-node.html"
+>pgpool_adm_pcp_detach_node</A
+>&nbsp;--&nbsp;指定ノードをデタッチする関数
+  </DT
+></DL
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="example-aws.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="server-commands.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>AWS設定の例</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>サーバコマンド</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

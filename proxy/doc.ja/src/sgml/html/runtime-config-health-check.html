@@ -1,0 +1,503 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ヘルスチェック</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="負荷分散"
+HREF="runtime-config-load-balancing.html"><LINK
+REL="NEXT"
+TITLE="フェイルオーバとフェイルバック"
+HREF="runtime-config-failover.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="負荷分散"
+HREF="runtime-config-load-balancing.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="フェイルオーバとフェイルバック"
+HREF="runtime-config-failover.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-CONFIG-HEALTH-CHECK"
+>5.8. ヘルスチェック</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はサーバネットワークの障害を検知するために、設定されたバックエンドに定期的に接続を試みます。
+この障害チェックの手続きを「ヘルスチェック」と言います。
+障害が検知されると、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は設定に基づいてフェイルオーバや縮退運転を試みます。 
+    <DIV
+CLASS="CAUTION"
+><P
+></P
+><TABLE
+CLASS="CAUTION"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+>注意</B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>ヘルスチェックは各バックエンドノードへの余分の接続を1つ必要としますので、<TT
+CLASS="FILENAME"
+>postgresql.conf</TT
+>の<TT
+CLASS="LITERAL"
+>max_connections</TT
+>もそれに応じて調整する必要があります。
+      </P
+></TD
+></TR
+></TABLE
+></DIV
+>
+  </P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-HEALTH-CHECK-TIMEOUT"
+></A
+><TT
+CLASS="VARNAME"
+>health_check_timeout</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+      </DT
+><DD
+><P
+>TCP接続が時間内に成功せずにバックエンドの<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>への接続を諦めるまでのタイムアウト値を秒単位で指定します。 
+    </P
+><P
+>このパラメータは、ネットワークケーブルが抜けた際などにヘルスチェックが長時間待たされるのを防止します。
+デフォルトは20秒です。0を指定するとタイムアウト処理をしません (TCP/IP のタイムアウトまで待ちます)。 
+    </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-HEALTH-CHECK-PERIOD"
+></A
+><TT
+CLASS="VARNAME"
+>health_check_period</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+      </DT
+><DD
+><P
+>ヘルスチェックの間隔を秒単位で指定します。
+デフォルトは0で、これはヘルスチェックが無効であることを意味します。
+    </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+    </P
+></DD
+><DT
+><A
+NAME="GUC-HEALTH-CHECK-USER"
+></A
+><TT
+CLASS="VARNAME"
+>health_check_user</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+      </DT
+><DD
+><P
+>ヘルスチェックを行う<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>ユーザ名を指定します。
+同じユーザ名が全ての<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドに存在していなければなりません。
+さもないと、ヘルスチェックがエラーとなります。
+      </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-HEALTH-CHECK-PASSWORD"
+></A
+><TT
+CLASS="VARNAME"
+>health_check_password</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+      </DT
+><DD
+><P
+><A
+HREF="runtime-config-health-check.html#GUC-HEALTH-CHECK-USER"
+>health_check_user</A
+>で設定したヘルスチェックを行う<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>ユーザ名のパスワードを指定します。
+ユーザとパスワードは全ての<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドで同じである必要があります。
+さもないと、ヘルスチェックがエラーとなります。
+      </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-HEALTH-CHECK-DATABASE"
+></A
+><TT
+CLASS="VARNAME"
+>health_check_database</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+      </DT
+><DD
+><P
+>ヘルスチェックを行う対象の<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>データベース名を指定します。
+デフォルトは<TT
+CLASS="LITERAL"
+>''</TT
+>で、この場合は最初に<TT
+CLASS="LITERAL"
+>postgres</TT
+>データベースが試され、その後で<TT
+CLASS="LITERAL"
+>template1</TT
+>データベースが試されます。
+これは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.4</I
+></SPAN
+>以前の挙動と同じです。 
+      </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-HEALTH-CHECK-MAX-RETRIES"
+></A
+><TT
+CLASS="VARNAME"
+>health_check_max_retries</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+      </DT
+><DD
+><P
+>ヘルスチェックに失敗したときに、諦めてフェイルオーバを始める前にリトライする最大回数を指定します。
+        <DIV
+CLASS="TIP"
+><BLOCKQUOTE
+CLASS="TIP"
+><P
+><B
+>ティップ: </B
+>この設定は動作にむらのあるネットワーク環境において、マスターノードが正常であるにも関わらず、たまにヘルスチェックが失敗することが予想される場合に有用です。
+          </P
+></BLOCKQUOTE
+></DIV
+>
+        <DIV
+CLASS="TIP"
+><BLOCKQUOTE
+CLASS="TIP"
+><P
+><B
+>ティップ: </B
+><TT
+CLASS="VARNAME"
+>health_check_max_retreis</TT
+>を有効にする場合は、<A
+HREF="runtime-config-failover.html#GUC-FAIL-OVER-ON-BACKEND-ERROR"
+>fail_over_on_backend_error</A
+>を無効にするのが望ましいです。 
+          </P
+></BLOCKQUOTE
+></DIV
+>
+デフォルト値は0で、この場合はリトライをしません。 
+      </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-HEALTH-CHECK-RETRY-DELAY"
+></A
+><TT
+CLASS="VARNAME"
+>health_check_retry_delay</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+      </DT
+><DD
+><P
+>ヘルスチェックのリトライ間の時間間隔を秒単位で指定します(<A
+HREF="runtime-config-health-check.html#GUC-HEALTH-CHECK-MAX-RETRIES"
+>health_check_max_retries</A
+> &#62; 0でなければ有効になりません)。
+0を指定すると、待ち時間はなくリトライは直ちに行われます。
+      </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-CONNECT-TIMEOUT"
+></A
+><TT
+CLASS="VARNAME"
+>connect_timeout</TT
+> (<TT
+CLASS="TYPE"
+>integer</TT
+>)
+      </DT
+><DD
+><P
+><CODE
+CLASS="FUNCTION"
+>connect()</CODE
+>システムコールを使ったバックエンドへの接続を諦めるまでの時間をミリ秒単位で指定します。
+デフォルトは10000ミリ秒(10秒)です。
+不安定なネットワークを使う場合、この値を大きくすると良いでしょう。
+0を指定すると、タイムアウトしません。 
+        </P><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><TT
+CLASS="VARNAME"
+>connect_timeout</TT
+>の値はヘルスチェックだけではなく通常の接続プールを生成するときにも使われます。
+          </P
+></BLOCKQUOTE
+></DIV
+><P>
+      </P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+      </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config-load-balancing.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-config-failover.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>負荷分散</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>フェイルオーバとフェイルバック</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

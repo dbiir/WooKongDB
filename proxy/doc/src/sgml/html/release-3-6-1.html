@@ -1,0 +1,339 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Release 3.6.1</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="pgpool-II 3.6.4 Documentation"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Release Notes"
+HREF="release.html"><LINK
+REL="PREVIOUS"
+TITLE="Release 3.6.2"
+HREF="release-3-6-2.html"><LINK
+REL="NEXT"
+TITLE="Release 3.6"
+HREF="release-3-6.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=ISO-8859-1"><META
+NAME="creation"
+CONTENT="2017-05-11T09:56:13"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>pgpool-II 3.6.4 Documentation</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="Release 3.6.2"
+HREF="release-3-6-2.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>Appendix A. Release Notes</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="Release 3.6"
+HREF="release-3-6.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RELEASE-3-6-1"
+>A.4. Release 3.6.1</A
+></H1
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Release Date: </B
+>2016-12-26</P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN6750"
+>A.4.1. Bug fixes</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>      Tightening up the watchdog security. (Muhammad Usama)
+    </P
+><P
+>      Now wd_authkey uses the HMAC SHA-256 hashing.
+	</P
+></LI
+><LI
+><P
+>	  Add pgpool_adm extension in <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> RPM. (Bo Peng)
+	</P
+></LI
+><LI
+><P
+>	  Fix occasional segfault when query cache is enabled. (bug 263) (Tatsuo Ishii)
+	</P
+></LI
+><LI
+><P
+>	  Fix packet kind does not match error in extended protocol. (bug 231) (Tatsuo Ishii)
+	</P
+><P
+>	  According to the bug231, the bug seem to bite you if all of
+	  following conditions are met:
+	</P
+><P
+></P
+><UL
+><LI
+><P
+>	      Streaming replication mode
+	    </P
+></LI
+><LI
+><P
+>	      Load balance node is not node 0
+	    </P
+></LI
+><LI
+><P
+>	      Extended protocol is used
+	      </P
+></LI
+><LI
+><P
+>	      SELECT is executed, the statement is closed, then a
+	      transaction command is executed
+	    </P
+></LI
+></UL
+><P
+>	The sequence of how the problem bites is:
+	<P
+></P
+></P><OL
+TYPE="1"
+><LI
+><P
+>	      SELECT executes on statement S1 on the load balance node 1
+	    </P
+></LI
+><LI
+><P
+>	      Frontend send Close statement
+	    </P
+></LI
+><LI
+><P
+>	      Pgool-II forward it to backend 1
+	    </P
+></LI
+><LI
+><P
+>	      Frontend sends Parse, Bind, Execute of COMMIT
+	    </P
+></LI
+><LI
+><P
+>	      Pgool-II forward it to backend 0 &#38; 1
+	    </P
+></LI
+><LI
+><P
+>	      Frontend sends sync message
+	    </P
+></LI
+><LI
+><P
+>	      Pgool-II forward it to backend 0 &#38; 1
+	    </P
+></LI
+><LI
+><P
+>	      Backend 0 replies back Parse complete ("1"), while
+	      backend 1 replies back close complete ("3") because of
+	      #3.
+	    </P
+></LI
+><LI
+><P
+>	      Kind mismatch occurs
+	    </P
+></LI
+></OL
+><P>
+
+	</P
+><P
+>	  The solution is, in #3, let Pgpool-II wait for response from backend
+	  1, but do not read the response message. Later on Pgpool-II's state
+	  machine will read the response from it before the sync message is sent
+	  in #6. With this, backend 1 will reply back "1" in #8, and the kind
+	  mismatch error does not occur.
+	</P
+><P
+>	  Also, fix not calling pool_set_doing_extended_query_message() when
+	  receives Close message.  (I don't know why it was missed).
+	</P
+><P
+>	  New regression test "067.bug231" was added.
+	</P
+></LI
+><LI
+><P
+>	  Fix a race condition in a signal handler. (bug 265) (Tatsuo Ishii)
+	</P
+><P
+>	  In child.c there's signal handler which calls elog. Since the signal
+	  handler is not blocked against other signals while processing, deadlock
+	  could occur in the system calls in the pgpool shutdown sequence. To
+	  fix the problem, now the signal handler is blocked by using
+	  POOL_SETMASK.
+	</P
+><P
+>	  Ideally we should avoid calling elog in signal handlers though.
+	</P
+></LI
+><LI
+><P
+>	  Fix wrong minimum configuration value for client_idle_limit_in_recovery. (bug 264) (Tatsuo Ishii)
+	</P
+></LI
+><LI
+><P
+>	  Allow to execute "make xslthtml" under doc.ja. (Tatsuo Ishii)
+	</P
+><P
+>&#13;	</P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release-3-6-2.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="release-3-6.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Release 3.6.2</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Release 3.6</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

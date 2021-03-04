@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Installation from RPM</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="pgpool-II 3.6.4 Documentation"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Installation of Pgpool-II"
+HREF="installation.html"><LINK
+REL="PREVIOUS"
+TITLE="Setting up pgpool.conf"
+HREF="setting-up-pgpool-conf.html"><LINK
+REL="NEXT"
+TITLE="Server Setup and Operation"
+HREF="runtime.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=ISO-8859-1"><META
+NAME="creation"
+CONTENT="2017-05-11T09:56:13"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>pgpool-II 3.6.4 Documentation</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="Setting up pgpool.conf"
+HREF="setting-up-pgpool-conf.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Installation of <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="Server Setup and Operation"
+HREF="runtime.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="INSTALL-RPM"
+>3.9. Installation from RPM</A
+></H1
+><P
+>     This chapter describes the installation
+     of <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> from PRM.  If you are
+     going to install from the source code, please
+     check <A
+HREF="install-source.html"
+>Section 3.1</A
+>.
+   </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="INSTALLING-RPM"
+>3.9.1. Installing RPM</A
+></H2
+><P
+>     <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> official RPMs can be
+     obtained from
+     <A
+HREF="http://www.pgpool.net/yum"
+TARGET="_top"
+>http://www.pgpool.net/yum</A
+>.
+   </P
+><P
+>     For RHEL and its derivatives do following once:
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install http://www.pgpool.net/yum/rpms/3.6/redhat/rhel-7-x86_64/pgpool-II-release-3.6-1.noarch.rpm
+     </PRE
+><P>
+     Then:
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install pgpool-II-pg96
+     </PRE
+><P>
+
+     <TT
+CLASS="LITERAL"
+>pg96</TT
+> means <TT
+CLASS="LITERAL"
+>PostgreSQL
+     9.5</TT
+>. <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>
+     needs <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>'s library and
+     extensions directory. Since the directory paths are different in
+     the particular <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> versions,
+     You must choose appropriate RPM for
+     your <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> rpm installation. We
+     also assume you are
+     using <A
+HREF="https://www.postgresql.org/download/linux/redhat/"
+TARGET="_top"
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>
+     community rpms</A
+>.
+
+     Optionally you can install:
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install pgpool-II-pg96-debuginfo
+     </PRE
+><P>
+     which makes it easier to retrieve debugging symbols from the core
+     or the backtrace. We recommend to install it.
+
+     There is an optional package for developers.
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install pgpool-II-pg96-devel
+     </PRE
+><P>
+     This installs header files which developers are interested in
+   </P
+><P
+>     On all the <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> servers you need
+     to install:
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install pgpool-II-pg96-extensions
+     </PRE
+><P>
+
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIGURE-RPM"
+>3.9.2. Configuration with RPM</A
+></H2
+><P
+>     All the <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> configuration files
+     live in <TT
+CLASS="FILENAME"
+>/etc/pgpool-II</TT
+>. Please refer
+     to <A
+HREF="setting-up-pgpool-conf.html"
+>Section 3.8</A
+> to see how to set up
+     configuration files.
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="START-RPM"
+>3.9.3. Starting/stopping Pgpool-II</A
+></H2
+><P
+>       On RHEL7/CentOS 7, do this once.
+
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>systemctl enable pgpool.service
+       </PRE
+><P>
+
+       After this, restart the whole system or:
+
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>systemctl start pgpool.service 
+       </PRE
+><P>
+
+       Please note that <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> servers
+       must have been started before this.
+
+       To stop <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>:
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>systemctl stop pgpool.service 
+       </PRE
+><P>
+
+       After this, you can stop <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>
+       servers.
+     </P
+><P
+>       On RHEL6/CentOS 6, do this once.
+
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>chkconfig pgpool on
+       </PRE
+><P>
+
+       After this, restart the whole system or:
+
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>service start pgpool
+       </PRE
+><P>
+
+       Please note that <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> servers
+       must have been started before this.
+
+       To stop <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>:
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>service stop pgpool
+       </PRE
+><P>
+
+       After this, you can stop <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>
+       servers.
+     </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="setting-up-pgpool-conf.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Setting up pgpool.conf</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Server Setup and Operation</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

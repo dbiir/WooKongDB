@@ -1,0 +1,150 @@
+'\" t
+.\"     Title: pcp_node_info
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PCP_NODE_INFO" "1" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+pcp_node_info \- 指定されたノードの情報を表示する
+.SH "概要"
+.HP \w'\fBpcp_node_info\fR\ 'u
+\fBpcp_node_info\fR [\fIoption\fR...] [\fInode_id\fR]
+.SH "説明"
+.PP
+\fBpcp_node_info\fR
+指定されたノードの情報を表示します。
+.SH "オプション"
+.PP
+.PP
+\fB\-n \fR\fB\fInode_id\fR\fR
+.br
+\fB\-\-node\-id=\fR\fB\fInode_id\fR\fR
+.RS 4
+情報を表示するバックエンドノードのインデックスを指定します。
+.RE
+.PP
+\fBOther options \fR
+.RS 4
+\fBpcp_common_options\fR(1)
+を参照してください。
+.RE
+.SH "例"
+.PP
+ここでは例を示します。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_node_info \-h localhost \-U postgres 0
+host1 5432 1 1073741823\&.500000 waiting
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+結果は以下の順のとおりです。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+1\&. ノードのホスト名
+2\&. ノードのポート番号
+3\&. ステータス
+4\&. ロードバランスウェイト
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+ステータスは [0\&.\&.3] までの数字で表わされます。各数字の意味は以下のとおりです。
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 \- 初期化時のみに表われる。PCP コマンドで表示されることはない。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 \- ノード稼働中。接続無し
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 \- ノード稼働中。接続有り
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 \- ノードダウン
+.RE
+.PP
+ロードバランスウェイトは Normalize されたフォーマットで出力されます。
+.PP
+\fB\-\-verbose\fR
+オプションは出力内容を理解するのに役に立ちます。例：
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_node_info \-\-verbose \-h localhost \-U postgres 0
+Hostname   : host1
+Port       : 5432
+Status     : 1
+Weight     : 0\&.5
+Status Name: waiting
+    
+.fi
+.if n \{\
+.RE
+.\}

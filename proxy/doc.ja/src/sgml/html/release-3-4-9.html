@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>リリース 3.4.9</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="リリースノート"
+HREF="release.html"><LINK
+REL="PREVIOUS"
+TITLE="リリース 3.4.10"
+HREF="release-3-4-10.html"><LINK
+REL="NEXT"
+TITLE="リリース 3.3.15"
+HREF="release-3-3-15.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="リリース 3.4.10"
+HREF="release-3-4-10.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>付録 A. リリースノート</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="リリース 3.3.15"
+HREF="release-3-3-15.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RELEASE-3-4-9"
+>A.12. リリース 3.4.9</A
+></H1
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>リリース日: </B
+>2016-12-26</P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN7562"
+>A.12.1. 不具合修正</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>    
+watchdog のセキュリティを強化しました。(Muhammad Usama)
+    </P
+><P
+>    
+wd_authkeyは、HMAC SHA-256ハッシングを使用するようになりました。
+	</P
+></LI
+><LI
+><P
+>	
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のRPM にpgpool_adm extension が含まれるように修正しました。(Bo Peng)
+	</P
+></LI
+><LI
+><P
+>    
+クエリキャッシュが有効になっている場合に、時々発生しうるセグメンテーション違反を修正しました。(bug 263) (Tatsuo Ishii)
+	</P
+></LI
+><LI
+><P
+>    
+ネイティブレプリケーションモード以外の場合、エラーが発生した場合は、クエリをキャンセルしないように修正しました。(Tatsuo Ishii)
+	</P
+><P
+>    
+本来は一貫性を維持するためにキャセルされるようになっていましたが、ネイティブレプリケーションモード以外の場合ではキャセルする必要がないので、修正しました。
+	</P
+></LI
+><LI
+><P
+>    
+pgpool コマンドで廃止されたオプション"-c"を削除しました。(Tatsuo Ishii)
+	</P
+><P
+>    
+また、helpメッセージのタイポを修正しました。
+	</P
+></LI
+><LI
+><P
+>    
+<A
+HREF="runtime-config-failover.html#GUC-SEARCH-PRIMARY-NODE-TIMEOUT"
+>search_primary_node_timeout</A
+>のデフォルト値を10から300に変更しました。(Tatstuo Ishii)
+	</P
+><P
+>    
+これまでのデフォルト値10秒は、スタンバイを昇格する際には小さすぎでした。
+	</P
+></LI
+><LI
+><P
+>    
+すべてのバックエンドがダウンした後に、1つのノードを復帰させる時の不具合が修正されました。(bug 248) (Tatsuo Ishii)
+	</P
+><P
+>    
+すべてのノードがダウンすると、すべてのコネクションを受け付けなくなります。
+その状態で1つの<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>が起動し、<TT
+CLASS="COMMAND"
+>pcp_attach_node</TT
+>コマンドでそのノードを復帰させます。
+そしてこのコマンドは成功しました。
+しかし、新しい接続が拒否されました。
+これは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセスがキャッシュされた古い情報を参照したのが原因でした。
+ストリーミングレプリケーションモードでは、このキャッシュされた情報において、復帰させたノードの状態がdownのままでした。
+（ネィティブレプリケーションモード、およびそれ以外のモードでは問題ありません）
+解決法として、全ノードがダウンした場合、強制的に全 <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>子プロセスを再起動するようにしました。
+	</P
+></LI
+><LI
+><P
+>    
+MD5 salt を生成するときに、<CODE
+CLASS="FUNCTION"
+>random()</CODE
+> を使用しないように修正しました。(Tatsuo Ishii)
+	</P
+><P
+>        
+<CODE
+CLASS="FUNCTION"
+>random()</CODE
+>関数はセキュリティ関連のアプリケーションで使用すべきではありません。
+<CODE
+CLASS="FUNCTION"
+>random()</CODE
+>の代わりに<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の<CODE
+CLASS="FUNCTION"
+>PostmasterRandom()</CODE
+> 使用するように変更しました。
+	</P
+></LI
+><LI
+><P
+>    
+クエリキャッシュが有効な場合、sync メッセージが廃棄されないよう修正しました。(Tatsuo Ishii)
+	</P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release-3-4-10.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="release-3-3-15.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>リリース 3.4.10</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>リリース 3.3.15</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

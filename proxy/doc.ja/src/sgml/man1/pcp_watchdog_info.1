@@ -1,0 +1,188 @@
+'\" t
+.\"     Title: pcp_watchdog_info
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PCP_WATCHDOG_INFO" "1" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+pcp_watchdog_info \- Pgpool\-II の watchdog ステータスを表示します
+.SH "概要"
+.HP \w'\fBpcp_watchdog_info\fR\ 'u
+\fBpcp_watchdog_info\fR [\fIoptions\fR...] [\fIwatchdog_id\fR]
+.SH "説明"
+.PP
+\fBpcp_watchdog_info\fR
+は、
+Pgpool\-II
+の
+pgpool\&.conf
+の watchdog セクションで定義された
+Pgpool\-II
+の watchdog ステータスを表示します。 watchdog_id は情報を取得する watchdog ノードのインデックです。 省略された場合には、クラスタ中の全ての Pgpool\-II の watchdog ノードのステータスが表示されます。
+.PP
+watchdog_id = 0 はローカルの
+Pgpool\-II
+ノードのために予約されています。 そのため、リモートの watchdog ノードのインデックスは 1 から始まります。
+pgpool\&.conf
+ではリモート watchdog ノードのインデックスは 0 をベースにしていますが、
+\fBpcp_watchdog_info\fR
+ではそれが 1 から始まることに注意してください。
+.PP
+\fBpcp_watchdog_info\fR
+コマンドで情報を取得する際には、他の watchdog のインデックスに 1 を足す必要があります。
+.PP
+例えば、\fIother_pgpool_hostname0\fR
+パラメータで定義されている、添字 0 である最初のリモート watchdog ノードの情報を取得するには、
+\fBpcp_watchdog_info\fR
+で watchdog_id = 1 を指定します。
+.SH "オプション"
+.PP
+.PP
+\fB\-n \fR\fB\fIwatcgdog_id\fR\fR
+.br
+\fB\-\-node\-id=\fR\fB\fIwatcgdog_id\fR\fR
+.RS 4
+情報を取得する他の
+Pgpool\-II
+のインデックスを指定します。
+.sp
+0 の場合ははローカルの watchdog の情報を取得します。
+.sp
+省略された場合は、全ての watchdog ノードの情報を取得します。
+.RE
+.PP
+\fBその他 \fR
+.RS 4
+\fBpcp_common_options\fR(1)
+を参照してください。
+.RE
+.SH "出力例"
+.PP
+ここでは，出力例を示します。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_watchdog_info \-h localhost \-u postgres
+
+3 NO Linux_host1\&.localdomain_9991 host1
+
+Linux_host1\&.localdomain_9991 host1 9991 9001 7 STANDBY
+Linux_host2\&.localdomain_9992 host2 9992 9002 4 MASTER
+Linux_host3\&.localdomain_9993 host3 9993 9003 7 STANDBY
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+結果は以下の順のとおりです。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+最初に出力される行は、watchdog クラスタの情報を示しています:
+
+1\&. クラスタ内の全 watchdog ノード数
+2\&. 仮想 IP がこのノードで起動しているか？
+3\&. マスターノード名
+4\&. マスターノードホスト
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+それ以降は watchdog ノードのリストが出力されます:
+
+1\&. ノード名
+2\&. ホスト名
+3\&. pgpool ポート番号
+4\&. watchdog ポート番号
+5\&. 現在のノードステータス
+6\&. 現在のノードステータス名
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBverbose\fR
+モードは結果の詳細を表示できます。例えば:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_watchdog_info \-h localhost \-v \-u postgres
+
+Watchdog Cluster Information
+Total Nodes          : 3
+Remote Nodes         : 2
+Quorum state         : QUORUM EXIST
+Alive Remote Nodes   : 2
+VIP up on local node : NO
+Master Node Name     : Linux_host2\&.localdomain_9992
+Master Host Name     : localhost
+
+Watchdog Node Information
+Node Name      : Linux_host1\&.localdomain_9991
+Host Name      : host1
+Delegate IP    : 192\&.168\&.1\&.10
+Pgpool port    : 9991
+Watchdog port  : 9001
+Node priority  : 1
+Status         : 7
+Status Name    : STANDBY
+
+Node Name      : Linux_host2\&.localdomain_9992
+Host Name      : host2
+Delegate IP    : 192\&.168\&.1\&.10
+Pgpool port    : 9992
+Watchdog port  : 9002
+Node priority  : 1
+Status         : 4
+Status Name    : MASTER
+
+Node Name      : Linux_host3\&.localdomain_9993
+Host Name      : host3
+Delegate IP    : 192\&.168\&.1\&.10
+Pgpool port    : 9993
+Watchdog port  : 9003
+Node priority  : 1
+Status         : 7
+Status Name    : STANDBY
+    
+.fi
+.if n \{\
+.RE
+.\}

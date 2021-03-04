@@ -1,0 +1,165 @@
+'\" t
+.\"     Title: pcp_watchdog_info
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "PCP_WATCHDOG_INFO" "1" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pcp_watchdog_info \- displays the watchdog status of the Pgpool\-II
+.SH "SYNOPSIS"
+.HP \w'\fBpcp_watchdog_info\fR\ 'u
+\fBpcp_watchdog_info\fR [\fIoptions\fR...] [\fIwatchdog_id\fR]
+.SH "DESCRIPTION"
+.PP
+\fBpcp_node_info\fR
+displays the information on the given node ID\&.
+.SH "OPTIONS"
+.PP
+.PP
+\fB\-n \fR\fB\fIwatcgdog_id\fR\fR
+.br
+\fB\-\-node\-id=\fR\fB\fIwatcgdog_id\fR\fR
+.RS 4
+The index of other Pgpool\-II to get information for\&.
+.sp
+Index 0 gets one\*(Aqs self watchdog information\&.
+.sp
+If ommitted then gets information of all watchdog nodes\&.
+.RE
+.PP
+\fBOther options \fR
+.RS 4
+See
+\fBpcp_common_options\fR(1)\&.
+.RE
+.SH "EXAMPLE"
+.PP
+Here is an example output:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_watchdog_info \-h localhost \-u postgres
+
+3 NO Linux_host1\&.localdomain_9991 host1
+
+Linux_host1\&.localdomain_9991 host1 9991 9001 7 STANDBY
+Linux_host2\&.localdomain_9992 host2 9992 9002 4 MASTER
+Linux_host3\&.localdomain_9993 host3 9993 9003 7 STANDBY
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The result is in the following order:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+The first output line describes the watchdog cluster information:
+
+1\&. Total watchdog nodes in the cluster
+2\&. Is VIP is up on current node?
+3\&. Master node name
+4\&. Master node host
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Next is the list of watchdog nodes:
+
+1\&. node name
+2\&. hostname
+3\&. pgpool port
+4\&. watchdog port
+5\&. current node state
+6\&. current node state name
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fB\-\-verbose\fR
+option can help understand the output\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_watchdog_info \-h localhost \-v \-u postgres
+
+Watchdog Cluster Information
+Total Nodes          : 3
+Remote Nodes         : 2
+Quorum state         : QUORUM EXIST
+Alive Remote Nodes   : 2
+VIP up on local node : NO
+Master Node Name     : Linux_host2\&.localdomain_9992
+Master Host Name     : localhost
+
+Watchdog Node Information
+Node Name      : Linux_host1\&.localdomain_9991
+Host Name      : host1
+Delegate IP    : 192\&.168\&.1\&.10
+Pgpool port    : 9991
+Watchdog port  : 9001
+Node priority  : 1
+Status         : 7
+Status Name    : STANDBY
+
+Node Name      : Linux_host2\&.localdomain_9992
+Host Name      : host2
+Delegate IP    : 192\&.168\&.1\&.10
+Pgpool port    : 9992
+Watchdog port  : 9002
+Node priority  : 1
+Status         : 4
+Status Name    : MASTER
+
+Node Name      : Linux_host3\&.localdomain_9993
+Host Name      : host3
+Delegate IP    : 192\&.168\&.1\&.10
+Pgpool port    : 9993
+Watchdog port  : 9003
+Node priority  : 1
+Status         : 7
+Status Name    : STANDBY
+    
+.fi
+.if n \{\
+.RE
+.\}

@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pcp_node_info</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="PCP コマンド"
+HREF="pcp-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="pcp_node_count"
+HREF="pcp-node-count.html"><LINK
+REL="NEXT"
+TITLE="pcp_watchdog_info"
+HREF="pcp-watchdog-info.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pcp_node_count"
+HREF="pcp-node-count.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pcp-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pcp_watchdog_info"
+HREF="pcp-watchdog-info.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PCP-NODE-INFO"
+></A
+>pcp_node_info</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN5061"
+></A
+><H2
+>名前</H2
+>pcp_node_info&nbsp;--&nbsp;  
+	指定されたノードの情報を表示する</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN5064"
+></A
+><H2
+>概要</H2
+><P
+><TT
+CLASS="COMMAND"
+>pcp_node_info</TT
+> [<TT
+CLASS="REPLACEABLE"
+><I
+>option</I
+></TT
+>...] [<TT
+CLASS="REPLACEABLE"
+><I
+>node_id</I
+></TT
+>]</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="R1-PCP-NODE-INFO-1"
+></A
+><H2
+>説明</H2
+><P
+>  <TT
+CLASS="COMMAND"
+>pcp_node_info</TT
+>
+  
+    指定されたノードの情報を表示します。
+  </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5075"
+></A
+><H2
+>オプション</H2
+><P
+>    <P
+></P
+></P><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="OPTION"
+>-n <TT
+CLASS="REPLACEABLE"
+><I
+>node_id</I
+></TT
+></TT
+><BR><TT
+CLASS="OPTION"
+>--node-id=<TT
+CLASS="REPLACEABLE"
+><I
+>node_id</I
+></TT
+></TT
+></DT
+><DD
+><P
+>       
+     情報を表示するバックエンドノードのインデックスを指定します。
+       </P
+></DD
+><DT
+><TT
+CLASS="OPTION"
+>Other options </TT
+></DT
+><DD
+><P
+>       
+	 <A
+HREF="pcp-common-options.html"
+>pcp_common_options</A
+> を参照してください。
+       </P
+></DD
+></DL
+></DIV
+><P>
+   </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5094"
+></A
+><H2
+>例</H2
+><P
+>   
+    ここでは例を示します。
+    </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pcp_node_info -h localhost -U postgres 0
+host1 5432 1 1073741823.500000 waiting
+    </PRE
+><P>
+  </P
+><P
+>  
+    結果は以下の順のとおりです。
+</P><PRE
+CLASS="LITERALLAYOUT"
+>1. ノードのホスト名
+2. ノードのポート番号
+3. ステータス
+4. ロードバランスウェイト</PRE
+><P>
+  </P
+><P
+>  
+    ステータスは [0..3] までの数字で表わされます。各数字の意味は以下のとおりです。
+	<P
+></P
+></P><UL
+><LI
+><P
+>0 - 初期化時のみに表われる。PCP コマンドで表示されることはない。 </P
+></LI
+><LI
+><P
+>1 - ノード稼働中。接続無し </P
+></LI
+><LI
+><P
+>2 - ノード稼働中。接続有り </P
+></LI
+><LI
+><P
+>3 -  ノードダウン </P
+></LI
+></UL
+><P>
+  </P
+><P
+>  
+    ロードバランスウェイトは Normalize されたフォーマットで出力されます。
+  </P
+><P
+>  
+    <TT
+CLASS="OPTION"
+>--verbose</TT
+> オプションは出力内容を理解するのに役に立ちます。例：
+  </P
+><PRE
+CLASS="PROGRAMLISTING"
+>$ pcp_node_info --verbose -h localhost -U postgres 0
+Hostname   : host1
+Port       : 5432
+Status     : 1
+Weight     : 0.5
+Status Name: waiting
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pcp-node-count.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pcp-watchdog-info.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pcp_node_count</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="pcp-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pcp_watchdog_info</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

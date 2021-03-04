@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>レプリケーションを試してみる</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="さあ始めましょう"
+HREF="tutorial-start.html"><LINK
+REL="PREVIOUS"
+TITLE="負荷分散を試してみる"
+HREF="tutorial-testing-load-balance.html"><LINK
+REL="NEXT"
+TITLE="フェイルオーバを試してみる"
+HREF="tutorial-testing-failover.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="負荷分散を試してみる"
+HREF="tutorial-testing-load-balance.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-start.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 1章さあ始めましょう</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="フェイルオーバを試してみる"
+HREF="tutorial-testing-failover.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="TUTORIAL-TESTING-REPLICATION"
+>1.4. レプリケーションを試してみる</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>に同梱されているベンチマークツールの<TT
+CLASS="COMMAND"
+>pgbench</TT
+>を使って、レプリケーション機能を試してみましょう。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgbench -i -p 11000 test
+      </PRE
+><P>
+レプリケーションが正しく動いているかどうか確かめるために、直接プライマリとスタンバイサーバに接続して、両方が同じ結果を返すかどうか見てみます。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ psql -p 11002 test
+\dt
+              List of relations
+ Schema |       Name       | Type  |  Owner  
+--------+------------------+-------+---------
+ public | pgbench_accounts | table | t-ishii
+ public | pgbench_branches | table | t-ishii
+ public | pgbench_history  | table | t-ishii
+ public | pgbench_tellers  | table | t-ishii
+(4 rows)
+\q
+$ psql -p 11003 test
+\dt
+              List of relations
+ Schema |       Name       | Type  |  Owner  
+--------+------------------+-------+---------
+ public | pgbench_accounts | table | t-ishii
+ public | pgbench_branches | table | t-ishii
+ public | pgbench_history  | table | t-ishii
+ public | pgbench_tellers  | table | t-ishii
+(4 rows)
+      </PRE
+><P>
+プライマリサーバ（ポート11002）とスタンバイサーバ（ポート11003）は、同一の結果を返しています。
+次に、pgbenchをしばらく走らせて、結果を見てみます。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pgbench -p 11000 -T 10 test
+starting vacuum...end.
+transaction type: &lt;builtin: TPC-B (sort of)&gt;
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+duration: 10 s
+number of transactions actually processed: 2171
+latency average = 4.692 ms
+tps = 213.147520 (including connections establishing)
+tps = 213.258008 (excluding connections establishing)
+
+$ psql -p 11002 -c "SELECT sum(abalance) FROM pgbench_accounts" test
+  sum   
+--------
+ 192112
+(1 row)
+
+$ psql -p 11003 -c "SELECT sum(abalance) FROM pgbench_accounts" test
+  sum   
+--------
+ 192112
+(1 row)
+      </PRE
+><P>
+ここでも結果は同じでした。
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-testing-load-balance.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="tutorial-testing-failover.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>負荷分散を試してみる</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="tutorial-start.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>フェイルオーバを試してみる</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

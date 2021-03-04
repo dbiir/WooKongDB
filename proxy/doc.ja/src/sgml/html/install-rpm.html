@@ -1,0 +1,363 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>RPMからのインストール</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Pgpool-IIのインストール"
+HREF="installation.html"><LINK
+REL="PREVIOUS"
+TITLE="pgpool.confの設定"
+HREF="setting-up-pgpool-conf.html"><LINK
+REL="NEXT"
+TITLE="サーバの準備と運用"
+HREF="runtime.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="pgpool.confの設定"
+HREF="setting-up-pgpool-conf.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 3章<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストール</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="サーバの準備と運用"
+HREF="runtime.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="INSTALL-RPM"
+>3.9. RPMからのインストール</A
+></H1
+><P
+>この章では、RPMから<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のインストールについて説明します。
+ソースコードからインストールする場合は、<A
+HREF="install-source.html"
+>項3.1</A
+>を参照してください。
+   </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="INSTALLING-RPM"
+>3.9.1. RPMのインストール</A
+></H2
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の公式RPMは、<A
+HREF="http://www.pgpool.net/yum"
+TARGET="_top"
+>http://www.pgpool.net/yum</A
+>から入手できます。
+   </P
+><P
+>RHELとその派生ディストリビューションでは、以下を一度行ってください。
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install http://www.pgpool.net/yum/rpms/3.6/redhat/rhel-7-x86_64/pgpool-II-release-3.6-1.noarch.rpm
+     </PRE
+><P>
+そして以下を実施してください。
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install pgpool-II-pg96
+     </PRE
+><P>
+
+<TT
+CLASS="LITERAL"
+>pg96</TT
+>は、<TT
+CLASS="LITERAL"
+>PostgreSQL 9.6</TT
+>を意味しています。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>のライブラリと拡張のディレクトリが必要です。
+そのディレクトリへのパスは<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>のバージョンごとに異なっているので、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>に対応するRPMを選んでください。
+またRPMは、<A
+HREF="https://www.postgresql.org/download/linux/redhat/"
+TARGET="_top"
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>コミュニティRPM</A
+>を使用することを前提としています。
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install pgpool-II-pg96-debuginfo
+     </PRE
+><P>
+これにより、コアファイルあるいはバックトレースにおいて、デバッグ用のシンボルを得ることができます。
+インストールすることを推奨します。
+開発向けのオプションパッケージがあります。
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install pgpool-II-pg96-devel
+     </PRE
+><P>
+これにより、開発者向けのヘッダーファイルがインストールされます。
+   </P
+><P
+>すべての<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバに、以下をインストールしてください。
+     </P><PRE
+CLASS="PROGRAMLISTING"
+>yum install pgpool-II-pg96-extensions
+     </PRE
+><P>
+
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CONFIGURE-RPM"
+>3.9.2. RPMの設定</A
+></H2
+><P
+>すべての<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>設定ファイルは<TT
+CLASS="FILENAME"
+>/etc/pgpool-II</TT
+>にあります。
+設定方法については<A
+HREF="setting-up-pgpool-conf.html"
+>項3.8</A
+>を参照ください。
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="START-RPM"
+>3.9.3. Pgpool-IIの起動と停止</A
+></H2
+><P
+>&#13;       </P><PRE
+CLASS="PROGRAMLISTING"
+>systemctl enable pgpool.service
+       </PRE
+><P>
+
+この後システム全体を再起動するか、以下を実行してください。
+
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>systemctl start pgpool.service 
+       </PRE
+><P>
+
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバは、これよりも前に起動済みでなければならないことに注意してください。
+
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>systemctl stop pgpool.service 
+       </PRE
+><P>
+
+この後、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバを停止しても構いません。
+     </P
+><P
+>RHEL6/CentOS 6では、以下を一度行ってください。
+
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>chkconfig pgpool on
+       </PRE
+><P>
+
+この後システム全体を再起動するか、以下を実行してください。
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>service start pgpool
+       </PRE
+><P>
+
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバは、これよりも前に起動済みでなければならないことに注意してください。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を停止するには、次のようにしてください。
+
+       </P><PRE
+CLASS="PROGRAMLISTING"
+>service stop pgpool
+       </PRE
+><P>
+
+この後、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバを停止しても構いません。
+     </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="setting-up-pgpool-conf.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>pgpool.confの設定</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="installation.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>サーバの準備と運用</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

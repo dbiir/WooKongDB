@@ -1,0 +1,1024 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>動作モード</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="接続と認証"
+HREF="runtime-config-connection.html"><LINK
+REL="NEXT"
+TITLE="バックエンドの設定"
+HREF="runtime-config-backend-settings.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="接続と認証"
+HREF="runtime-config-connection.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="バックエンドの設定"
+HREF="runtime-config-backend-settings.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-CONFIG-RUNNUNG-MODE"
+>5.3. 動作モード</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-MASTER-SLAVE-MODE"
+>5.3.1. マスタースレーブモード</A
+></H2
+><P
+>このモードは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>と（<ACRONYM
+CLASS="ACRONYM"
+>Slony-I</ACRONYM
+>やストリームレプリケーションのような）他のマスター/スレーブ型のレプリケーションソフトウェアと組み合わせるのに使用されます。
+実際にデータレプリケーションを行うのはこれらのソフトウェアに任されます。
+		</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>スレーブノードの数は1つに限定されず、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は127個までのスレーブノードを持つことができます。
+マスター/スレーブモードは、スレーブノードが1つも存在しない場合マスターノードのみを動作させることができます。
+			</P
+></BLOCKQUOTE
+></DIV
+><P
+>参照負荷をスタンバイバックエンドノードに振り分ける負荷分散（<A
+HREF="runtime-config-load-balancing.html"
+>項5.7</A
+>を参照）もマスター/スレーブモードと共に使用可能です。
+		</P
+><P
+>マスター/スレーブモードでは以下のオプションを設定する必要があります。
+		</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-MASTER-SLAVE-MODE"
+></A
+><TT
+CLASS="VARNAME"
+>master_slave_mode</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+					</DT
+><DD
+><P
+>マスタースレーブモードを有効にします。
+デフォルトはoffです。
+					</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><A
+HREF="runtime-config-runnung-mode.html#GUC-MASTER-SLAVE-MODE"
+>master_slave_mode</A
+>と<A
+HREF="runtime-config-runnung-mode.html#GUC-REPLICATION-MODE"
+>replication_mode</A
+>は相互に排他的で、一度に一方しか有効にすることができません。
+						</P
+></BLOCKQUOTE
+></DIV
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+					</P
+></DD
+><DT
+><A
+NAME="GUC-MASTER-SLAVE-SUB-MODE"
+></A
+><TT
+CLASS="VARNAME"
+>master_slave_sub_mode</TT
+> (<TT
+CLASS="TYPE"
+>enum</TT
+>)
+					</DT
+><DD
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>ノード間のデータレプリケーションに用いる外部のレプリケーションシステムを指定します。
+以下の表にこのパラメータで有効な値のリストを示します。
+
+					</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="MASTER-SLAVE-SUB-MODE-TABLE"
+></A
+><P
+><B
+>表 5-1. master_slave_sub_modeオプション</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>値</TH
+><TH
+>説明</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+><TT
+CLASS="LITERAL"
+>'slony'</TT
+></TD
+><TD
+> <ACRONYM
+CLASS="ACRONYM"
+>Slony-I</ACRONYM
+>に適合</TD
+></TR
+><TR
+><TD
+><TT
+CLASS="LITERAL"
+>'stream'</TT
+></TD
+><TD
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の組み込みレプリケーションシステム（ストリーミングレプリケーション）に適合</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>デフォルトは<TT
+CLASS="LITERAL"
+>'slony'</TT
+>です。
+					</P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+					</P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-CONFIG-REPLICATION-MODE"
+>5.3.2. レプリケーションモード</A
+></H2
+><P
+>このモードでは<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>間のデータレプリケーションを<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に行わせます。
+		</P
+><P
+>参照負荷をスタンバイバックエンドノードに振り分ける負荷分散（<A
+HREF="runtime-config-load-balancing.html"
+>項5.7</A
+>を参照）もレプリケーションモードと共に使用可能です。
+		</P
+><P
+>以下のオプションがプリケーションモードにおける<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の動作に影響します。
+		</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-REPLICATION-MODE"
+></A
+><TT
+CLASS="VARNAME"
+>replication_mode</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+					</DT
+><DD
+><P
+>レプリケーションモードを有効にします。
+デフォルトはoffです。
+					</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><A
+HREF="runtime-config-runnung-mode.html#GUC-REPLICATION-MODE"
+>replication_mode</A
+>と<A
+HREF="runtime-config-runnung-mode.html#GUC-MASTER-SLAVE-MODE"
+>master_slave_mode</A
+>は相互に排他的で、一度に一方しか有効にすることができません。
+						</P
+></BLOCKQUOTE
+></DIV
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+					</P
+></DD
+><DT
+><A
+NAME="GUC-REPLICATION-STOP-ON-MISMATCH"
+></A
+><TT
+CLASS="VARNAME"
+>replication_stop_on_mismatch</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+					</DT
+><DD
+><P
+>&#13;これがonで、全ての<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>バックエンドノードに送られたクエリに対して、全てのノードが同じパケット種類で応答しなかった場合、多数派とは異なる応答したバックエンドノードは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>による切り離されます。
+<TT
+CLASS="VARNAME"
+>replication_stop_on_mismatch</TT
+>がoffの場合に同様の状況が発生したときには、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は現在のユーザセッションを強制終了するだけにとどめ、バックエンドの切り離しは行いません。
+
+					</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はバックエンドから返されたデータは調べずに、結果パケットの種類の比較のみにより決断します。
+						</P
+></BLOCKQUOTE
+></DIV
+><P
+><TT
+CLASS="VARNAME"
+>replication_stop_on_mismatch</TT
+>を有効にする典型的なユースケースは、バックエンドノード間のデータ不整合の防止です。
+例えば、UPDATE文が他のノードでは成功しているのにあるバックエンドノードでは失敗した場合、そのバックエンドノードを切り離したいかもしれません。
+					</P
+><P
+>デフォルトはoffです。
+					</P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+					</P
+></DD
+><DT
+><A
+NAME="GUC-FAILOVER-IF-AFFECTED-TUPLES-MISMATCH"
+></A
+><TT
+CLASS="VARNAME"
+>failover_if_affected_tuples_mismatch</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+					</DT
+><DD
+><P
+>これがonで、全てのノードの応答でINSERT/UPDATE/DELETEクエリの影響を受けたタプルの数が同じでなかった場合、多数派とは異なる応答したバックエンドノードは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>による切り離されます。
+<TT
+CLASS="VARNAME"
+>failover_if_affected_tuples_mismatch</TT
+>がoffの場合に同様の状況が発生したときには、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は現在のユーザセッションを強制終了するだけにとどめ、バックエンドの切り離しは行いません。
+					</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>もし同票で、2つ以上のグループで同じノード数だった場合は、マスターノード(最も若いDBノード番号のバックエンドノード)を含むグループが優先されます。
+						</P
+></BLOCKQUOTE
+></DIV
+><P
+>デフォルトはoffです。
+
+					</P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+					</P
+></DD
+><DT
+><A
+NAME="GUC-REPLICATE-SELECT"
+></A
+><TT
+CLASS="VARNAME"
+>replicate_select</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+					</DT
+><DD
+><P
+>onを設定すると、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はSELECTクエリのレプリケーションモードを有効にします。
+すなわち、SELECTクエリが全てのバックエンドノードに送信されます。
+					</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="REPLICATE-SELECT-AFFECT-TABLE"
+></A
+><P
+><B
+>表 5-2. replicate_selectと<A
+HREF="runtime-config-load-balancing.html#GUC-LOAD-BALANCE-MODE"
+>load_balance_mode</A
+>がSELECTのルーティングに与える影響</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><COL
+WIDTH="1*"
+TITLE="_1"><COL
+WIDTH="1*"
+TITLE="_2"><COL
+WIDTH="1*"
+TITLE="_3"><COL
+WIDTH="1*"
+TITLE="_4"><COL
+WIDTH="1*"
+TITLE="_5"><COL
+WIDTH="1*"
+TITLE="_6"><TBODY
+><TR
+><TD
+>replicate_selectがtrue</TD
+><TD
+ALIGN="CENTER"
+>Y</TD
+><TD
+COLSPAN="4"
+ALIGN="CENTER"
+>N</TD
+></TR
+><TR
+><TD
+>load_balance_modeがtrue</TD
+><TD
+>ANY</TD
+><TD
+ALIGN="CENTER"
+>Y</TD
+><TD
+COLSPAN="3"
+ALIGN="CENTER"
+>N</TD
+></TR
+><TR
+><TD
+>SELECTがトランザクションブロックの内部にある</TD
+><TD
+ALIGN="CENTER"
+>ANY</TD
+><TD
+COLSPAN="2"
+ALIGN="CENTER"
+> Y </TD
+><TD
+ALIGN="CENTER"
+>N</TD
+><TD
+ALIGN="CENTER"
+>ANY</TD
+></TR
+><TR
+><TD
+>										トランザクション分離レベルがSERIALIZABLEで、トランザクションが更新クエリを発行済
+									</TD
+><TD
+ALIGN="CENTER"
+>Y</TD
+><TD
+ALIGN="CENTER"
+>N</TD
+><TD
+ALIGN="CENTER"
+>ANY</TD
+><TD
+ALIGN="CENTER"
+>ANY</TD
+><TD
+ALIGN="CENTER"
+>ANY</TD
+></TR
+><TR
+><TD
+>										結果（R:レプリケーション、M:マスターのみに送信、L:負荷分散）
+									</TD
+><TD
+ALIGN="CENTER"
+>R</TD
+><TD
+ALIGN="CENTER"
+>M</TD
+><TD
+ALIGN="CENTER"
+>L</TD
+><TD
+ALIGN="CENTER"
+>L</TD
+><TD
+ALIGN="CENTER"
+>M</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>デフォルトはoffです。
+					</P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+					</P
+></DD
+><DT
+><A
+NAME="GUC-INSERT-LOCK"
+></A
+><TT
+CLASS="VARNAME"
+>insert_lock</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+					</DT
+><DD
+><P
+>onに設定すると、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はINSERT文が発行される前に<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>上のテーブルを自動的にロックします。
+					</P
+><P
+>SERIAL型を使っているテーブルをレプリケーションすると、SERIAL型の列の値がDBノードの間で一致しなくなることがあります。
+この問題の回避策は、INSERT実行前に該当テーブルを明示的にロックすることです。
+					</P
+><P
+>テーブルの自動ロックのため、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は以下の変換を行います。
+							</P><PRE
+CLASS="PROGRAMLISTING"
+>INSERT INTO ...
+							</PRE
+><P>
+これを次のように変換します。
+
+							</P><PRE
+CLASS="PROGRAMLISTING"
+>BEGIN;
+LOCK TABLE ...
+INSERT INTO ...
+COMMIT;
+							</PRE
+><P>
+					</P
+><DIV
+CLASS="CAUTION"
+><P
+></P
+><TABLE
+CLASS="CAUTION"
+BORDER="1"
+WIDTH="90%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+>注意</B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>この方法はトランザクションの並列実行性が大きく劣化させます。
+						</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V2.2</I
+></SPAN
+>以降では、テーブルがSERIAL列を持つかどうか自動判別するため、SERIAL列がなければ決してテーブルをロックしません。
+					</P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.0.4</I
+></SPAN
+>までの<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.0</I
+></SPAN
+>では、テーブルロックではなシーケンステーブルに対して行ロックをかけます。
+これはVACUUM(autovacuumを含む)とのロック競合を最小化することを意図しています。
+しかし、これは他の問題を引き起こします。
+トランザクション周回が起きた後、シーケンステーブルに対する行ロックはPostgreSQLの内部エラー (詳細には、トランザクション状態を保持するpg_clogへのアクセスエラー)を起こします。
+これを防ぐため、PostgreSQLのコア開発者はシーケンステーブルに対する行ロックを許可しないことを決定しました。
+これはもちろん<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>を動作不能にします(修正されたPostgreSQLはバージョン 9.0.5, 8.4.9, 8.3.16そして8.2.22としてリリースされました)。
+
+					</P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V3.0.5</I
+></SPAN
+>以降では、新しいPostgreSQLがシーケンステーブルに対するロックを許可しなくなったため、<TT
+CLASS="LITERAL"
+>pgpool_catalog.insert_lock</TT
+>テーブルに対して行ロックをかけます。
+したがって、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>経由でアクセスするすべてのデータベースにinsert_lockテーブルをあらかじめ作成しておく必要があります。
+詳細は<A
+HREF="create-installlock-table.html"
+>項3.7</A
+>をご覧ください。
+もし、insert_lockテーブルが存在しない場合は、挿入対象のテーブルに対してロックを行います。
+これは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V2.2</I
+></SPAN
+>と<SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>V2.3</I
+></SPAN
+>シリーズと同じ動作です。
+					</P
+><P
+>過去のバージョンと互換性のある<TT
+CLASS="VARNAME"
+>insert_lock</TT
+>を使用したい場合は、configureスクリプトでロック方法を指定できます。
+詳細は<A
+HREF="install-pgpool.html"
+>項3.4</A
+>をご覧下さい。
+					</P
+><P
+>（文ごとの）細かい制御:
+					</P
+><P
+></P
+><UL
+><LI
+><P
+>insert_lockをtrueにして、テーブルロックを獲得してほしくないINSERT文には、先頭に/*NO INSERT LOCK*/コメントを追加します。
+							</P
+></LI
+><LI
+><P
+>insert_lockをfalseにして、テーブルロックを獲得してほしいINSERT文には、先頭に/*INSERT LOCK*/コメントを追加します。
+							</P
+></LI
+></UL
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>insert_lockを有効にしてregression testを実行すると、PostgreSQL 8.0では transactions, privileges, rules, alter_tableがfailします。
+						</P
+><P
+>その理由は、ruleテストで<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がビューにLOCKを実行しようとするため、そして以下のエラーメッセージが出てしまうためです。
+								</P><PRE
+CLASS="PROGRAMLISTING"
+>! ERROR: current transaction is aborted, commands ignored until
+end of transaction block
+							</PRE
+><P>
+たとえば、transactionsテストでは、存在しないテーブルに対してINSERTを試みており、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>PostgerSQL</SPAN
+>にそのテーブルのロックを獲得させることになります。
+これはもちろんエラーとなります。
+トランザクションがアボート状態になり、続くINSERTでは上記エラーが出てしまいます。
+						</P
+></BLOCKQUOTE
+></DIV
+><P
+>デフォルトはoffです。
+					</P
+><P
+>このパラメータは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の設定を再読み込みすることで変更可能です。
+					</P
+></DD
+><DT
+><A
+NAME="GUC-LOBJ-LOCK-TABLE"
+></A
+><TT
+CLASS="VARNAME"
+>lobj_lock_table</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+					</DT
+><DD
+><P
+>ラージオブジェクトのレプリケーションを行いたいときにロック管理に使うためのテーブル名を指定します。
+このテーブルが指定されてる場合、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は、<TT
+CLASS="VARNAME"
+>lobj_lock_table</TT
+>で指定されているテーブルをロックした後、<TT
+CLASS="LITERAL"
+>pg_largeobject</TT
+>システムカタログを参照してラージオブジェクトIDを生成し、<TT
+CLASS="LITERAL"
+>lo_create()</TT
+>を呼び出してラージオブジェクトの作成を行います。
+この方法により、レプリケーションモードにおいて<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>が全てのDBノードで同じラージオブジェクトIDを得られることが保証されます。
+
+						</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> 8.0以前は<TT
+CLASS="LITERAL"
+>lo_create</TT
+>を持たないため、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> 8.0以前のバージョンではこの処理は行われません。
+							</P
+></BLOCKQUOTE
+></DIV
+><P
+><TT
+CLASS="LITERAL"
+>libpq</TT
+>の関数<TT
+CLASS="LITERAL"
+>lo_creat()</TT
+>の呼び出しがこの機能の契機となります。
+<ACRONYM
+CLASS="ACRONYM"
+>Java</ACRONYM
+> API（<ACRONYM
+CLASS="ACRONYM"
+>JDBC</ACRONYM
+>ドライバ）、<ACRONYM
+CLASS="ACRONYM"
+>PHP</ACRONYM
+> API（<TT
+CLASS="LITERAL"
+>pg_lo_create</TT
+>、またはPDOといったPHPライブラリの同様のAPI）、様々なプログラミング言語の同様のAPIを経由したラージオブジェクトの生成においても同じプロトコルが使われることがわかっているので、この機能は動作するはずです。
+					</P
+><P
+>この機能はラージオブジェクトに対する以下の操作では動作しません。
+
+					</P
+><P
+></P
+><UL
+><LI
+><P
+>								<TT
+CLASS="LITERAL"
+>lo_create</TT
+>、<TT
+CLASS="LITERAL"
+>lo_import_with_oid</TT
+>を使う全てのAPI。
+							</P
+></LI
+><LI
+><P
+>								バックエンドの<TT
+CLASS="LITERAL"
+>lo_import</TT
+>関数をSELECTで呼び出す場合
+							</P
+></LI
+><LI
+><P
+>								バックエンドの<TT
+CLASS="LITERAL"
+>lo_create</TT
+>関数をSELECTで呼び出す場合
+							</P
+></LI
+></UL
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>全ての<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>ユーザは<TT
+CLASS="VARNAME"
+>lobj_lock_table</TT
+>へ書き込み可能ある必要が有ります。
+また、これはどのスキーマに作成されてかまいません。
+						</P
+></BLOCKQUOTE
+></DIV
+><P
+>ラージオブジェクトロックテーブルを作る例を示します。
+						</P><PRE
+CLASS="PROGRAMLISTING"
+>CREATE TABLE public.my_lock_table ();
+GRANT ALL ON public.my_lock_table TO PUBLIC;
+						</PRE
+><P>
+					</P
+><P
+>デフォルトは<TT
+CLASS="LITERAL"
+>''</TT
+>（空文字列）で、この機能は無効です。
+					</P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config-connection.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-config-backend-settings.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>接続と認証</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>バックエンドの設定</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

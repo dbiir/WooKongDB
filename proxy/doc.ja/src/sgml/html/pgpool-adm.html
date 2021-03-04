@@ -1,0 +1,356 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pgpool_admエクステンション</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="リファレンス"
+HREF="reference.html"><LINK
+REL="PREVIOUS"
+TITLE="SHOW POOL_CACHE"
+HREF="sql-show-pool-cache.html"><LINK
+REL="NEXT"
+TITLE="pgpool_adm_pcp_node_info"
+HREF="pgpool-adm-pcp-node-info.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFERENCE"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="SHOW POOL_CACHE"
+HREF="sql-show-pool-cache.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="reference.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pgpool_adm_pcp_node_info"
+HREF="pgpool-adm-pcp-node-info.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="REFERENCE"
+><A
+NAME="PGPOOL-ADM"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+>V. pgpool_admエクステンション</H1
+><DIV
+CLASS="PARTINTRO"
+><A
+NAME="AEN6229"
+></A
+><P
+><TT
+CLASS="COMMAND"
+>pgpool_adm</TT
+>は、<A
+HREF="pcp-commands.html"
+>参照II, <I
+>PCP コマンド</I
+></A
+> (実際には, pcp
+ライブラリ)にアクセスできるようにするための一連のエクステンションです。
+      </P
+><P
+>	<DIV
+CLASS="FIGURE"
+><A
+NAME="AEN6234"
+></A
+><P
+><B
+>図 1. <TT
+CLASS="COMMAND"
+>pgpool_adm</TT
+>が動く仕組み</B
+></P
+><DIV
+CLASS="MEDIAOBJECT"
+><P
+><IMG
+SRC="pgpool_adm.gif"></P
+></DIV
+></DIV
+>
+      </P
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>経由でも(1)、あるいは直接<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>に対しても(2)、関数を呼び出すことができます。
+(1)の場合には、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はユーザからクエリを受け付け(1)、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>に転送します(3)。
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>は、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に接続し(5)、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>に(3)の結果を返します。
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に結果を返し(5)、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はそのデータをユーザに転送します(6)。
+      </P
+><P
+>(2)の場合には、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>がクエリをユーザから受け付けます(2)。
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に接続し(5)、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>に(3)の結果を返します。
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>はそのデータをユーザに返します(6)。
+      </P
+><P
+>pgpool_adm関数の呼び出し形式は2種類あります。
+最初の形式は<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のホスト名(またはIPアドレス)、pcpポート番号、pcpユーザ名、パスワード、それ以外のパラメータです。
+      </P
+><P
+>2番目の形式では、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>サーバ名が必要になります。
+サーバ名は<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の"CREATE FOREIGN SERVER"コマンドで定義済みでなければなりません。
+pcpポート番号は9898に固定されています。
+pcpユーザ名は、呼び出し元の<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>ユーザ名と同じであると見なされます。
+パスワードは$HOME/.pcppassから取得します。
+      </P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="INSTALLING-PGPOOL-ADM"
+>1. pgpool_admのインストール</A
+></H1
+><P
+>pgpool_admはエクステンションであり、すべてのPostgreSQLサーバにインストールする必要があります。
+	  </P><PRE
+CLASS="PROGRAMLISTING"
+>$ cd src/sql/pgpool_adm
+$ make
+$ make install
+	  </PRE
+><P>
+次のSQLコマンドをアクセスしたいすべてのデータベースに発行します。
+	  </P><PRE
+CLASS="PROGRAMLISTING"
+>$ psql ...
+$ CREATE EXTENSION pgpool_adm
+	  </PRE
+><P>
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>目次</B
+></DT
+><DT
+><A
+HREF="pgpool-adm-pcp-node-info.html"
+>pgpool_adm_pcp_node_info</A
+>&nbsp;--&nbsp;指定ノードIDの情報を表示する関数
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-pool-status.html"
+>pgpool_adm_pcp_pool_status</A
+>&nbsp;--&nbsp;pgpool.confのパラメータを取得する関数
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-node-count.html"
+>pgpool_adm_pcp_node_count</A
+>&nbsp;--&nbsp;ノード数を取得する関数
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-attach-node.html"
+>pgpool_adm_pcp_attach_node</A
+>&nbsp;--&nbsp;指定ノードをアタッチする関数
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-detach-node.html"
+>pgpool_adm_pcp_detach_node</A
+>&nbsp;--&nbsp;指定ノードをデタッチする関数
+  </DT
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-show-pool-cache.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pgpool-adm-pcp-node-info.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>SHOW POOL_CACHE</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="reference.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pgpool_adm_pcp_node_info</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

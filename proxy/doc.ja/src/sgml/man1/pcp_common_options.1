@@ -1,0 +1,110 @@
+'\" t
+.\"     Title: pcp_common_options
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PCP_COMMON_OPTIONS" "1" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+pcp_common_options \- PCP コマンドには共通する引数
+.SH "概要"
+.HP \w'\fBpcp_command\fR\ 'u
+\fBpcp_command\fR [\fIoption\fR...]
+.SH "説明"
+.PP
+全てのコマンドには共通する引数があります。 そのほとんどは認証情報を指定するもので、 他は冗長出力モードやデバッグなどに関するものです。
+.SH "オプション"
+.PP
+.PP
+\fB\-h \fR\fB\fIhostname\fR\fR
+.br
+\fB\-\-host=\fR\fB\fIhostname\fR\fR
+.RS 4
+pgpool\-II が稼働しているホスト名を指定します。 スラッシュから始まる場合は、 Unix ドメインソケットのディレクトリと解釈されます。
+.RE
+.PP
+\fB\-p \fR\fB\fIport\fR\fR
+.br
+\fB\-\-port=\fR\fB\fIport\fR\fR
+.RS 4
+PCP ポート番号を指定します。(デフォルト: 9898)
+.RE
+.PP
+\fB\-u \fR\fB\fIusername\fR\fR
+.br
+\fB\-\-username=\fR\fB\fIusername\fR\fR
+.RS 4
+PCP 認証のユーザ名を指定します。(デフォルト: OS のユーザ)
+.RE
+.PP
+\fB\-w\fR
+.br
+\fB\-\-no\-password\fR
+.RS 4
+パスワード入力プロンプトを表示しません。 もしパスワードが
+\&.pcppass
+ファイルから 取得できない場合には接続は失敗します。 このオプションはバッチジョブやスクリプトなど、 パスワード入力が行うユーザいない場合に有用です。
+.RE
+.PP
+\fB\-W\fR
+.br
+\fB\-\-password\fR
+.RS 4
+パスワード入力プロンプトを表示します。（自動的に選択される動作です）
+.RE
+.PP
+\fB\-d\fR
+.br
+\fB\-\-debug\fR
+.RS 4
+デバッグメッセージを表示します。
+.RE
+.PP
+\fB\-v\fR
+.br
+\fB\-\-verbose\fR
+.RS 4
+冗長出力を有効にします。
+.RE
+.PP
+\fB\-V\fR
+.br
+\fB\-\-version\fR
+.RS 4
+バージョンを表示して終了します。
+.RE
+.PP
+\fB\-?\fR
+.br
+\fB\-\-help\fR
+.RS 4
+コマンドラインのヘルプを表示して終了します。
+.RE
+.SH "環境変数"
+.PP
+\fBPCPPASSFILE\fR
+.RS 4
+pcp パスワードファイルをパスを指定します。
+.RE

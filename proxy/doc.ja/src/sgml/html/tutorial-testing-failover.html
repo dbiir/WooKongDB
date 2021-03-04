@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>フェイルオーバを試してみる</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="さあ始めましょう"
+HREF="tutorial-start.html"><LINK
+REL="PREVIOUS"
+TITLE="レプリケーションを試してみる"
+HREF="tutorial-testing-replication.html"><LINK
+REL="NEXT"
+TITLE="オンラインリカバリを試してみる"
+HREF="tutorial-testing-online-recovery.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="レプリケーションを試してみる"
+HREF="tutorial-testing-replication.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-start.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 1章さあ始めましょう</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="オンラインリカバリを試してみる"
+HREF="tutorial-testing-online-recovery.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="TUTORIAL-TESTING-FAILOVER"
+>1.5. フェイルオーバを試してみる</A
+></H1
+><P
+><SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>サーバが停止した際に、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は自動フェイルオーバさせることができます。
+この場合、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はステータスを"down"にして、残ったサーバでデータベースの運用を継続します。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ pg_ctl -D data1 stop
+waiting for server to shut down.... done
+server stopped
+$ psql -p 11000 -c "show pool_nodes" test
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay 
+---------+----------+-------+--------+-----------+---------+------------+-------------------+-------------------
+ 0       | /tmp     | 11002 | up     | 0.500000  | primary | 2172       | true              | 0
+ 1       | /tmp     | 11003 | down   | 0.500000  | standby | 0          | false             | 0
+(2 rows)
+
+$ psql -p 11000 -c "SELECT sum(abalance) FROM pgbench_accounts" test
+  sum   
+--------
+ 192112
+(1 row)
+      </PRE
+><P>
+スタンバイノードをpg_ctlコマンドで停止しました。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はそのことを検出し、そのスタンバイノードを切り離します。
+"show pool_nodes"コマンドは、スタンバイノードがダウンしていることを表示します。
+このスタンバイノードなしで、クラスタの運用を継続できます。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ psql -p 11000 -c "SELECT sum(abalance) FROM pgbench_accounts" test
+  sum   
+--------
+ 192112
+(1 row)
+      </PRE
+><P>
+プライマリサーバが落ちたらどうなるでしょう？
+この場合、残ったスタンバイサーバの一つが新しいプライマリサーバへと昇格します。
+テストのため、両方のノードが稼働中である状態から始めます。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>$ psql -p 11000 -c "show pool_nodes" test
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay 
+---------+----------+-------+--------+-----------+---------+------------+-------------------+-------------------
+ 0       | /tmp     | 11002 | up     | 0.500000  | primary | 2173       | true              | 0
+ 1       | /tmp     | 11003 | up     | 0.500000  | standby | 0          | false             | 0
+(2 rows)
+
+$ pg_ctl -D data0 stop
+waiting for server to shut down.... done
+server stopped
+$ psql -p 11000 -c "show pool_nodes" test
+ node_id | hostname | port  | status | lb_weight |  role   | select_cnt | load_balance_node | replication_delay 
+---------+----------+-------+--------+-----------+---------+------------+-------------------+-------------------
+ 0       | /tmp     | 11002 | down   | 0.500000  | standby | 2173       | false             | 0
+ 1       | /tmp     | 11003 | up     | 0.500000  | primary | 0          | true              | 0
+(2 rows)
+      </PRE
+><P>
+プライマリノードが0から1へと変わりました。
+内部では何が起きたのでしょう？
+ノード0がダウンした時、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はそのことを検出し、<TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+>に定義された"fail_over_script"を実行します。
+その内容を以下に示します。
+      </P><PRE
+CLASS="PROGRAMLISTING"
+>#! /bin/sh
+# Execute command by failover.
+# special values:  %d = node id
+#                  %h = host name
+#                  %p = port number
+#                  %D = database cluster path
+#                  %m = new master node id
+#                  %M = old master node id
+#                  %H = new master node host name
+#                  %P = old primary node id
+#                  %R = new master database cluster path
+#                  %r = new master port number
+#                  %% = '%' character
+failed_node_id=$1
+failed_host_name=$2
+failed_port=$3
+failed_db_cluster=$4
+new_master_id=$5
+old_master_id=$6
+new_master_host_name=$7
+old_primary_node_id=$8
+new_master_port_number=$9
+new_master_db_cluster=${10}
+mydir=/home/t-ishii/tmp/Tutorial
+log=$mydir/log/failover.log
+pg_ctl=/usr/local/pgsql/bin/pg_ctl
+cluster0=$mydir/data0
+cluster1=$mydir/data1
+
+date &#62;&#62; $log
+echo "failed_node_id $failed_node_id failed_host_name $failed_host_name failed_port $failed_port failed_db_cluster $failed_db_cluster new_master_id $new_master_id old_master_id $old_master_id new_master_host_name $new_master_host_name old_primary_node_id $old_primary_node_id new_master_port_number $new_master_port_number new_master_db_cluster $new_master_db_cluster" &#62;&#62; $log
+
+if [ a"$failed_node_id" = a"$old_primary_node_id" ];then	# master failed
+! 	new_primary_db_cluster=${mydir}/data"$new_master_id"
+	echo $pg_ctl -D $new_primary_db_cluster promote &#62;&#62;$log	# let standby take over
+	$pg_ctl -D $new_primary_db_cluster promote &#62;&#62;$log	# let standby take over
+fi
+      </PRE
+><P>
+そのスクリプトは、パラメータとして必要な情報を<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>から受け取ります。
+プライマリサーバが落ちた時に、"pg_ctl -D data1 promote"を実行し、スタンバイサーバは新しいプライマリサーバへと昇格します。
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tutorial-testing-replication.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="tutorial-testing-online-recovery.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>レプリケーションを試してみる</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="tutorial-start.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>オンラインリカバリを試してみる</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

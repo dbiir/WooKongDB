@@ -1,0 +1,637 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>AWS Configuration Example</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="pgpool-II 3.6.4 Documentation"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuration Examples"
+HREF="example-configs.html"><LINK
+REL="PREVIOUS"
+TITLE="Watchdog Configuration Example"
+HREF="example-watchdog.html"><LINK
+REL="NEXT"
+TITLE="Reference"
+HREF="reference.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=ISO-8859-1"><META
+NAME="creation"
+CONTENT="2017-05-11T09:56:13"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>pgpool-II 3.6.4 Documentation</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="Watchdog Configuration Example"
+HREF="example-watchdog.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="example-configs.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuration Examples</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="Reference"
+HREF="reference.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="EXAMPLE-AWS"
+>7.3. AWS Configuration Example</A
+></H1
+><P
+>      This tutrial explains the simple way to try "Watchdog"
+      on <A
+HREF="https://aws.amazon.com/"
+TARGET="_top"
+>AWS</A
+> and using
+      the <A
+HREF="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html"
+TARGET="_top"
+>      Elastic IP Address</A
+> as the Virtual IP for the high availability solution.
+      </P><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>        You can use watchdog with <SPAN
+CLASS="PRODUCTNAME"
+>        Pgpool-II</SPAN
+> in any mode: replication mode,
+        master/slave mode and raw mode.
+        </P
+></BLOCKQUOTE
+></DIV
+><P>
+    </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXAMPLE-AWS-SETUP"
+>7.3.1. AWS Setup</A
+></H2
+><P
+>        For this example, we will use two node <SPAN
+CLASS="PRODUCTNAME"
+>        Pgpool-II</SPAN
+> watchdog cluster. So we will set up two
+        Linux Amazon EC2 instances and one Elastic IP address.
+        So for this example, do the following steps:
+      </P
+><P
+></P
+><UL
+><LI
+><P
+>            Launch two Linux Amazon EC2 instances. For this example, we name these
+            instances as "instance-1" and "instance-2"
+          </P
+></LI
+><LI
+><P
+>           Configure the security group for the instances and allow inbound traffic
+           on ports used by pgpool-II and watchdog.
+          </P
+></LI
+><LI
+><P
+>           Install the <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> on both instances.
+          </P
+></LI
+><LI
+><P
+>            Allocate an Elastic IP address.
+            For this example, we will use "35.163.178.3" as an Elastic IP address"
+          </P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXAMPLE-AWS-PGPOOL-CONFIG"
+>7.3.2. <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> configurations</A
+></H2
+><P
+>        Mostly the <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> configurations for this
+        example will be same as in the <A
+HREF="example-watchdog.html"
+>Section 7.2</A
+>, except the
+        <A
+HREF="runtime-watchdog-config.html#GUC-DELEGATE-IP"
+>delegate_IP</A
+> which we will not set in this example instead
+        we will use <A
+HREF="runtime-watchdog-config.html#GUC-WD-ESCALATION-COMMAND"
+>wd_escalation_command</A
+> and
+        <A
+HREF="runtime-watchdog-config.html#GUC-WD-DE-ESCALATION-COMMAND"
+>wd_de_escalation_command</A
+> to switch the
+        Elastic IP address to the maste/Active <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> node.
+      </P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-AWS-PGPOOL-CONFIG-INSTANCE-1"
+>7.3.2.1. <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> configurations on Instance-1</A
+></H3
+><P
+>&#13;          </P><PRE
+CLASS="PROGRAMLISTING"
+>use_watchdog = on
+delegate_IP = ''
+wd_hostname = 'instance-1-private-ip'
+other_pgpool_hostname0 = 'instance-2-private-ip'
+other_pgpool_port0 = 9999
+other_wd_port0 = 9000
+wd_escalation_command = '$path_to_script/aws-escalation.sh'
+wd_de_escalation_command = '$path_to_script/aws-de-escalation.sh'
+          </PRE
+><P>
+
+        </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-AWS-PGPOOL-CONFIG-INSTANCE-2"
+>7.3.2.2. <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> configurations on Instance-2</A
+></H3
+><P
+>&#13;          </P><PRE
+CLASS="PROGRAMLISTING"
+>use_watchdog = on
+delegate_IP = ''
+wd_hostname = 'instance-2-private-ip'
+other_pgpool_hostname0 = 'instance-1-private-ip'
+other_pgpool_port0 = 9999
+other_wd_port0 = 9000
+wd_escalation_command = '$path_to_script/aws-escalation.sh'
+wd_de_escalation_command = '$path_to_script/aws-de-escalation.sh'
+          </PRE
+><P>
+
+        </P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXAMPLE-AWS-PGPOOL-AWS-ESCALATION-INSTANCE"
+>7.3.3. escalation and de-escalation Scripts</A
+></H2
+><P
+>        Create the aws-escalation.sh and aws-de-escalation.sh scripts on both
+        instances and point the <A
+HREF="runtime-watchdog-config.html#GUC-WD-ESCALATION-COMMAND"
+>wd_escalation_command</A
+> and
+        <A
+HREF="runtime-watchdog-config.html#GUC-WD-DE-ESCALATION-COMMAND"
+>wd_de_escalation_command</A
+> to the respective scripts.
+      </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>          You may need to configure the AWS CLI first on all AWS instances
+          to enable the execution of commands used by wd-escalation.sh and wd-de-escalation.sh.
+          See <A
+HREF="http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html"
+TARGET="_top"
+>configure AWS CLI</A
+>
+        </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-AWS-PGPOOL-AWS-ESCALATION-SCRIPT"
+>7.3.3.1. escalation script</A
+></H3
+><P
+>        This script will be executed by the watchdog
+        to assign the Elastic IP on the instance when the watchdog becomes the active/master node.
+        Change the INSTANCE_ID and ELASTIC_IP values as per your AWS setup values.
+      </P
+><P
+>        <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>aws-escalation.sh:</I
+></SPAN
+>
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>#! /bin/sh
+
+ELASTIC_IP=35.163.178.3
+                        # replace it with the Elastic IP address you
+                        # allocated from the aws console
+INSTANCE_ID=i-0a9b64e449b17ed4b
+                        # replace it with the instance id of the Instance
+                        # this script is installed on
+
+echo "Assigning Elastic IP $ELASTIC_IP to the instance $INSTANCE_ID"
+# bring up the Elastic IP
+aws ec2 associate-address --instance-id $INSTANCE_ID --public-ip $ELASTIC_IP
+
+exit 0
+        </PRE
+><P>
+
+      </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="EXAMPLE-AWS-PGPOOL-AWS-DE-ESCALATION-SCRIPT"
+>7.3.3.2. de-escalation script</A
+></H3
+><P
+>        This script will be executed by watchdog
+        to remove the Elastic IP from the instance when the watchdog resign from the active/master node.
+      </P
+><P
+>      <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>aws-de-escalation.sh:</I
+></SPAN
+>
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>#! /bin/sh
+
+ELASTIC_IP=35.163.178.3
+                        # replace it with the Elastic IP address you
+                        # allocated from the aws console
+
+echo "disassociating the Elastic IP $ELASTIC_IP from the instance"
+# bring down the Elastic IP
+aws ec2 disassociate-address --public-ip $ELASTIC_IP
+exit 0
+          </PRE
+><P>
+        </P
+></DIV
+><H3
+><A
+NAME="AEN4725"
+>AWS Command References</A
+></H3
+><DIV
+CLASS="BIBLIOENTRY"
+><A
+NAME="AEN4727"
+></A
+><P
+>"<A
+HREF="http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html"
+TARGET="_top"
+>Configure AWS CLI</A
+>", <I
+>AWS Documentation: Configuring the AWS Command Line Interface</I
+>.</P
+><DIV
+CLASS="BIBLIOENTRYBLOCK"
+STYLE="margin-left: 0.5in"
+></DIV
+></DIV
+><DIV
+CLASS="BIBLIOENTRY"
+><A
+NAME="AEN4733"
+></A
+><P
+>"<A
+HREF="http://docs.aws.amazon.com/cli/latest/reference/ec2/associate-address.html"
+TARGET="_top"
+>associate-address</A
+>", <I
+>AWS Documentation: associate-address reference</I
+>.</P
+><DIV
+CLASS="BIBLIOENTRYBLOCK"
+STYLE="margin-left: 0.5in"
+></DIV
+></DIV
+><DIV
+CLASS="BIBLIOENTRY"
+><A
+NAME="AEN4739"
+></A
+><P
+>"<A
+HREF="http://docs.aws.amazon.com/cli/latest/reference/ec2/disassociate-address.html"
+TARGET="_top"
+>disassociate-address</A
+>", <I
+>AWS Documentation: disassociate-address reference</I
+>.</P
+><DIV
+CLASS="BIBLIOENTRYBLOCK"
+STYLE="margin-left: 0.5in"
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXAMPLE-AWS-TRY"
+>7.3.4. Try it out</A
+></H2
+><P
+>        Start <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> on each server with "-n" switch
+        and redirect log messages to the pgpool.log file.
+        The log message of master/active <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> node
+        will show the message of Elastic IP assignment.
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>LOG:  I am the cluster leader node. Starting escalation process
+LOG:  escalation process started with PID:23543
+LOG:  watchdog: escalation started
+<B
+CLASS="EMPHASIS"
+>Assigning Elastic IP 35.163.178.3 to the instance i-0a9b64e449b17ed4b
+{
+    "AssociationId": "eipassoc-39853c42"
+}</B
+>
+LOG:  watchdog escalation successful
+LOG:  watchdog escalation process with pid: 23543 exit with SUCCESS.
+        </PRE
+><P>
+      </P
+><P
+>        Confirm to ping to the Elastic IP address.
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>[user@someserver]$ ping 35.163.178.3
+PING 35.163.178.3 (35.163.178.3) 56(84) bytes of data.
+64 bytes from 35.163.178.3: icmp_seq=1 ttl=64 time=0.328 ms
+64 bytes from 35.163.178.3: icmp_seq=2 ttl=64 time=0.264 ms
+64 bytes from 35.163.178.3: icmp_seq=3 ttl=64 time=0.412 ms
+        </PRE
+><P>
+     </P
+><P
+>        Try to connect <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> by "psql -h ELASTIC_IP -p port".
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>[user@someserver]$ psql -h 35.163.178.3 -p 9999 -l
+        </PRE
+><P>
+      </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="EXAMPLE-AWS-VIP-SWITCH"
+>7.3.5. Switching Elastic IP</A
+></H2
+><P
+>        To confirm if the Standby server acquires the Elastic IP when the
+        Active server becomes unavailable, Stop the <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>
+        on the Active server. Then, the Standby server should start using the Elastic IP address,
+        And the <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> log will show the below messages.
+
+        </P><PRE
+CLASS="PROGRAMLISTING"
+><B
+CLASS="EMPHASIS"
+>LOG:  remote node "172.31.2.94:9999 [Linux ip-172-31-2-94]" is shutting down
+LOG:  watchdog cluster has lost the coordinator node</B
+>
+LOG:  watchdog node state changed from [STANDBY] to [JOINING]
+LOG:  watchdog node state changed from [JOINING] to [INITIALIZING]
+LOG:  I am the only alive node in the watchdog cluster
+HINT:  skiping stand for coordinator state
+LOG:  watchdog node state changed from [INITIALIZING] to [MASTER]
+LOG:  I am announcing my self as master/coordinator watchdog node
+LOG:  I am the cluster leader node
+DETAIL:  our declare coordinator message is accepted by all nodes
+LOG:  I am the cluster leader node. Starting escalation process
+LOG:  escalation process started with PID:23543
+LOG:  watchdog: escalation started
+<B
+CLASS="EMPHASIS"
+>Assigning Elastic IP 35.163.178.3 to the instance i-0dd3e60734a6ebe14
+{
+    "AssociationId": "eipassoc-39853c42"
+}</B
+>
+LOG:  watchdog escalation successful
+LOG:  watchdog escalation process with pid: 61581 exit with SUCCESS.
+        </PRE
+><P>
+         Confirm to ping to the Elastic IP address again.
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>[user@someserver]$ ping 35.163.178.3
+PING 35.163.178.3 (35.163.178.3) 56(84) bytes of data.
+64 bytes from 35.163.178.3: icmp_seq=1 ttl=64 time=0.328 ms
+64 bytes from 35.163.178.3: icmp_seq=2 ttl=64 time=0.264 ms
+64 bytes from 35.163.178.3: icmp_seq=3 ttl=64 time=0.412 ms
+        </PRE
+><P>
+      </P
+><P
+>        Try to connect <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> by "psql -h ELASTIC_IP -p port".
+        </P><PRE
+CLASS="PROGRAMLISTING"
+>[user@someserver]$ psql -h 35.163.178.3 -p 9999 -l
+        </PRE
+><P>
+      </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="example-watchdog.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="reference.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Watchdog Configuration Example</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="example-configs.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Reference</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

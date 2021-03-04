@@ -1,0 +1,111 @@
+'\" t
+.\"     Title: PGPOOL SET
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: Pgpool-II 3.6.4 文書
+.\"    Source: Pgpool-II 3.6.4
+.\"  Language: Japanese
+.\"
+.TH "PGPOOL SET" "1" "2016" "Pgpool-II 3.6.4" "Pgpool-II 3.6.4 文書"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "名前"
+PGPOOL_SET \- 実行時パラメータの設定を変更する
+.SH "概要"
+.sp
+.nf
+SET  \fIconfiguration_parameter\fR { TO | = } { \fIvalue\fR | \*(Aq\fIvalue\fR\*(Aq | DEFAULT }
+.fi
+.SH "説明"
+.PP
+\fBPGPOOL SET\fR
+は現行セッションで
+Pgpool\-II
+の設定パラメータを変更します。 このコマンドは
+PostgreSQL
+の
+\m[blue]\fB\fBSET\fR\fR\m[]\&\s-2\u[1]\d\s+2
+コマンドと似っていますが、
+PostgreSQL
+の
+\fBSET\fR
+コマンドと区別するために、
+PGPOOL
+というキーワードが追加されました。
+5章サーバの設定
+に列挙されているパラメータの多くは
+\fBPGPOOL SET\fR
+で変更ですますが、 現行セッションで使用される値にのみ影響することにご注意ください。
+.SH "例"
+.PP
+パラメータ
+client_idle_limit
+の設定値を変更する:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+PGPOOL SET client_idle_limit = 350;
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+パラメータ
+client_idle_limit
+の値をデフォルトの設定にリセットする:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+PGPOOL SET client_idle_limit TO DEFAULT;
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+パラメータ
+log_min_messages
+の値を変更する:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+PGPOOL SET log_min_messages TO INFO;
+    
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.SH "関連項目"
+PGPOOL RESET (\fBPGPOOL_RESET\fR(1)), PGPOOL SHOW (\fBPGPOOL_SHOW\fR(1))
+.SH "注記"
+.IP " 1." 4
+    \fBSET\fR
+.RS 4
+\%http://www.postgresql.jp/document/9.5/html/sql-set.html
+.RE

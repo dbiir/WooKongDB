@@ -1,0 +1,1533 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>リリース 3.6</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="リリースノート"
+HREF="release.html"><LINK
+REL="PREVIOUS"
+TITLE="リリース 3.6.1"
+HREF="release-3-6-1.html"><LINK
+REL="NEXT"
+TITLE="リリース 3.5.8"
+HREF="release-3-5-8.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="リリース 3.6.1"
+HREF="release-3-6-1.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>付録 A. リリースノート</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="リリース 3.5.8"
+HREF="release-3-5-8.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RELEASE-3-6"
+>A.5. リリース 3.6</A
+></H1
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Release Date: </B
+>2016-11-21</P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN6852"
+>A.5.1. 概要</A
+></H2
+><P
+>    
+      <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> 3.6 の主な改善点は以下のとおりです。
+    </P
+><P
+></P
+><UL
+><LI
+><P
+>      fail-over の挙動が改善されました。
+      </P
+><P
+>      Streaming Replicationモードで、フェイルオーバーが発生した時に、ダウンしたスタンバイサーバを利用しなければ、クライアントセッションが切断されなくなります。
+      プライマリサーバがダウンした場合、すべてのセッションが切断されます。
+      また、ヘルスチェックのリトライの最中でも <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に接続することが可能です。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>への接続リトライする最大回数までヘルスチェックのリトライが続きます。
+	    </P
+></LI
+><LI
+><P
+>    
+      新しいコマンド <A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+> が追加されました。
+      このコマンドを使用することで、現行セッション内で設定パラメータを変更することができるようになりました。
+	</P
+></LI
+><LI
+><P
+>    
+Watchdogが大幅に改善されました。
+以前のバージョンよりも信頼性が向上しています。
+	</P
+></LI
+><LI
+><P
+>    
+問合せから大量の行が返される場合、ストリーミングレプリケーション時の拡張問い合わせプロトコル（例えば、Java アプリケーションで使用される場合）の処理速度が改善されました。
+	</P
+></LI
+><LI
+><P
+>    
+      PostgreSQL 9.6 のパーサを取り込みました。
+	</P
+></LI
+><LI
+><P
+>    
+特定の場合に<CODE
+CLASS="FUNCTION"
+>pg_terminate_backend()</CODE
+>がフェイルオーバを起こさないようになりました。
+	</P
+></LI
+><LI
+><P
+>    
+      ドキュメントの形式が HTML から SGML に変更されました。
+	</P
+></LI
+></UL
+><P
+>    
+      上記の項目は以下のセクションで詳しく説明します。
+    </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN6877"
+>A.5.2. 主な改善点</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>    
+      fail-over の挙動が改善されました。(Tatsuo Ishii)
+	</P
+><P
+>    
+      Streaming Replication モードで、フェイルオーバーが発生した時に、ダウンしたスタンバイサーバがそのセッションで使用されていなければ、クライアントセッションが切断されなくなりました。
+プライマリサーバがダウンした場合は、すべてのセッションが切断されます。
+ヘルスチェックタイムアウトした場合でも、すべてのセッションが切断されます。
+リトライ最大回数を超えた場合を含めて、他のヘルスチェックエラーではすべてのセッションは切断されません。
+	</P
+><P
+>    
+fail-over が発生する場合にローカル負荷分散ノードの情報が重要なので、<TT
+CLASS="COMMAND"
+>show pool_nodes</TT
+> コマンドで、ローカル負荷分散ノードの情報が利用者の便宜のために表示されるようになりました。
+負荷分散ノードがダウンしたノードではない場合、フェイルオーバーによる影響はありません。
+	</P
+><P
+>    
+      また、ヘルスチェックのリトライの最中でも <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> に接続できるようになりました。
+以前は、<A
+HREF="runtime-config-failover.html#GUC-FAIL-OVER-ON-BACKEND-ERROR"
+>fail_over_on_backend_error</A
+>がオフの場合でも<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>への接続は、ヘルスチェックのリトライをしている間はすべて失敗していました。
+これは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>の子プロセスがまず失敗したバックエンドを含めてすべてのバックエンドへの接続を試み、失敗した場合終了するためです（これはもちろん失敗します）。
+これは一時的な状況であり、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がフェールオーバーを行えば解決します。
+しかし、ヘルスチェックの再試行が行っている場合は、この一時的な状況は
+      <A
+HREF="runtime-config-health-check.html#GUC-HEALTH-CHECK-MAX-RETRIES"
+>health_check_max_retries</A
+>と<A
+HREF="runtime-config-health-check.html#GUC-HEALTH-CHECK-RETRY-DELAY"
+>health_check_retry_delay</A
+>の設定次第で長時間続きます。
+この状況は良くないので、以下のように修正しました。
+
+	</P
+><P
+>    
+ストリーミングレプリケーションモードにおいて、バックエンドへの接続に失敗したら、そのダウンしたノードがプライマリではなければ、このバックエンドへの接続をあきらめて、他のノードへの接続を試みます。
+	</P
+><P
+>    
+ローカルノードのステータスを"down"と記録します。
+これによりプライマリーノードがロードバランスノードとして選択され、すべてのクエリがプライマリーノードへ転送されます。
+他にスタンバイのノードが存在する場合、その中からロードバランスノードが選択されます。
+	</P
+><P
+>    
+セッションが終了した後、ローカルの状態を保持しないように子プロセスは自殺します。
+	</P
+></LI
+><LI
+><P
+>    
+	  <A
+HREF="sql-pgpool-show.html"
+>PGPOOL
+	  SHOW</A
+>, <A
+HREF="sql-pgpool-set.html"
+>PGPOOL
+	  SET</A
+> と
+	  <A
+HREF="sql-pgpool-reset.html"
+>PGPOOL RESET</A
+>
+	  コマンドが追加されました。 (Muhammad Usama)
+	</P
+><P
+>    
+これは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>に現在のセッションの設定パラメータを設定またはリセットする機能を追加するという点で<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>のSET、SHOW、RESETコマンドと似ていますが、PostgreSQLのSET、RESETコマンドコマンドと区別するために、<TT
+CLASS="LITERAL"
+>PGPOOL</TT
+>というキーワードが前に挿入してあります。
+	</P
+><P
+>    
+      現在 PGPOOL SHOW/SET/RESET に対応している設定パラメータは以下です。
+	  <A
+HREF="runtime-config-logging.html#GUC-LOG-PER-NODE-STATEMENT"
+>log_per_node_statement</A
+>, <A
+HREF="runtime-misc.html#GUC-CHECK-TEMP-TABLE"
+>check_temp_table</A
+>,
+	  <A
+HREF="runtime-misc.html#GUC-CHECK-UNLOGGED-TABLE"
+>check_unlogged_table</A
+>, <A
+HREF="runtime-config-load-balancing.html#GUC-ALLOW-SQL-COMMENTS"
+>allow_sql_comments</A
+>,
+	  <A
+HREF="runtime-config-connection-pooling.html#GUC-CLIENT-IDLE-LIMIT"
+>client_idle_limit</A
+>, <A
+HREF="runtime-config-logging.html#GUC-LOG-ERROR-VERBOSITY"
+>log_error_verbosity</A
+>,
+	  <A
+HREF="runtime-config-logging.html#GUC-CLIENT-MIN-MESSAGES"
+>client_min_messages</A
+>, <A
+HREF="runtime-config-logging.html#GUC-LOG-MIN-MESSAGES"
+>log_min_messages</A
+>,
+	  <A
+HREF="runtime-online-recovery.html#GUC-CLIENT-IDLE-LIMIT-IN-RECOVERY"
+>client_idle_limit_in_recovery</A
+>.
+	</P
+></LI
+><LI
+><P
+>    
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>再起動後、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>ノードの状態の不整合がある場合、これを同期するようにしました。(bug 218) (Muhammad Usama)
+	</P
+><P
+>    
+    watchdog がバックエンドノードを同期させなかったのが原因でした。
+	</P
+></LI
+><LI
+><P
+>    
+多くの行が出力されるSELECTの性能を改善しました。(Tatsuo Ishii)
+	</P
+><P
+>    
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> がフロントエンドに行データ（"Data Row"メッセージ）を送るたびにネットワークにデータを（<CODE
+CLASS="FUNCTION"
+>write(2)</CODE
+>を呼び出して）フラッシュしていました。
+例えば、10,000行を転送する必要がある場合、write()が10,000 回呼び出されます。
+これは非常にコストが高いです。
+繰り返し行データを送信した後、"Command Complete"メッセージが送られるので、Command Completeメッセージの時に併せてwrite()を発行すれば十分です。
+また、command completeメッセージの取り扱いにおいて、不必要なフラッシュがありました。
+	</P
+><P
+>    
+<A
+HREF="http://www.pgpool.net/pipermail/pgpool-hackers/2016-September/001784.html"
+TARGET="_top"
+>Quick testing</A
+>のテスト結果から、この修正により、特定の場合で、47%から62%の性能向上が得られたことが分かりました。
+	</P
+><P
+>    
+しかし、問い合わせが返す行が少ない場合は、まだ改善されていません。
+そうした行はいずれにせよネットワークへのフラッシュが必要だからです。
+	</P
+></LI
+><LI
+><P
+>    
+	  <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> 9.6's のパーサを取り込みました。 (Bo Peng)
+	</P
+><P
+>    
+      これにより、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> は <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>
+      9.6 で導入された新しい構文 (<TT
+CLASS="LITERAL"
+>COPY INSERT/UPDATE/DELETE ... RETURNING</TT
+> など) を理解可能です。
+	</P
+></LI
+><LI
+><P
+>    
+ある場合では、pg_terminate_backend() 関数が failover を引き起さないようになりました。(Muhammad Usama)
+	</P
+><P
+><CODE
+CLASS="FUNCTION"
+>pg_terminate_backend()</CODE
+>でバックエンドを終了させた場合、
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>がpostmasterをシャットダウンしたときと同じメッセージを返しますので、
+ユーザが望まないかもしれないフェールオーバーを発生させます。</P
+><P
+>これを修正するために、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>は、
+<CODE
+CLASS="FUNCTION"
+>pg_terminate_backend()</CODE
+>の対象バックエンドのPIDを検出し、フェールオーバーを発生させません。</P
+><P
+>この修正は単純なプロトコルの場合、または<CODE
+CLASS="FUNCTION"
+>pg_terminate_backend()</CODE
+>
+に渡されたPIDが定数の場合にのみ適用します。
+拡張プロトコル（Javaなど）の場合、<CODE
+CLASS="FUNCTION"
+>pg_terminate_backend()</CODE
+>はフェールオーバーを起こします。</P
+></LI
+><LI
+><P
+>HTMLドキュメントが、SGMLドキュメントから生成されるようになりました。(Muhammad Usama, Tatsuo Ishii, Bo Peng)
+	</P
+><P
+>これはより良い構成、内容、保守の容易性をもたらすためです。
+また、manページがSGMLから生成されるようになりました。
+しかし、SGMLドキュメントにはまだたくさんの改良の余地があります。
+どうか私達を助けてください！
+	</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN6949"
+>A.5.3. 他の改善点</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>    
+	  認証エラーメッセージをわかりやすくしました。 (Tatsuo Ishii)
+	</P
+><P
+>    
+バックエンドに接続する時に(ヘルスチェックを含む)、"invalid authentication message response type, Expecting 'R' and received '%c'" メッセージではなく"sorry, too many clients already"のようなメッセージを返すようにしました。
+	</P
+></LI
+><LI
+><P
+>    
+      pool_check_fd()のヘルスチェックタイマーの期限切れ条件を強化しました。(Muhammad Usama)
+	</P
+></LI
+><LI
+><P
+>    
+	  新しいスクリプト "watchdog_setup" が追加されました。 (Tatstuo Ishii)
+	</P
+><P
+>    
+<A
+HREF="watchdog-setup.html"
+>watchdog_setup</A
+> は watchdog 機能を有効にした<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>クラスタのテスト環境を構築するコマンドです。
+	</P
+></LI
+><LI
+><P
+>    
+	  pgpool_setup に "pg" オプションが追加されました。(Tatsuo Ishii)
+	</P
+><P
+>    
+これは<A
+HREF="pgpool-setup.html"
+>pgpool_setup</A
+>を使用する時に、<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>に特定のポート番号を割り当てたい場合に便利です。
+また、<TT
+CLASS="COMMAND"
+>pgpool</TT
+> と同じように、<TT
+CLASS="COMMAND"
+>pgpool_setup</TT
+>は標準binディレクトリにインストールされるようになりました。
+	</P
+></LI
+><LI
+><P
+>    
+	  <A
+HREF="sql-show-pool-nodes.html"
+>show pool_nodes</A
+> の出力結果に replication delay カラムが追加されました。(Tatsuo Ishii)
+	</P
+><P
+>    
+      streaming replication モードの場合、
+      このカラムは <A
+HREF="runtime-streaming-replication-check.html"
+>replication delay</A
+> の値を bytes 単位で表示します。
+	</P
+></LI
+><LI
+><P
+>    
+     すべてのノードがダウンした場合、 status ファイルを更新しないように変更されました。(Chris Pacejo, Tatsuo Ishii)
+	</P
+><P
+>    
+レプリケーションモードにおいて、すべてのノードがダウン状態の場合にstatusファイルに記録しないようにすることで、<A
+HREF="http://www.pgpool.net/pipermail/pgpool-general/2015-August/003974.html"
+TARGET="_top"
+>[pgpool-general:3918]</A
+> で報告されたデータの不整合を修正しました。
+この驚ほど単純ですが、スマートな解決方法はChris Pacejoにより提供されました。
+	</P
+></LI
+><LI
+><P
+>    
+     <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> が 複数 SSL cipher protocols に対応できるように修正しました。(Muhammad Usama)
+	</P
+><P
+>    
+SSLセッションを初期化する際の処理でTLSv1_method()を<CODE
+CLASS="FUNCTION"
+>SSLv23_method()</CODE
+>で置き換えることにより、TLSv1プロトコルよりも多くのプロトコルを使うことができるようになりました。
+	</P
+></LI
+><LI
+><P
+>    
+	  black_function_list/white_function_list
+      に任意のアイテムの数が使用できるようになりました。(Muhammad Usama)
+	</P
+><P
+>    
+      これまで、このアイテムの数には固定の上限がありました。
+	</P
+></LI
+><LI
+><P
+>    
+     コメントのみを含む空クエリを適切に処理できるよう修正しました。(Tatsuo Ishii)
+	</P
+><P
+>    
+この修正で、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>"/* DBD::Pg ping test v3.5.3 */" (';' を含まないことに注意)のような空クエリを正しく識別できるようになりました。
+	  </P
+><P
+>    
+      これまではエラークエリとして処理していました。
+	</P
+></LI
+><LI
+><P
+>    
+      wd_authkey ハッシュ計算失敗時に警告メッセージを出力するようにしました。(Yugo Nagata)
+	</P
+><P
+>    
+      たまに、認証キー不一致以外の何らかの理由で wd_authkey 計算に失敗することがあります。
+      メッセージ出力を追加することでこれらを互いに区別できるようにしました。
+	</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN6994"
+>A.5.4. 変更点</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>        
+log_destination = syslog 設定の不具合を修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+PGPOOL SET/SHOW コマンド追加の修正によって、ログの出力先がsyslogの場合、不具合がありましたので、修正しました。また、log_destinationパラメータがカンマ区切りで複数出力先を指定することができるようになりました。この修正によって、log_destination は "syslog" と "stderr" の任意の組み合わせに設定できるようになりました。
+        </P
+></LI
+><LI
+><P
+>            
+<A
+HREF="runtime-config-failover.html#GUC-SEARCH-PRIMARY-NODE-TIMEOUT"
+>search_primary_node_timeout</A
+>のデフォルト値を10から300に変更しました。(Tatstuo Ishii)
+			</P
+><P
+>            
+これまでのデフォルト値10秒は、スタンバイを昇格する際には小さすぎでした。
+			</P
+></LI
+><LI
+><P
+>            
+            src/sql/ 配下の Makefile が修正されました。(Bo Peng)
+            </P
+><P
+>            詳しくは  <A
+HREF="http://www.pgpool.net/pipermail/pgpool-hackers/2016-June/001611.html"
+TARGET="_top"
+>            [pgpool-hackers: 1611]</A
+> を参照してください。
+			</P
+></LI
+><LI
+><P
+>            
+                pcp_proc_count コマンドの出力結果のプロセス ID を 6 桁まで表示 できるよう修正しました。(Bo Peng)
+			</P
+><P
+>            
+                 特定の環境において、pcp_proc_count コマンドの出力結果のプロセス ID が6 桁の場合、
+                 6 番目の文字が表示されませんでした。 この修正で、プロセス ID が最大 6 桁まで表示するよう変更しました。
+            </P
+></LI
+><LI
+><P
+>            
+                すべてのクエリがプライマリサーバに送信されるように変更しました。(Tatsuo Ishii)
+            </P
+><P
+>            
+<A
+HREF="runtime-config-load-balancing.html#GUC-LOAD-BALANCE-MODE"
+>load_balance_mode</A
+> = off の場合でも、一部のクエリがプライマリサーバ以外にも転送されていました。
+               この修正で、 streaming replication モードで load_balance_mode = off
+               の場合はすべてのクエリをプライマリサーバにのみ送るようにしました。
+            </P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN7015"
+>A.5.5. 不具合修正</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>      
+pool_stream関数の潜在的なクラッシュを修正しました。(Muhammad Usama)
+      </P
+><P
+>      
+POOL_CONNECTION-&#62; con_infoは、バックエンドソケットで読み取りまたは書き込みが失敗したときに、逆参照する前にヌル値をチェックする必要があります。
+      </P
+></LI
+><LI
+><P
+>      
+watchdogクラスタでのフェイルオーバーコマンドの転送処理が改善されました。(Muhammad Usama)
+      </P
+><P
+>      
+これまでは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> ノードの watchdogがすべての接続されたノードにフェイルオーバーコマンド(failover、 failback 及び promote node)を転送していました。多数のノードが含まれているwatchdogクラスタでは、フェールオーバーコマンドが複数の<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>によって実行されることによって、データの同期問題を引き起こす可能性がありました。このコミットでは、すべてのフェイルオーバーコマンド(failover、 failback 及び promote node)が master/coordinator watchdog に転送され、master/coordinator watchdogはすべてのスタンバイノードに転送するようになりました。
+      </P
+><P
+>      
+また、今回の修正では、インターロック機能も変更されました。master/coordinatorノーのみがロックホルダになり、フェイルオーバコマンドはmaster/coordinatorノードでのみ実行されます。
+      </P
+></LI
+><LI
+><P
+>        
+        すべてのバックエンドがダウンした後に、1つのノードを復帰させる時の不具合が修正されました。(Tatsuo Ishii)
+        </P
+><P
+>        
+すべてのノードがダウンすると、すべてのコネクションを受け付けなくなります。
+その状態で1つの<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>が起動し、<TT
+CLASS="COMMAND"
+>pcp_attach_node</TT
+>コマンドでそのノードを復帰させます。
+そしてこのコマンドは成功しました。
+しかし、新しい接続が拒否されました。
+これは<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> の子プロセスがキャッシュされた古い情報を参照したのが原因でした。
+ストリーミングレプリケーションモードでは、このキャッシュされた情報において、復帰させたノードの状態がdownのままでした。
+（ネィティブレプリケーションモード、およびそれ以外のモードでは問題ありません）
+解決法として、全ノードがダウンした場合、強制的に全 <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>子プロセスを再起動するようにしました。
+        </P
+></LI
+><LI
+><P
+>        
+再起動が必要なパラメータの設定を変更した際の<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>停止が起こらないようにしました。(Muhammad Usama)
+        </P
+><P
+>        
+この修正のために、設定パラメータの検証機構の順序を逆にしました。
+以前はスタンバイノードが<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>マスターノードに対して設定パラメータの値を検証し、不整合が見つかった場合にはFATALエラーが出力されていました。
+この修正で、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>マスターノードに検証の役割が移譲されました。
+マスターノードは参加している個々のスタンバイノードの設定値をローカルの設定値と比較し、違っている場合にはエラーではなくてWARNINGメッセージを出力します。
+この方法では、ユーザは、手動でマスター<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>ログの中から不整合ワーニングを見つけて、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>マスターのスイッチオーバが起きたときに驚くようなことが起こらないようにしなければなりません。
+        </P
+></LI
+><LI
+><P
+>        
+        watchdog が有効な場合、<A
+HREF="runtime-config-failover.html#GUC-FAILOVER-COMMAND"
+>failover_command</A
+> コマンドのロック取得時の処理が改善されました。(Muhammad Usama)
+        </P
+></LI
+><LI
+><P
+>        
+        コンパイルエラーを修正するために、<TT
+CLASS="FILENAME"
+>configure.ac</TT
+>
+        ファイルにコンパイルフラグ "-fno-strict-aliasing" が追加されました。(Tatsuo Ishii)
+        </P
+></LI
+><LI
+><P
+>        
+        MD5 salt を生成するときに、<CODE
+CLASS="FUNCTION"
+>random()</CODE
+> を使用しないように修正しました。(Tatsuo Ishii)
+        </P
+><P
+>        
+<CODE
+CLASS="FUNCTION"
+>random()</CODE
+>関数はセキュリティ関連のアプリケーションで使用すべきではありません。
+<CODE
+CLASS="FUNCTION"
+>random()</CODE
+>の代わりに<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>の<CODE
+CLASS="FUNCTION"
+>PostmasterRandom()</CODE
+> 使用するように変更しました。
+        </P
+></LI
+><LI
+><P
+>        
+        クエリキャッシュが有効な場合、sync メッセージが廃棄されないよう修正しました。(Tatsuo Ishii)
+        </P
+></LI
+><LI
+><P
+>        
+<A
+HREF="runtime-config-connection.html#GUC-LISTEN-ADDRESSES"
+>listen_addresses</A
+>が空文字の場合、Pgpool-II が起動できない不具合を修正しました。(bug 237) (Muhammad Usama)
+        </P
+><P
+>        
+        TCP listen addresses が空の場合、socket descriptor 配列（fds[]）の終了マークがないのが原因でした。
+        </P
+></LI
+><LI
+><P
+>        
+リグレッションログディレクトリが存在しない場合、作成されるようになりました。(Tatsuo Ishii)
+        </P
+></LI
+><LI
+><P
+>        
+        ソケットの操作に失敗したときのエラーメッセージを修正しました。(Muhammad Usama)
+        </P
+></LI
+><LI
+><P
+>        
+        <A
+HREF="sql-show-pool-nodes.html"
+>show pool_nodes</A
+> コマンドの修正を反映し、レグレッションテスト 003.failover を変更しました。
+        </P
+></LI
+><LI
+><P
+>        
+        Portal suspend を受け取ったときのハングが修正されました。(bug 230) (Tatsuo Ishii)
+        </P
+></LI
+><LI
+><P
+>ネットワークが復旧した時にIPを降格しない問題を修正しました。(bug 228) (Muhammad Usama)
+        </P
+><P
+>ローカルノードの状態が調停者状態から他の状態に変わった時に降格させるために、set_state関数が実装されました。
+        </P
+></LI
+><LI
+><P
+>        
+        SIGUSR1 シグナルハンドラーを watchdog の初期化前にインストールするように修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+        watchdog 初期化直後に 他のwatchdog ノードから failover リクエストがあった場合、
+        SIGUSR1 シグナルハンドラーのインストールを待っていれば、クラッシュが発生する可能性がありました。
+        </P
+></LI
+><LI
+><P
+>        
+        他のノードが利用できない場合、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> が
+        IPアドレスをエスカレートしない不具合を修正しました。(bug 215) (Muhammad Usama)
+        </P
+><P
+>        
+        Heartbeat destination が IPアドレスで指定され、wd_hostname が hostname で設定される場合、
+        heartbeat receiver が heartbeat sender watchdog ノードを識別できなかったのが原因でした。
+        逆の場合でも同様なエラーが起こります。
+        </P
+></LI
+><LI
+><P
+>        
+        watchdog に関するコーデイングミスを修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+<CODE
+CLASS="FUNCTION"
+>wd_issue_failover_lock_command()</CODE
+>関数は、渡ってきたコマンドタイプを<CODE
+CLASS="FUNCTION"
+>wd_send_failover_sync_command()</CODE
+>関数の引数に渡すように想定されていますが、その代わりにNODE_FAILBACK_CMDコマンドタイプを渡していました。
+        </P
+><P
+>        
+        この修正で、いくつかのログメッセージも改善しました。
+        </P
+></LI
+><LI
+><P
+>        
+        <A
+HREF="pcp-proc-info.html"
+>pcp_node_info</A
+> コマンドの標準出力の「Status」がわかりやすくように変更されました。(Muhammad Usama)
+
+        </P
+><P
+>        
+        <A
+HREF="pcp-proc-info.html"
+>pcp_node_info</A
+> コマンドの標準出力の「Status」が内部状態コードから人間がわかりやすい状態の文字列に変更されました。
+        </P
+></LI
+><LI
+><P
+>        
+          「MAJOR」マクロによる発生しうるセグメンテーションフォルトを修正しました。(Tatsuo Ishii)
+        </P
+><P
+>        
+          MAJOR が <CODE
+CLASS="FUNCTION"
+>pool_virtual_master_db_node_id()</CODE
+> を呼出し、
+          戻り値 idを使ってbackend-&#62;slots[id]-&#62;con にアクセスします。
+可能性は低いですが、conが0を指し（DB にアクセスできない場合）、con-&#62;major にアクセスし、セグメンテーションフォルトを引き起す可能性がありました。
+        </P
+></LI
+><LI
+><P
+>        
+        "kind mismatch" エラーメッセージの処理について修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+        多くの"kind mismatch..."エラーは、NOTICE や WARNING メッセージが
+        DBノードのいくつかで起こることによるものです。
+        この修正では、そうしたケースにおいて、"kind mismatch..."エラーを引き起こすのではなく、
+        NOTICE や WARNINGメッセージをフロントエンドに送るようになりました。
+        これにより、"kind mismatch..."エラーの発生が減少します。
+        </P
+></LI
+><LI
+><P
+>        
+        <A
+HREF="runtime-config-connection.html#GUC-PCP-LISTEN-ADDRESSES"
+>pcp_listen_addresses</A
+> パラメータの処理の不具合を修正しました。(Muhammad Usama)
+        </P
+></LI
+><LI
+><P
+>        
+        シグナルハンドラ中でエラー番号が保存されるようになりました。 (Tatsuo Ishii)
+        </P
+></LI
+><LI
+><P
+>        
+        pgpool メインプロセスの <CODE
+CLASS="FUNCTION"
+>wait(2)</CODE
+> の扱いを修正しました。(Tatsuo Ishii)
+        </P
+><P
+>        
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> メインプロセスから呼び出される<CODE
+CLASS="FUNCTION"
+>wait(2)</CODE
+>はそのシステムコール内で永久に待つ可能性があります。
+        この修正で、 <CODE
+CLASS="FUNCTION"
+>wait(2)</CODE
+> の代わりに、<CODE
+CLASS="FUNCTION"
+>waitpid(2)</CODE
+> を使うように変更しました。
+        </P
+></LI
+><LI
+><P
+>        
+        <A
+HREF="runtime-config-failover.html#GUC-FAIL-OVER-ON-BACKEND-ERROR"
+>fail_over_on_backend_error</A
+> が off の場合、
+        <CODE
+CLASS="FUNCTION"
+>read(2)</CODE
+> が -1 を返しても
+        <CODE
+CLASS="FUNCTION"
+>pool_read()</CODE
+> がエラーメッセージを発行しない不具合が修正されました。(Tatsuo Ishii)
+        </P
+></LI
+><LI
+><P
+>        
+        <TT
+CLASS="COMMAND"
+>show pool_nodes</TT
+> でのバッファオーバーランを修正しました。(Tatsuo Ishii)
+        </P
+><P
+>        
+        <TT
+CLASS="COMMAND"
+>show pool_nodes</TT
+> を実行時、hostname に割り当てられたバッファが十分ではないのが原因でした。
+        <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+> のバッファサイズと同じようにしました。
+        </P
+></LI
+><LI
+><P
+>        
+        <A
+HREF="http://www.pgpool.net/pipermail/pgpool-hackers/2016-June/001638.html"
+TARGET="_top"
+>        [pgpool-hackers: 1638]</A
+> で報告された、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>
+        がデフォルトの設定を使用しない不具合が修正されました。(Muhammad Usama)
+        </P
+><P
+>        
+         設定ファイルが見つからない場合は、 ERROR または FATAL ではなく、WARNING を返すように修正しました。
+        </P
+></LI
+><LI
+><P
+>        
+        共有メモリ上のロードバランスノードの書き込みに関するバグを修正しました。(Tatsuo Ishii)
+        </P
+><P
+>        
+2, 3の箇所で、ロードバランスノードが間違ったことろに置かれてしまいました。
+        </P
+><P
+>        [正しい場所]
+        </P
+><PRE
+CLASS="PROGRAMLISTING"
+>ConnectionInfo *con_info[child id, connection pool_id, backend id].load_balancing_node].
+        </PRE
+><P
+>        [実際に置かれた場所]
+        </P
+><PRE
+CLASS="PROGRAMLISTING"
+>*con_info[child id, connection pool_id, 0].load_balancing_node].
+        </PRE
+><P
+>        
+バックエンド id が 0 の場合、上記バグが発生しませんが、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> 3.6 のフェイルオーバーテストで、プライマリノードが 1 (ロードバランスノード)、スタンバイノードが 0 の場合、ノード1 の接続が切断され、フェイルオーバーが起きています。
+これは想定外のことだったのでこのバグが見つかりました。
+        </P
+><P
+>        
+このバグはかなり前からありましたが、上記の理由で、今まで見つかっておリませんでした。
+        </P
+></LI
+><LI
+><P
+>        
+#197 で報告されたpgpoolのハングを修正しました。(bug 197) (Muhammad Usama)
+        </P
+><P
+>        
+watchdog が有効で、バックエンドノードとリモート <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>ノードが同時接続できなくなった場合、クライアント接続がスタックします。
+        原因は watchdog に IPC コマンドを送信する関数を呼び出すコマンドタイムアウトがなかったからです。
+        </P
+></LI
+><LI
+><P
+>        
+        ヘルスチェックで発生し得るハングアップを修正しました。(bug 204) (Yugo Nagata)
+        </P
+><P
+>        
+        <CODE
+CLASS="FUNCTION"
+>connect(2)</CODE
+> が成功し、
+        その後バックエンドからデータが送信されない場合、ヘルスチェックがハングしていました。
+ヘルスチェック中に、<CODE
+CLASS="FUNCTION"
+>select(2)</CODE
+>がSIGALRMのためにEINTRで終了した場合、<CODE
+CLASS="FUNCTION"
+>pool_check_fd()</CODE
+>が1を返すように修正しました。
+        </P
+></LI
+><LI
+><P
+>        
+         streaming replication モードで、プライマリノードが 0 ではない場合に発生する不具合が修正されました。 (Tatsuo Ishii)
+        </P
+><P
+>        
+<A
+HREF="http://www.pgpool.net/mantisbt/view.php?id=194#c837"
+TARGET="_top"
+>http://www.pgpool.net/mantisbt/view.php?id=194#c837</A
+>の報告により、bug194-3.3.diff を適用しても、プライマリノードが 0 ではない場合、ステートメントタイムアウトが発生する可能性がありました。
+         調査した結果、MASTER マクロがプライマリノードまたはロードバランスノード
+         以外のノードを返したからです。
+そのため、<CODE
+CLASS="FUNCTION"
+>do_query()</CODE
+>がクエリを間違ったノードに送信していました（これは報告では明確ではありませんでしが、 調査で確認できました）。
+        </P
+><P
+>        
+MASTER マクロから呼ばれる<CODE
+CLASS="FUNCTION"
+>pool_virtual_master_db_node_id()</CODE
+> は、クエリコンテキストが存在する場合、query_context-&#62;virtual_master_node_id を返します。
+その変数がまだ初期化されていない場合、この関数が間違ったノード を返す可能性があります。
+そのため、<CODE
+CLASS="FUNCTION"
+>pool_virtual_master_db_node_id()</CODE
+> 関数を以下のように修正しました。
+変数にプライマリノードもロード バランスノードも設定されていない場合、プライマリノードを返します。
+        </P
+></LI
+><LI
+><P
+>        
+バックエンドのステートメントタイムアウトが有効で、<CODE
+CLASS="FUNCTION"
+>do_query()</CODE
+>がクエリをプライマリノードに送信し、それ以降のユーザクエリがスタンバイノードに送信された場合、次のコマンド、例えば、ENDコマンドが、プライマリノードのステートメントタイムアウトを引き起こし、kind mismatch error が発生する可能性がありました。(bug 194) (Tatsuo Ishii)
+        </P
+><P
+>        
+        この問題を軽減するために、<CODE
+CLASS="FUNCTION"
+>do_query()</CODE
+>
+        がフラッシュメッセージを送信する代わりに、sync メッセージ送信するように修正しました。
+明示的トランザクションのときは、sync メッセージを送信することで、ステートメントタイムアウトタイマーがリセットされます。
+暗黙的なトランザクションでは、このやり方は使えません。
+なぜなら、unnamed portal が存在する場合、sync メッセージが unnamed portalを削除するからです。
+        </P
+><P
+>更にこれにより、pg_stat_statement が <CODE
+CLASS="FUNCTION"
+>do_query()</CODE
+> が発行したクエリを "running" で表示しなくなります。
+        </P
+></LI
+><LI
+><P
+>        
+        拡張プロトコルのraw モードでのバグを修正しました。(bug 152) (Tatsuo Ishii)
+        </P
+><P
+>        
+        Bug 152の報告により、拡張プロトコルの raw モード（実は stream モード以外）で
+        <CODE
+CLASS="FUNCTION"
+>Describe()</CODE
+> と <CODE
+CLASS="FUNCTION"
+>Close()</CODE
+>
+        の処理に誤りがありました。stream モードとは異なり、バックエンドからの応答を待つべきでした。
+        </P
+></LI
+><LI
+><P
+>        
+        <TT
+CLASS="FILENAME"
+>pgpool.conf</TT
+> の不正確なコメントを修正しました。(Tatsuo Ishii)
+        </P
+></LI
+><LI
+><P
+>        
+日本語と中国語ドキュメントのraw モードに関する内容の誤りを修正しました。(Yugo Nagata, Bo Peng)
+        </P
+><P
+>        
+        raw モードでも、コネクションプーリングが有効です。
+        </P
+></LI
+><LI
+><P
+>        
+<CODE
+CLASS="FUNCTION"
+>is_set_transaction_serializable()</CODE
+>関数の<TT
+CLASS="COMMAND"
+>SET default_transaction_isolation TO 'serializable'</TT
+>の扱いに関するバグを修正しました。(bug 191) (Bo Peng)
+        </P
+><P
+>        
+        <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> は <TT
+CLASS="COMMAND"
+>SET default_transaction_isolation TO 'serializable'</TT
+>
+        をプライマリだけではなく、スタンバイにも送信してしまい、エラーが起きていました。
+        この修正で、streaming replication モードの場合、<TT
+CLASS="COMMAND"
+>SET default_transaction_isolation TO 'serializable'</TT
+>
+        がプライマリサーバのみに送信されます。
+        </P
+></LI
+><LI
+><P
+>        
+        拡張プロトコルにおける空クエリの場合、発生し得るハングアップを修正しました。(Tatsuo Ishii)
+        </P
+><P
+>        
+この修正は3.5.1で空のクエリの場合の拡張プロトコルの扱いに関係しています。
+この場合バックエンドはcommand complete messageと同じ意味を持つ"empty query response"を返します。
+問題は、"empty query response"を受信した際に、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>がクエリ進行中フラグをリセットせず、 バックエンドの応答を待ち続けることことです。
+しかし、バックエンドはsyncメッセージをを受け取るまではready for queryメッセージを返しません。
+解決方法は、"empty query response"を受信した際に、クエリ進行中フラグをリセットし、フロントエンドがsync メッセージを送信することを期待してフロントエンドからの応答を待つことです。
+        </P
+></LI
+><LI
+><P
+>        
+	    <A
+HREF="http://www.pgpool.net/pipermail/pgpool-general/2016-March/004627.html"
+TARGET="_top"
+>        [pgpool-general: 4569]</A
+> により報告された
+        trusted_servers チェック時のセグメンテーションフォルトを修正しました。 (Muhammad Usama)
+        </P
+><P
+>        
+        <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> 3.4 からは <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>
+        のメモリマネージャおよび 例外マネージャ API を流用していますが、
+        それはスレッドセーフ ではありません。上位接続を確認するため ping の応答で信頼できるサーバ確認時、
+        watchdog lifecheck プロセスでセグメンテ ーションフォルトを引き起こしていました。
+        スレッドを削除し、 子プロセスを使うように修正しました。
+        </P
+></LI
+><LI
+><P
+>        
+PCP パケットの長さを検証するよう修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+        この検証がない場合、非常に巨大なデータサイズのパケットを送信することで、
+        不正な PCP パケットが PCP 子プロセスをクラッシュさせたり、サーバで out of memory を発生させることが可能でした。
+        </P
+></LI
+><LI
+><P
+>        
+         <A
+HREF="pgpool-setup.html"
+>pgpool_setup</A
+>がログ出力を混乱させないように修正しました。(Tatsuo Ishii)
+        </P
+><P
+>        
+         以前は <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> プロセスの stdout および stderr
+         は単にログファイルにリダイレクトされていました。
+         これは複数プロセスが同時に書き込みを行うため競合が発生し、
+         ログの文字化けや消失の原因となっていました。
+         </P
+><P
+>         
+         このため、<A
+HREF="pgpool-setup.html"
+>pgpool_setup </A
+>
+         が生成する startall スクリプトでは、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>
+         は stdout/stderr を cat コマンドにパイプで送信し、
+         cat がログファイルの書き込みを行うように修正されました。
+（パイプに書き込む際にはこの競合状態は発生しないようです）
+        </P
+></LI
+><LI
+><P
+>        
+<A
+HREF="http://www.pgpool.net/pipermail/pgpool-general/2016-March/004577.html"
+TARGET="_top"
+>[pgpool-general: 4519]</A
+> により報告されたワーカープロセスが終了し再生成されなくなる不具合を修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+        この問題は watchdog が有効のときに終了した子プロセスのタイプをチェックするコードにロジック間違いがあったのが原因でした。
+        また、接続が max connection に達して子プロセスが終了する際に出力されるメッセージの重要度を FATAL からLOG に変更されました。
+        </P
+></LI
+><LI
+><P
+>        
+バックエンドからエラー状態を受信した後のハングを修正しました。 (bug #169) (Tatsuo Ishii)
+        </P
+><P
+>        
+        これは拡張プロトコル問い合わせを実行しそれが失敗したときに発生し得ました。
+        </P
+></LI
+><LI
+><P
+>        
+        ストリーミングレプリケーションモードで拡張プロトコル問い合わせを使用したときに
+        スタックが発生する問題を修正しました。(bug 167, 168) (Tatsuo Ishii)
+        </P
+><P
+>        </P
+></LI
+><LI
+><P
+>        
+	    <A
+HREF="http://www.pgpool.net/pipermail/pgpool-hackers/2016-March/001440.html"
+TARGET="_top"
+>        [pgpool-hackers: 1440]</A
+> により報告されたリセットクエリがスタックする問題を修正しました。(Tatsuo Ishii)
+        </P
+><P
+>        
+        フロントエンドから 'X' メッセージを受信した後、リセットクエリ送信前に <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> が
+        EOF をその接続で検出すると、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>
+        がリセットクエリを受信していないバックエンドからの応答を待ち続けることがありました。
+        EOF を受信した場合には、これを ERROR ではなく FRONTEND_ERROR として扱うことで修正しました。
+        </P
+></LI
+><LI
+><P
+>        
+	    <A
+HREF="http://www.pgpool.net/pipermail/pgpool-general/2015-December/004323.html"
+TARGET="_top"
+>[pgpool-general: 4265]</A
+>
+        より報告されたリセットクエリがスタックする問題を修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+        フロントエンドソケットにおける pool_flush が失敗したときには、ERRORではなく FRONTEND_ERROR を発生させることで解決しました。
+        </P
+></LI
+><LI
+><P
+>        
+<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> 9.6における pgpool-recovery モジュールのコンパイルエラーを修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+        <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> 9.6 の <CODE
+CLASS="FUNCTION"
+>GetConfigOption()</CODE
+>
+        関数の関数定義の変化に対応しました。
+        </P
+></LI
+><LI
+><P
+>        
+            FreeBSD でのコンパイルエラーを修正しました。(Muhammad Usama)
+        </P
+><P
+>        
+        不足していた include ファイルを追加しました。
+        パッチはバグ報告者によって作成され、Usama により改善されました。
+        </P
+></LI
+><LI
+><P
+>        
+        個々のテストのタイムアウトをチェックできるようレグレッションテストを修正しました。(Yugo Nagata)
+        </P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release-3-6-1.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="release-3-5-8.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>リリース 3.6.1</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>リリース 3.5.8</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

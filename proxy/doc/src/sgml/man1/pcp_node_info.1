@@ -1,0 +1,150 @@
+'\" t
+.\"     Title: pcp_node_info
+.\"    Author: The Pgpool Global Development Group
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 2016
+.\"    Manual: pgpool-II 3.6.4 Documentation
+.\"    Source: pgpool-II 3.6.4
+.\"  Language: English
+.\"
+.TH "PCP_NODE_INFO" "1" "2016" "pgpool-II 3.6.4" "pgpool-II 3.6.4 Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pcp_node_info \- displays the information on the given node ID
+.SH "SYNOPSIS"
+.HP \w'\fBpcp_node_info\fR\ 'u
+\fBpcp_node_info\fR [\fIoption\fR...] [\fInode_id\fR]
+.SH "DESCRIPTION"
+.PP
+\fBpcp_node_info\fR
+displays the information on the given node ID\&.
+.SH "OPTIONS"
+.PP
+.PP
+\fB\-n \fR\fB\fInode_id\fR\fR
+.br
+\fB\-\-node\-id=\fR\fB\fInode_id\fR\fR
+.RS 4
+The index of backend node to get information of\&.
+.RE
+.PP
+\fBOther options \fR
+.RS 4
+See
+\fBpcp_common_options\fR(1)\&.
+.RE
+.SH "EXAMPLE"
+.PP
+Here is an example output:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_node_info \-h localhost \-U postgres 0
+host1 5432 1 1073741823\&.500000
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The result is in the following order:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+1\&. hostname
+2\&. port number
+3\&. status
+4\&. load balance weight
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Status is represented by a digit from [0 to 3]\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 \- This state is only used during the initialization\&. PCP will never display it\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 \- Node is up\&. No connections yet\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 \- Node is up\&. Connections are pooled\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 \- Node is down\&.
+.RE
+.PP
+The load balance weight is displayed in normalized format\&.
+.PP
+The
+\fB\-\-verbose\fR
+option can help understand the output\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ pcp_node_info \-\-verbose \-h localhost \-U postgres 0
+Hostname: host1
+Port    : 5432
+Status  : 1
+Weight  : 0\&.5
+    
+.fi
+.if n \{\
+.RE
+.\}

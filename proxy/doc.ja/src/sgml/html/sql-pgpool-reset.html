@@ -1,0 +1,319 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>PGPOOL RESET</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="SQL 型コマンド"
+HREF="sql-commands.html"><LINK
+REL="PREVIOUS"
+TITLE="PGPOOL SET"
+HREF="sql-pgpool-set.html"><LINK
+REL="NEXT"
+TITLE="SHOW POOL STATUS"
+HREF="sql-show-pool-status.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="REFENTRY"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="PGPOOL SET"
+HREF="sql-pgpool-set.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="SHOW POOL STATUS"
+HREF="sql-show-pool-status.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="SQL-PGPOOL-RESET"
+></A
+>PGPOOL RESET</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN5990"
+></A
+><H2
+>名前</H2
+>PGPOOL RESET&nbsp;--&nbsp;設定パラメータの値をデフォルト値に戻す</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN5993"
+></A
+><H2
+>概要</H2
+><PRE
+CLASS="SYNOPSIS"
+>RESET <TT
+CLASS="REPLACEABLE"
+><I
+>configuration_parameter</I
+></TT
+>
+RESET ALL</PRE
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN5996"
+></A
+><H2
+>説明</H2
+><P
+>  
+    <TT
+CLASS="COMMAND"
+>PGPOOL RESET</TT
+> は<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のパラメータの値をデフォルト値に戻します。
+    デフォルト値とは、現行セッション内で <TT
+CLASS="COMMAND"
+>PGPOOL SET</TT
+>
+    コマンドが発行されなかった場合に変数が保持していた値として定義されます。
+    このコマンドは <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> の
+    <A
+HREF="http://www.postgresql.jp/document/9.5/html/sql-reset.html"
+TARGET="_top"
+>    <TT
+CLASS="COMMAND"
+>RESET</TT
+></A
+> コマンドと似っていますが、
+    <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> の <TT
+CLASS="COMMAND"
+>RESET</TT
+> コマンドと区別するために、
+    <ACRONYM
+CLASS="ACRONYM"
+>PGPOOL</ACRONYM
+> というキーワードが追加されました。
+
+  </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN6008"
+></A
+><H2
+>パラメータ</H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="REPLACEABLE"
+><I
+>configuration_parameter</I
+></TT
+></DT
+><DD
+><P
+>     
+      設定可能な <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> パラメータの名前です。
+      設定できるパラメータについては <A
+HREF="runtime-config.html"
+>第5章</A
+> で説明します。
+     </P
+></DD
+><DT
+><TT
+CLASS="LITERAL"
+>ALL</TT
+></DT
+><DD
+><P
+>     
+      設定可能な全ての <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> のパラメータをデフォルト値に戻します。
+     </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN6024"
+></A
+><H2
+>例</H2
+><P
+>  
+    <A
+HREF="runtime-config-connection-pooling.html#GUC-CLIENT-IDLE-LIMIT"
+>client_idle_limit</A
+> 設定変数をデフォルト値に設定します。
+</P><PRE
+CLASS="SCREEN"
+>PGPOOL RESET client_idle_limit;</PRE
+><P></P
+><P
+>  
+   全パラメータの設定値をデフォルト値に戻します。
+</P><PRE
+CLASS="SCREEN"
+>PGPOOL RESET ALL;</PRE
+><P></P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN6031"
+></A
+><H2
+>関連項目</H2
+><A
+HREF="sql-pgpool-set.html"
+>PGPOOL SET</A
+>, <A
+HREF="sql-pgpool-show.html"
+>PGPOOL SHOW</A
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-pgpool-set.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="sql-show-pool-status.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>PGPOOL SET</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sql-commands.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>SHOW POOL STATUS</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

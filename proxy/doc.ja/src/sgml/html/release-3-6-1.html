@@ -1,0 +1,354 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>リリース 3.6.1</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="リリースノート"
+HREF="release.html"><LINK
+REL="PREVIOUS"
+TITLE="リリース 3.6.2"
+HREF="release-3-6-2.html"><LINK
+REL="NEXT"
+TITLE="リリース 3.6"
+HREF="release-3-6.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="リリース 3.6.2"
+HREF="release-3-6-2.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>付録 A. リリースノート</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="リリース 3.6"
+HREF="release-3-6.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RELEASE-3-6-1"
+>A.4. リリース 3.6.1</A
+></H1
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>リリース日: </B
+>2016-12-26</P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN6792"
+>A.4.1. 不具合修正</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>    
+watchdog のセキュリティを強化しました。(Muhammad Usama)
+    </P
+><P
+>    
+wd_authkeyは、HMAC SHA-256ハッシングを使用するようになりました。
+	</P
+></LI
+><LI
+><P
+>	
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のRPM にpgpool_adm extension が含まれるように修正しました。(Bo Peng)
+	</P
+></LI
+><LI
+><P
+>    
+クエリキャッシュが有効になっている場合に、時々発生しうるセグメンテーション違反を修正しました。(bug 263) (Tatsuo Ishii)
+	</P
+></LI
+><LI
+><P
+>    
+拡張プロトコルにおいて発生しうるkind mismatchエラーを修正しました。(bug 231) (Tatsuo Ishii)
+	</P
+><P
+>    
+bug 231によると、以下の条件がすべて満たされていると、このバグが発生する可能性がありました。
+	</P
+><P
+></P
+><UL
+><LI
+><P
+>        
+ストリーミングレプリケーションモード
+	    </P
+></LI
+><LI
+><P
+>        
+ ロードバランスノードがnode 0ではない
+	    </P
+></LI
+><LI
+><P
+>        
+拡張プロトコルを使用している
+	      </P
+></LI
+><LI
+><P
+>        
+SELECTが実行され、ステートメントがクローズされた後、トランザクションコマンドが実行されている
+	    </P
+></LI
+></UL
+><P
+>    
+問題の発生順序:
+	<P
+></P
+></P><OL
+TYPE="1"
+><LI
+><P
+>        
+ロードバランスノード1でステートメントS1のSELECTが実行されます。
+	    </P
+></LI
+><LI
+><P
+>        
+フロントエンドがクローズステートメントを送ります。
+	    </P
+></LI
+><LI
+><P
+>        
+Pgpool-IIはそれをバックエンド1に転送します。
+	    </P
+></LI
+><LI
+><P
+>        
+フロントエンドは、COMMITのParse、Bind、Executeを送信します。
+	    </P
+></LI
+><LI
+><P
+>        
+Pgpool-IIはそれをバックエンド0と1に転送します。
+	    </P
+></LI
+><LI
+><P
+>        
+フロントエンドが同期メッセージを送信します。
+	    </P
+></LI
+><LI
+><P
+>        
+Pgpool-IIはそれをバックエンド0と1に転送します。
+	    </P
+></LI
+><LI
+><P
+>        
+バックエンド0はParse complete（ "1"）を返しますが、バックエンド1は＃3によりclose complete（ "3"）を返します。
+	    </P
+></LI
+><LI
+><P
+>        
+Kind mismatch が発生します。
+	    </P
+></LI
+></OL
+><P>
+
+	</P
+><P
+>    
+解決策は、＃3では、Pgpool-IIがバックエンド1からの応答を待つようにしますが、応答メッセージは読み取らないようにします。 その後、Pgpool-IIの状態マシンは、＃6で同期メッセージが送信される前に、その応答を読み込みます。 これによりバックエンド1は＃8で "1"を返信し、kind mismatchエラーは発生しなくなります。
+	</P
+><P
+>    
+また、Closeメッセージを受け取ったときにpool_set_doing_extended_query_message（）が呼び出されない不具合を修正しました。
+	</P
+><P
+>    
+新しいリグレッションテスト "067.bug231"を追加しました。
+	</P
+></LI
+><LI
+><P
+>    
+シグナルハンドラでの競合状態を修正しました。(bug 265) (Tatsuo Ishii)
+	</P
+><P
+>    
+child.cには、elogを呼び出すシグナルハンドラがあります。 シグナルハンドラは処理中に他のシグナルに対してブロックされないため、pgpoolのシャットダウンシーケンスでシステムコールにデッドロックが発生する可能性がありました。 この問題を解決するために、シグナルハンドラはPOOL_SETMASKを使用してブロックされるように修正されました。
+	</P
+><P
+>    
+理想的にはシグナルハンドラでelogを呼び出すことを避けるべきです。
+	</P
+></LI
+><LI
+><P
+>    
+誤ったclient_idle_limit_in_recoveryの最小設定値を修正しました。(bug 264) (Tatsuo Ishii)
+	</P
+></LI
+><LI
+><P
+>    
+doc.jaの下で "make xslthtml"を実行できるように修正しました。(Tatsuo Ishii)
+	</P
+><P
+>&#13;	</P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="release-3-6-2.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="release-3-6.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>リリース 3.6.2</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="release.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>リリース 3.6</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

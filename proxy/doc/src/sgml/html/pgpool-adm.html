@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>pgpool_adm extension</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="pgpool-II 3.6.4 Documentation"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Reference"
+HREF="reference.html"><LINK
+REL="PREVIOUS"
+TITLE="SHOW POOL_CACHE"
+HREF="sql-show-pool-cache.html"><LINK
+REL="NEXT"
+TITLE="pgpool_adm_pcp_node_info"
+HREF="pgpool-adm-pcp-node-info.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=ISO-8859-1"><META
+NAME="creation"
+CONTENT="2017-05-11T09:56:13"></HEAD
+><BODY
+CLASS="REFERENCE"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>pgpool-II 3.6.4 Documentation</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="SHOW POOL_CACHE"
+HREF="sql-show-pool-cache.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="reference.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="pgpool_adm_pcp_node_info"
+HREF="pgpool-adm-pcp-node-info.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="REFERENCE"
+><A
+NAME="PGPOOL-ADM"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+>V. pgpool_adm extension</H1
+><DIV
+CLASS="PARTINTRO"
+><A
+NAME="AEN6190"
+></A
+><P
+>	<TT
+CLASS="COMMAND"
+>pgpool_adm</TT
+> is a set of extensions to allow
+	SQL access to <A
+HREF="pcp-commands.html"
+>Reference II, <I
+>PCP commands</I
+></A
+> (actually, pcp
+	  libraries). It uses foreign data wrapper as shown in the
+	  diagram below.
+      </P
+><P
+>	<DIV
+CLASS="FIGURE"
+><A
+NAME="AEN6195"
+></A
+><P
+><B
+>Figure 1. How <TT
+CLASS="COMMAND"
+>pgpool_adm</TT
+> works</B
+></P
+><DIV
+CLASS="MEDIAOBJECT"
+><P
+><IMG
+SRC="pgpool_adm.gif"></P
+></DIV
+></DIV
+>
+      </P
+><P
+>	It is possible to call the functions from either via pgpool-II
+	(1) or via <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> (2).  In case
+	(1), <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> accepts query from
+	user (1), then forward
+	to <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> (3).
+	<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> connects
+	to <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> (5)
+	and <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> reply back
+	to <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> with the result
+	(3). <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> returns the result
+	to <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> (5)
+	and <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> fowards the data to
+	the user (6).
+      </P
+><P
+>	In case (2), <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> accepts query from user (2).
+	<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> connects
+	to <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> (5)
+	and <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> reply back
+	to <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> with the result (3).
+	<SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> replies back the data to
+	the user (6).
+      </P
+><P
+>	There are two forms to call pgpool_adm functions: first form
+	accepts <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> host name (or IP
+	address), pcp port number, pcp user name, its password and
+	another parameters.
+      </P
+><P
+>	In the second form, <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>
+	server name is required.  The server name must be already
+	defined using "CREATE FOREIGN SERVER" command
+	of <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+>.  The pcp port number
+	is hard coded as 9898, the pcp user name is assumes to be same
+	as caller's <SPAN
+CLASS="PRODUCTNAME"
+>PostgreSQL</SPAN
+> user name.
+	password is extraced from $HOME/.pcppass.
+      </P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="INSTALLING-PGPOOL-ADM"
+>1. Installing pgpool_adm</A
+></H1
+><P
+>	  pgpool_adm is an extension and should be installed on all
+	  PostgreSQL servers.
+	  </P><PRE
+CLASS="PROGRAMLISTING"
+>$ cd src/sql/pgpool_adm
+$ make
+$ make install
+	  </PRE
+><P>
+	  Then issue following SQL command for every database you want to access.
+	  </P><PRE
+CLASS="PROGRAMLISTING"
+>$ psql ...
+$ CREATE EXTENSION pgpool_adm
+	  </PRE
+><P>
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="pgpool-adm-pcp-node-info.html"
+>pgpool_adm_pcp_node_info</A
+>&nbsp;--&nbsp;	a function to display the information on the given node
+	ID</DT
+><DT
+><A
+HREF="pgpool-adm-pcp-pool-status.html"
+>pgpool_adm_pcp_pool_status</A
+>&nbsp;--&nbsp;	a function to retrieves parameters in pgpool.conf.</DT
+><DT
+><A
+HREF="pgpool-adm-pcp-node-count.html"
+>pgpool_adm_pcp_node_count</A
+>&nbsp;--&nbsp;    a function to retrieves number of backend nodes.
+  </DT
+><DT
+><A
+HREF="pgpool-adm-pcp-attach-node.html"
+>pgpool_adm_pcp_attach_node</A
+>&nbsp;--&nbsp;	a function to attach given node	ID</DT
+><DT
+><A
+HREF="pgpool-adm-pcp-detach-node.html"
+>pgpool_adm_pcp_detach_node</A
+>&nbsp;--&nbsp;	a function to detach given node ID</DT
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sql-show-pool-cache.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pgpool-adm-pcp-node-info.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>SHOW POOL_CACHE</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="reference.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>pgpool_adm_pcp_node_info</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

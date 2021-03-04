@@ -1,0 +1,398 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Secure Sockect Layer (SSL)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REV="MADE"
+HREF="mailto:pgsql-docs@postgresql.org"><LINK
+REL="HOME"
+TITLE="Pgpool-II 3.6.4 文書"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="サーバの設定"
+HREF="runtime-config.html"><LINK
+REL="PREVIOUS"
+TITLE="インメモリキャッシュ"
+HREF="runtime-in-memory-query-cache.html"><LINK
+REL="NEXT"
+TITLE="Watchdog"
+HREF="runtime-watchdog-config.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="stylesheet.css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=utf-8"><META
+NAME="creation"
+CONTENT="2017-05-11T10:04:34"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="4"
+ALIGN="center"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Pgpool-II 3.6.4 文書</A
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+TITLE="インメモリキャッシュ"
+HREF="runtime-in-memory-query-cache.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="60%"
+ALIGN="center"
+VALIGN="bottom"
+>第 5章サーバの設定</TD
+><TD
+WIDTH="20%"
+ALIGN="right"
+VALIGN="top"
+><A
+TITLE="Watchdog"
+HREF="runtime-watchdog-config.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RUNTIME-SSL"
+>5.13. Secure Sockect Layer (SSL)</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-SSL-SETTINGS"
+>5.13.1. SSLの設定</A
+></H2
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><A
+NAME="GUC-SSL"
+></A
+><TT
+CLASS="VARNAME"
+>ssl</TT
+> (<TT
+CLASS="TYPE"
+>boolean</TT
+>)
+        </DT
+><DD
+><P
+>onに設定すると，<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>はフロントエンドとバックエンドの両方の通信での<ACRONYM
+CLASS="ACRONYM"
+>SSL</ACRONYM
+>が可能になります。
+デフォルトはoffです。
+      </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>フロントエンド接続にSSLするには、<A
+HREF="runtime-ssl.html#GUC-SSL-KEY"
+>ssl_key</A
+>と<A
+HREF="runtime-ssl.html#GUC-SSL-CERT"
+>ssl_cert</A
+>が設定されてなければなりません。
+        </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>注意: </B
+>          For SSL to work <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+> must be build with OpenSSL support.
+          See <A
+HREF="install-pgpool.html"
+>項3.4</A
+> for details on building the
+          <SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>.
+SSLサポートを有効にするためには、<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>をOpenSSLサポート付きでビルドする必要があります。
+<SPAN
+CLASS="PRODUCTNAME"
+>Pgpool-II</SPAN
+>のビルドついて詳細は<A
+HREF="install-pgpool.html"
+>項3.4</A
+>をご覧ください。
+        </P
+></BLOCKQUOTE
+></DIV
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-SSL-KEY"
+></A
+><TT
+CLASS="VARNAME"
+>ssl_key</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>フロントエンドとの接続に使用するプライベートキーファイルのパスを指定します。
+このオプションののデフォルト値はありません。
+設定がない場合は、フロントエンドとの接続で<ACRONYM
+CLASS="ACRONYM"
+>SSL</ACRONYM
+>が使用されなくなります。 
+      </P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-SSL-CERT"
+></A
+><TT
+CLASS="VARNAME"
+>ssl_cert</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+>フロントエンドとの接続に使用する公開x509証明書のフルパスを指定します。 
+このオプションののデフォルト値はありません。
+設定がない場合は、フロントエンドとの接続で<ACRONYM
+CLASS="ACRONYM"
+>SSL</ACRONYM
+>が使用されなくなります。 
+      </P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-SSL-CA-CERT"
+></A
+><TT
+CLASS="VARNAME"
+>ssl_ca_cert</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+> <ACRONYM
+CLASS="ACRONYM"
+>PEM</ACRONYM
+>形式の<ACRONYM
+CLASS="ACRONYM"
+>CA</ACRONYM
+>ルート証明書のパスを指定します。
+ これはバックエンドサーバ証明書の検証に用いられます。
+ このオプションは<TT
+CLASS="COMMAND"
+>OpenSSL verify(1)</TT
+>コマンドにおける<TT
+CLASS="COMMAND"
+>-CAfile</TT
+>オプションと同様の機能を提供します。
+      </P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+      </P
+></DD
+><DT
+><A
+NAME="GUC-SSL-CA-CERT-DIR"
+></A
+><TT
+CLASS="VARNAME"
+>ssl_ca_cert_dir</TT
+> (<TT
+CLASS="TYPE"
+>string</TT
+>)
+        </DT
+><DD
+><P
+> <ACRONYM
+CLASS="ACRONYM"
+>PEM</ACRONYM
+>形式の<ACRONYM
+CLASS="ACRONYM"
+>CA</ACRONYM
+>ルート証明書ファイルが格納されているディレクトリへのパスを指定します。
+ これはバックエンドサーバ証明書の検証に用いられます。
+ このオプションは<TT
+CLASS="COMMAND"
+>OpenSSL verify(1)</TT
+>コマンドにおける<TT
+CLASS="COMMAND"
+>-CAfile</TT
+>オプションと同様の機能を提供します。
+      </P
+><P
+>デフォルトでは値が設定されておらず検証は行われません。
+このオプションが設定されていない場合においても、<A
+HREF="runtime-ssl.html#GUC-SSL-CA-CERT"
+>ssl_ca_cert</A
+>オプションが設定されている場合には検証が行われます。
+      </P
+><P
+>このパラメータはサーバ起動時にのみ設定可能です。
+      </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RUNTIME-SSL-GENERATING-SSL-CERTIFICATES"
+>5.13.2. SSL証明書の生成</A
+></H2
+><P
+>証明書の扱いについてはこのマニュアルの範囲外です。
+PostgreSQLドキュメント<A
+HREF="http://www.postgresql.jp/document/current/html/ssl-tcp.html"
+TARGET="_top"
+>SSLによる安全なTCP/IP接続</A
+>の章に自分で認証する証明書を作成するコマンドの例があります。
+  </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="runtime-in-memory-query-cache.html"
+ACCESSKEY="P"
+>前のページ</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>ホーム</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="runtime-watchdog-config.html"
+ACCESSKEY="N"
+>次のページ</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>インメモリキャッシュ</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="runtime-config.html"
+ACCESSKEY="U"
+>上に戻る</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Watchdog</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
