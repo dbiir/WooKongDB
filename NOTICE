@@ -1,3 +1,5 @@
+WooKongDB repository note: this tree is maintained as a strong-consistency, high-availability, and high-performance database prototype.
+
 =================================================================
 
 Greenplum Database version of PostgreSQL Database Management System

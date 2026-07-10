@@ -1,3 +1,5 @@
+> WooKongDB repository note: this tree is maintained as a strong-consistency, high-availability, and high-performance database prototype.
+>
 We've confirmed that these steps work on a brand new installation of macOS
 Sierra.
 

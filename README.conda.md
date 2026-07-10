@@ -1,3 +1,5 @@
+> WooKongDB repository note: this tree is maintained as a strong-consistency, high-availability, and high-performance database prototype.
+>
 # Steps to build plpython with Anaconda
 
 Anaconda (https://www.continuum.io/) is an excellent Python distribution for

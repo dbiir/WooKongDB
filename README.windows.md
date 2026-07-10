@@ -1,3 +1,5 @@
+> WooKongDB repository note: this tree is maintained as a strong-consistency, high-availability, and high-performance database prototype.
+>
 # Building GPDB client tools on Windows
 
 We only support building 64-bit client tools on Windows using Visual Studio 2017. Building backend is not supported.

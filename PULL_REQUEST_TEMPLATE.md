@@ -1,3 +1,5 @@
+> WooKongDB repository note: this tree is maintained as a strong-consistency, high-availability, and high-performance database prototype.
+>
 ## Here are some reminders before you submit the pull request
 - [ ] Add tests for the change
 - [ ] Document changes

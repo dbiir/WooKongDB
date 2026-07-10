@@ -1,3 +1,5 @@
+> WooKongDB repository note: this tree is maintained as a strong-consistency, high-availability, and high-performance database prototype.
+>
 # Setting up a Docker Development Environment
 
 This guide shows how to use native Docker for Mac to compile GPDB5 with your Mac’s folders mounted into a CentOS container. Although compiling GPDB5 on Mac is supported, Linux is required for some GPDB5 features like resource groups.

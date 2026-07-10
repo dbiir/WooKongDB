@@ -1,24 +1,34 @@
+> WooKongDB repository note: this tree is maintained as a strong-consistency, high-availability, and high-performance database prototype.
+>
 **Concourse Pipeline** [![Concourse Build Status](https://prod.ci.gpdb.pivotal.io/api/v1/teams/main/pipelines/gpdb_master/badge)](https://prod.ci.gpdb.pivotal.io/teams/main/pipelines/gpdb_master) |
 **Travis Build** [![Travis Build Status](https://travis-ci.org/greenplum-db/gpdb.svg?branch=master)](https://travis-ci.org/greenplum-db/gpdb)
 
 ----------------------------------------------------------------------
 
-![Greenplum](logo-greenplum.png)
+![WooKongDB](logo-greenplum.png)
 
-Greenplum Database (GPDB) is an advanced, fully featured, open
-source data warehouse, based on PostgreSQL. It provides powerful and rapid analytics on
-petabyte scale data volumes. Uniquely geared toward big data
-analytics, Greenplum Database is powered by the world’s most advanced
-cost-based query optimizer delivering high analytical query
-performance on large data volumes.
+WooKongDB is a database prototype system focused on strong consistency,
+high availability, and high performance. The repository is derived from the
+PostgreSQL and Greenplum Database code lineage, and is used to explore and
+validate distributed database capabilities around transactional correctness,
+cluster resilience, and scalable execution.
 
-The Greenplum project is released under the [Apache 2
-license](http://www.apache.org/licenses/LICENSE-2.0). We want to thank
-all our past and present community contributors and are really interested in
-all new potential contributions. For the Greenplum Database community
-no contribution is too small, we encourage all types of contributions.
+As a prototype system, WooKongDB keeps the mature engineering foundation of
+its upstream components while evolving the storage, execution, and operational
+paths needed for system-level research and validation. The project is released
+under the [Apache 2 license](http://www.apache.org/licenses/LICENSE-2.0).
 
 ## Overview
+
+WooKongDB targets three core system properties:
+
+* **Strong consistency** for distributed transaction processing and correctness-sensitive workloads.
+* **High availability** through multi-node deployment, fault handling, and cluster recovery mechanisms.
+* **High performance** for large-scale data processing and parallel analytical execution.
+
+The current codebase preserves the overall cluster architecture inherited from
+Greenplum Database while serving as the implementation base for WooKongDB
+prototype validation.
 
 A Greenplum cluster consists of a __master__ server, and multiple
 __segment__ servers. All user data resides in the segments, the master

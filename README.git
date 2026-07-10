@@ -1,3 +1,5 @@
+WooKongDB repository note: this tree is maintained as a strong-consistency, high-availability, and high-performance database prototype.
+
 (This file does not appear in release tarballs.)
 
 In a release or snapshot tarball of PostgreSQL, a documentation file named
