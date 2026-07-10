@@ -5,7 +5,7 @@
 
 ----------------------------------------------------------------------
 
-![WooKongDB](logo-greenplum.png)
+![WooKongDB](wookongdb.png)
 
 WooKongDB is a database prototype system focused on strong consistency,
 high availability, and high performance. The repository is derived from the
