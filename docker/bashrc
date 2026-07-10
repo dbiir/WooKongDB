@@ -1,3 +1,5 @@
+# WooKongDB prototype note: repository annotation only, no functional behavior change.
+
 source /home/gpadmin/gp/greenplum_path.sh
 
 export GPPORT=5432

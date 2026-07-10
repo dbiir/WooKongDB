@@ -1,4 +1,6 @@
 #!/bin/tclsh
+# WooKongDB prototype note: repository annotation only, no functional behavior change.
+
 puts "SETTING CONFIGURATION"
 
 global complete

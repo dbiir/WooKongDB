@@ -1,4 +1,6 @@
 #!/bin/bash
+# WooKongDB prototype note: repository annotation only, no functional behavior change.
+
 
 # Hook to try to catch pushing pipelines without running `fly set-pipeline` first.
 

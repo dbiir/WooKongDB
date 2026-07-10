@@ -1,3 +1,5 @@
+> WooKongDB prototype note: repository annotation only, no functional behavior change.
+>
 ## Concourse pipeline configuration and scripts
 
 This directory contains pipelines, task files, and scripts to run various sets

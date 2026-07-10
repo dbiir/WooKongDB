@@ -1,3 +1,5 @@
+> WooKongDB prototype note: repository annotation only, no functional behavior change.
+>
 By default all tables are created on all the segments, with this extension we
 could check or change the default behavior.
 

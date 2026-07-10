@@ -1,3 +1,5 @@
+> WooKongDB prototype note: repository annotation only, no functional behavior change.
+>
 # Greenplum Database End-User Documentation
 
 The latest check-ins to this repo are automatically built and published to [http://docs-greenplum-db-staging.cfapps.io](http://docs-greenplum-db-staging.cfapps.io).

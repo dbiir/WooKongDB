@@ -1,3 +1,5 @@
+# WooKongDB prototype note: repository annotation only, no functional behavior change.
+
 # config/Makefile
 
 subdir = config
