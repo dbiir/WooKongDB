@@ -1,3 +1,5 @@
+# WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
+
 # The PostgreSQL make files exploit features of GNU make that other
 # makes do not have. Because it is a common mistake for users to try
 # to build Postgres with a different make, we have this make file

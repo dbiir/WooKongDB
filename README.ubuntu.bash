@@ -1,4 +1,6 @@
 #!/bin/bash
+# WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
+
 
 apt-get update
 apt-get install -y \

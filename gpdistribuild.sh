@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
+
 
 gpsrc=$GPSRC
 echo 'We are going to build gpdb from the source code under '$gpsrc','

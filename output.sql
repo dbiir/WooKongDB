@@ -1,3 +1,5 @@
+-- WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
+
 --
 -- PostgreSQL database dump
 --

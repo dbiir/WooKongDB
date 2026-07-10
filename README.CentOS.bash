@@ -1,4 +1,6 @@
 #!/bin/bash
+# WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
+
 
 # Install needed packages. Please add to this list if you discover additional prerequisites.
 sudo yum install -y epel-release

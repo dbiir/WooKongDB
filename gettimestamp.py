@@ -1,3 +1,5 @@
+# WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
+
 import sys
 import time
 from datetime import datetime

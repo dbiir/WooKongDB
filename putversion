@@ -1,4 +1,6 @@
 #!/usr/bin/env perl
+# WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
+
 
 use File::Basename;
 use Cwd 'abs_path';

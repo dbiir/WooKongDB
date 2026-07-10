@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
+
 
 
 gptmp=$GPCOMPILE

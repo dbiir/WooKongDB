@@ -1,3 +1,4 @@
+dnl WooKongDB prototype note: non-functional repository annotation to document prototype positioning.
 dnl aclocal.m4
 m4_include([config/ac_func_accept_argtypes.m4])
 m4_include([config/ax_pthread.m4])
